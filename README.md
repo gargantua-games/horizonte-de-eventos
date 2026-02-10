@@ -1,1 +1,1 @@
-# sincronia-estelar
+# horizonte-de-eventos
