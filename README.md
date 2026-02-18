@@ -10,19 +10,21 @@ Numa corrida contra o tempo, dois astronautas devem consertar a sua nave antes d
 
 ## Referencias
 
-Interestelar; Level Devil; 
+Interestelar; Level Devil; Alien; Dead Space;
 
 ## Objetivos
 
-Pegar quantas engrenagens conseguir, e fazer com que os dois saiam da nave pelo módulo de fuga para chegar a Terra.
+Pegar quantas engrenagens conseguir, e fazer com que os dois saiam da nave pelo módulo de fuga para chegar à Terra. 
 
 ## Regras
 
-
+Não é necessário pegar todas as engrenagens para passar de fase, embora, quanto mais engrenagens coletadas, mais fácil será a última fase; 
+Se um personagem morrer, a fase recomeça;
 
 ## Personagens
 
-Um Navegador(roxo), um Engenheiro(Vermelho), aliens, naves alienigenas. 
+Um Navegador(roupa roxa), será quem fica na sala de controle, por exemplo, abrindo portas para a Engenheira(roupa vermelha), que deve atravessar as diferentes salas da nave; aliens, naves alienigenas. 
 
 ## Artefatos
 
+Engrenagens;
