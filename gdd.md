@@ -1,17 +1,19 @@
 # game desing document
 - Overview
   - Theme / Setting / Genre
-    Situado numa nave espacial
+
+     Situado numa nave espacial
   - Core Gameplay Mechanics Brief
   - Targeted platforms
   - Monetization model (Brief/Document)
   - Project Scope
-    Um jogo com mais ou menos 20 minutos
+
+     Um jogo com mais ou menos 20 minutos
   - Influences (Brief)
-    - <Level Devil, a forma como a Engenheira deve atravessar as salas #1>
-    - <Interestelar, a história #2>
-    - <Dead Space, fase sem oxigênio e gravidade #3>
-    - <Alien, presença de alienígenas #4>
+    - Level Devil, a forma como a Engenheira deve atravessar as salas 
+    - Interestelar, a história 
+    - Dead Space, fase sem oxigênio e gravidade 
+    - Alien, presença de alienígenas 
   - The elevator Pitch
     
   - Project Description (Brief):
@@ -29,13 +31,16 @@
   - Gameplay (Detailed)
 - Assets Needed
   - 2D
+
     Ambiente, parede, chão, astronautas, engrenagens
   - 3D
   - Sound
-    caminhar, arma, porta abrindo, voar, respiração
+
+     caminhar, arma, porta abrindo, voar, respiração
   - Code
   - Animation
-    porta abrindo, caminhar, atirar, cair, pular, movimentação de cenário
+
+     porta abrindo, caminhar, atirar, cair, pular, movimentação de cenário
 - Schedule
   - <Object #1>
   - <Object #2>
@@ -48,7 +53,7 @@
 
 ## Theme / Setting / Genre
 
-<Insert Theme here>
+Uma nave previamente nova em folha e cheia de tripulantes, agora danificada por invasores, com sistemas como manutenção de oxigênio falhando, fendas no exterior da nave, alguns lugares sem luz. Pelas janelas é possível ver o destino se aproximando, um buraco negro. 
 
 ## Core Gameplay Mechanics Brief
 
