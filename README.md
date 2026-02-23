@@ -6,11 +6,12 @@ Numa corrida contra o tempo, dois astronautas devem consertar a sua nave antes d
 
 ## Universo
 
-
-
 ## Referencias
 
-Interestelar; Level Devil; Alien; Dead Space;
+- Interestelar;
+- Level Devil;
+- Alien;
+- Dead Space;
 
 ## Objetivos
 
@@ -23,7 +24,11 @@ Se um personagem morrer, a fase recomeça;
 
 ## Personagens
 
-Um Navegador(roupa roxa), será quem fica na sala de controle, por exemplo, abrindo portas para a Engenheira(roupa vermelha), que deve atravessar as diferentes salas da nave; aliens, naves alienigenas. 
+- Um Navegador(roupa roxa, será quem fica na sala de controle resolvendo alguns puzzles);
+- Engenheira(roupa vermelha, que deve atravessar as diferentes salas da nave);
+- Aliens;
+- Espaço-naves Alienigenas;
+- Drones;
 
 ## Artefatos
 
