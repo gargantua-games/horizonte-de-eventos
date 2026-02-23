@@ -24,8 +24,8 @@ Se um personagem morrer, a fase recomeça;
 
 ## Personagens
 
-- Um Navegador(roupa roxa, será quem fica na sala de controle resolvendo alguns puzzles);
-- Engenheira(roupa vermelha, que deve atravessar as diferentes salas da nave);
+- Um Navegador (roupa roxa, será quem fica na sala de controle resolvendo alguns puzzles);
+- Engenheira (roupa vermelha, que deve atravessar as diferentes salas da nave);
 - Aliens;
 - Espaço-naves Alienigenas;
 - Drones;
