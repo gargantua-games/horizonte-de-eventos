@@ -27,4 +27,6 @@ Um Navegador(roupa roxa), será quem fica na sala de controle, por exemplo, abri
 
 ## Artefatos
 
-Engrenagens;
+- Engrenagens;
+- Laterna;
+- Jetpack;
