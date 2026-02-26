@@ -1,248 +1,78 @@
-# game desing document
-- Overview
-  - Theme / Setting / Genre
+# Horizonte de Eventos:
 
-     Situado numa nave espacial
-  - Core Gameplay Mechanics Brief
-  - Targeted platforms
-  - Monetization model (Brief/Document)
-  - Project Scope
+# VISÃO GERAL
 
-     Um jogo com mais ou menos 20 minutos
-  - Influences (Brief)
-    - Level Devil, a forma como a Engenheira deve atravessar as salas 
-    - Interestelar, a história 
-    - Dead Space, fase sem oxigênio e gravidade 
-    - Alien, presença de alienígenas 
-  - The elevator Pitch
+## TEMA: 
+Espaço sideral.
+
+## AMBIENTAÇÃO:
+A nave está em ruínas e infestada de alienígenas escondidos nas sombras. O sistema de segurança pifou e o cenário é de destruição total: fumaça, luzes falhando e corredores bloqueados por destroços. Para sobreviver, a dupla precisa trabalhar em sincronia perfeita. Pela nave, vai estar um jogador usando toda a sua agilidade no parkour, saltando por buracos e correndo por plataformas que ameaçam cair a qualquer momento. E na sala de controle, o outro jogador corre contra o tempo quebrando a cabeça com puzzles, hackeando painéis e abrindo os portões e liberar a passagem. Até que eles se encontrem para fugir pelo módulo de fuga. É uma corrida desesperada onde os reflexos de um dependem da inteligência do outro.
+
+O Visual é algo simples, a nave será algo futurista, nela haverão algumas plataformas flutuantes que se movem ou ficam estáticas, terão portas trancadas que poderão ser abertas, itens a serem coletados. Na sala de controle terá alguns computadores que poderão ser acessados para resolver os puzzles e para outros fins.  
+
+## GÊNERO:
+- Ficção ciêntifica
+- Jogo Arcade de Plataforma
+- Puzzles
+- Cooperativo
+- Multiplayer
+  
+## MECÂNICAS PRINCIPAIS DO JOGO (RESUMO):
+As principais mecânicas propostas no jogo serão o salto, o salto com escoro na parede, a sincrônia entre os jogadores, os puzzles que terão de ser realizados com urgência e a confiança no seu parceiro para juntos sairem da nave.
+
+## PLATAFORMAS-ALVOS:
+- Desktop
+- Consoles
+  
+## MODELO DE MONETIZAÇÃO (RESUMO/DOCUMENTO):
+A monetização do jogo se daria pela venda dele para o dowload, além da possibilidade de fazer DLC's para expandir mais a história e adicionar mais fases e fases secundárias ou até para adição de personagens diferentes, outra proposta para arrecadar o dinheiro para o jogo seria um finânciamento coletivo aberto para quem tiver disposto a ajudar além.
+  
+## INFLUÊNCIAS (RESUMO):
+- Interestelar - Usamos de uma inspiração na história do filme para o jogo
+- Level devil - Jogo que nos ajudou a pensar sobre a questão das plataformas e desafios dos jogos
+- Among-Us - Jogo que no inspirou para alguns puzzles
+- Alien - Nos ajudou para nos inspirarmos numa fase
+- Dead Space - Nos inspirou em outra fase do jogo
+   
+## APRESENTAÇÃO CONCISA/RELÂMPAGO:
+Após uma missão em outro planeta para coletar minérios para levar até a Terra a nave onde você estava foi atacada e agora restando somente você e mais um outro tripulante vocês terão de coperar e confiar um nonoutro para escapar até a Terra novamente.
+
+## DESCRIÇÃO DO PROJETO (RESUMO):
+Enquanto um dos astronautas anda pela nave, passando por desafios fisicos e de habilidade, para ir atras das engrenagens para acessarem os botões para liberar o módulo de fuga, o outro fica na sala de controle observando, dando dicas e resolvendo puzzles para liberar as portas e os acessos para que o outro possa passar pelas salas e eles possam se encontrar e fugir desta nave e fiacrem a salvo na Terra.
+
+## O QUE DIFERENCIA ESSE PROJETO?:
+- Motivo 1: Jogabilidade cooperativa para dois jogadores com foco na coperação, onde ambos precisam colaborar o tempo todo para sobreviver e cumprir os objetivos;
+- Motivo 2: Diferentes visões entre os jogadores;
+- Motivo 3: Puzzles e mecânicas que deixa a jogabilidade entre os jogadores bem única e diferenciada.
     
-  - Project Description (Brief):
-  - Project Description (Detailed)
-- What sets this project apart?
-  - Core Gameplay Mechanics (Detailed)
-    - <Core Gameplay Mechanic #1>
-    - <Core Gameplay Mechanic #2>
-    - <Core Gameplay Mechanic #3>
-    - <Core Gameplay Mechanic #4>
-- Story and Gameplay
-  - Story (Brief)
-  - Story (Detailed)
-  - Gameplay (Brief)
-  - Gameplay (Detailed)
-- Assets Needed
-  - 2D
+## MECÂNICAS PRINCIPAIS DO JOGO (DETALHADAS):
+- Saltos:
+Os saltos serão simples e serviram para o jogador pular por plataformas ou obstáculos.
+- Salto na Parede:
+Estes saltos servirão para alcançar plataformas mais altas do que o personagem normalmente conseguiria.
+- Puzzles:
+Os puzzles serão variados para ter diferentes experiências dependendo do que o jogador ira consertar ou fazer pelas interfaces da nave.
 
-    Ambiente, parede, chão, astronautas, engrenagens
-  - 3D
-  - Sound
+# HISTÓRIA E JOGABILIDADE:
 
-     caminhar, arma, porta abrindo, voar, respiração
-  - Code
-  - Animation
+## HISTÓRIA RESUMIDA:
+Após sairem de um planeta a tripulação é atacada até sobrar somente dois astronautas que juntos tentam escapar para o módulo de fuga da nave e irem até a Terra.
 
-     porta abrindo, caminhar, atirar, cair, pular, movimentação de cenário
-- Schedule
-  - <Object #1>
-  - <Object #2>
-  - <Object #3>
-  - <Object #4>
+## HISTÓRIA DETALHADA: 
+No ano de 12072025 a humanidade explora diversos planetas para usar dos seus recursos na Terra ou em outra estações espaciais. Nessas vão grandes naves, tripuladas por diferentes tipos de astronautas que são identificados pela cor dos seus uniformes que diz a sua profissão. E numa dessas explorações a nave Lírio na volta pra Terra foi atacada, e quase toda a tripulação capiturada ou foram para fora da existência material, e agora só restaram um engenheiro, uniforme vermelho, e um navegador, uniforme roxo. Neste cenário eles são obrigados a coperar para os dois conseguirem escapar com segurança. No final da jornada de muitos desafios e os jogadores finalmente escaparem o jogo vai mostrar que na verdade os jogadores ja tinham sido capturados e botados numa simulação que eles nunca poderiam escapar.
 
+## JOGABILIDADE:
+Um jogador passa por desafios de parkour e alguns outros, e o outro resolve puzzles para liberar portas para a saída ou outros motivos
 
-# Overview
+# RECURSOS NECESSÁRIOS:
+- 2D:
+Criação de personagens (astronautas), aliens, cenário, interface, engrenagens, nave, efeitos visuais.
 
+- SOM:
+Efeitos sonoros na nave, passos, disparos de laser, som da respiração, batimento cardiaco, sirene da nave e possíveis trilhas sonoras.
 
-## Theme / Setting / Genre
+- CÓDIGO:
+Programação da movimentação, sistema de tempo, inteligência dos aliens, mecânica do salto na parede, colisões, coleta de itens, interação com os computadores e a interface da nave, puzzles
 
-Uma nave previamente nova em folha e cheia de tripulantes, agora danificada por invasores, com sistemas como manutenção de oxigênio falhando, fendas no exterior da nave, alguns lugares sem luz. Pelas janelas é possível ver o destino se aproximando, um buraco negro. 
-
-## Core Gameplay Mechanics Brief
-
-  - <Gameplay Mechanic #1>
-  - <Gameplay Mechanic #2>
-  - <Gameplay Mechanic #3>
-  - <Gameplay Mechanic #4>
-
-## Targeted platforms
-  - <Example Platform #1 Here>
-  - <Example Platform #2 Here>
-  - <Example Platform #3 Here>
-
-## Monetization model (Brief/Document) 
-  - Monetization Type (Premium, Paid Alpha/Beta/Final, Ad Driven, Micro-transactions, Subscription, etc.)
-  - Link to Monetization Document (How do you plan to monetize the game?)
-
-## Project Scope 
-  - Game Time Scale
-    - Cost? (How much will it cost?)
-    - Time Scale (How long will it take to make this game?)
-  - Team Size
-    - Core Team
-      - Team Member name?
-        - What does he/she do?
-        - Cost to employ them full time or part time
-      - etc. (List as many core team members as you need to)
-    - Marketing Team
-      - Team Member name?
-        - What does he/she do?
-        - Cost to employ them full time or part time
-      - Etc. (List as many marketing team members as you need to)
-    - Licenses / Hardware / Other Costs
-    - Total Costs with breakdown
-
-## Influences (Brief)
-  - Influence #1
-    - Medium (Television, Games, Literature, Movies, etc.)
-    - /Explain why this is an influence in 1 Paragraph or less/
-  - Influence #2
-    - Medium (Television, Games, Literature, Movies, etc.)
-    - /Explain why this is an influence in 1 Paragraph or less/
-  - Influence #3
-    - Medium (Television, Games, Literature, Movies, etc.)
-    - /Explain why this is an influence in 1 Paragraph or less/
-  - Influence #4>
-    - Medium (Television, Games, Literature, Movies, etc.)
-    - /Explain why this is an influence in 1 Paragraph or less/
-
-## The elevator Pitch
-
-[A one sentence pitch for your game.]
-Pretend that your were pitching your game to a executive going to the elevator. You have less than 60 Seconds.
-
-## Project Description (Brief):
-
-[Two Paragraphs at least]
-[No more than three paragraphs]
-
-## Project Description (Detailed)
-
-[Four Paragraphs or more If needs be]
-[No more than six paragraphs]
-
-# What sets this project apart?
-  - <Reason #1>
-  - <Reason #2>
-  - <Reason #3>
-  - <Reason #4>
-  - <etc.>
-
-## Core Gameplay Mechanics (Detailed)
-  - [Core Gameplay Mechanic #1]
-    - [Details] /Describe in 2 Paragraphs or less/
-    - [How it works] /Describe in 2 Paragraphs or less/
-  - [Core Gameplay Mechanic #2]
-    - [Details] /Describe in 2 Paragraphs or less/
-    - [How it works] /Describe in 2 Paragraphs or less/
-  - [Core Gameplay Mechanic #3]
-    - [Details] /Describe in 2 Paragraphs or less/
-    - [How it works] /Describe in 2 Paragraphs or less/
-  - [Core Gameplay Mechanic #4]
-    - [Details] /Describe in 2 Paragraphs or less/
-    - [How it works] /Describe in 2 Paragraphs or less/
-
-# Story and Gameplay
-
-## Story (Brief)
-
-[The Summary or TL;DR version of below]
-
-## Story (Detailed)
-
-[Go into as much detail as needs be]
-[Spare no detail]
-[Use Mind Mapping software to get your point across]
-
-## Gameplay (Brief)
-
-[The Summary version of below]
-
-## Gameplay (Detailed)
-
-[Go into as much detail as needs be]
-[Spare no detail]
-[Combine this with the game mechanics section above]
-
-# Assets Needed
-
-## 2D
-  - Textures
-    - Environment Textures
-  - Heightmap data (If applicable)
-    - List required data required - Example: DEM data of the entire UK.
-  - Etc.
-
-## 3D
-  - Characters List
-    - Character #1
-    - Character #2
-    - Character #3
-    - etc.
-  - Environmental Art Lists
-    - Example #1
-    - Example #2 
-    - Example #3
-    - etc.
-
-## Sound
-  - Sound List (Ambient)
-    - Outside
-      - Level 1
-      - Level 2 
-      - Level 3
-      - etc.
-    - Inside
-      - Level 1
-      - Level 2
-      - Level 3
-      - etc.
-  - Sound List (Player)
-    - Character Movement Sound List
-      - Example 1
-      - Example 2
-      - etc. 
-    - Character Hit / Collision Sound list
-      - Example 1
-      - Example 2
-      - etc.
-    - Character on Injured / Death sound list
-      - Example 1
-      - Example 2
-      - etc.
-
-## Code
-  - Character Scripts (Player Pawn/Player Controller)
-    - Example
-  - Ambient Scripts (Runs in the background)
-    - Example
-  - NPC Scripts
-    - Example
-
-## Animation
-  - Environment Animations 
-    - Example
-  - Character Animations 
-    - Player
-      - Example 
-    - NPC
-      - Example
-
-# Schedule
-  - <Object #1>
-    - Time Scale
-      - Milestone 1
-      - Milestone 2
-      - Etc.
-  - <Object #2>
-    - Time Scale
-      - Milestone 1
-      - Milestone 2
-      - Etc.
-  - <Object #3>
-    - Time Scale
-      - Milestone 1
-      - Milestone 2
-      - Etc.
-  - <Object #4>
-    - Time Scale
-      - Milestone 1
-      - Milestone 2
-      - Etc.
+- ANIMAÇÃO:
+Animações dos personagens (andar, saltar), aliens, efeitos de impacto, disparos de laser, elementos do cenário, computadores, elementos fora da nave.
