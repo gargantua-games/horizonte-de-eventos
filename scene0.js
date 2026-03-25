@@ -119,36 +119,33 @@ class scene0 extends Phaser.Scene {
     });
 
     this.plataformG = this.physics.add.sprite(431, 930, "plataformG");
-    this.plataformG.setImmovable(true);
-
+    this.plataformG.setImmovable(true).setIgnoreGravityY(true);
+    
     this.plataform1 = this.physics.add.sprite(360, 1094, "plataform");
-    this.plataform1.setImmovable(true);
-    this.plataform1.setVelocityX(100);
+    this.plataform1.setImmovable(true).setIgnoreGravityY(true).setVelocityX(100);
     
     setInterval(() => {
       this.plataform1.setVelocityX(this.plataform1.body.velocity.x * -1);
     }, 3400);
-
+    
     this.plataform2 = this.physics.add.sprite(1092, 960, "plataform");
-    this.plataform2.setImmovable(true);
-    this.plataform2.setVelocityY(-90);
-
+    this.plataform2.setImmovable(true).setIgnoreGravityY(true).setVelocityY(-90);
+    
     setInterval(() => {
       this.plataform2.setVelocityY(this.plataform2.body.velocity.y * -1);
     }, 1045);
-
+    
     this.plataform3 = this.physics.add.sprite(963, 910, "plataform");
-    this.plataform3.setImmovable(true);
-    this.plataform3.setVelocityX(-100);
-
+    this.plataform3.setImmovable(true).setIgnoreGravity(true).setVelocityX(-100);
+    
     setInterval(() => {
       this.plataform3.setVelocityX(this.plataform3.body.velocity.x * -1);
     }, 4000);
-
+    
     this.player = this.physics.add.sprite(92, 1052, "player", 5);
     this.cameras.main.startFollow(this.player);
     this.player.anims.play("idle",true);
-
+    
     // Texto de posição do player atualizado a cada segundo
     this.positionText = this.add.text(10, 10, "X: 0 Y: 0", {
       fontSize: "18px",
@@ -156,7 +153,7 @@ class scene0 extends Phaser.Scene {
       backgroundColor: "rgba(0,0,0,0.5)",
       padding: { x: 6, y: 4 },
     }).setScrollFactor(0);
-
+    
     this.time.addEvent({
       delay: 1000,
       loop: true,
@@ -174,7 +171,7 @@ class scene0 extends Phaser.Scene {
       base: this.add.circle(0, 0, 50, 0x6acac2),
       thumb: this.add.circle(0, 0, 25, 0x3fa789),
     });
-
+    
     this.joystick.on("update", () => {
       const angle = Phaser.Math.DegToRad(this.joystick.angle);
       const force = this.joystick.force;
@@ -197,34 +194,36 @@ class scene0 extends Phaser.Scene {
             this.player.anims.play("walk-up", true);
             break;
             case this.joystick.angle >= -45 && this.joystick.angle < 45:
-            this.player.anims.play("walk-right", true);
-            break;
-          case this.joystick.angle >= 45 && this.joystick.angle < 135:
-            this.player.anims.play("walk-down", true);
-            break;
-            case this.joystick.angle >= 135 || this.joystick.angle < -135:
-              this.player.anims.play("walk-left", true);
+              this.player.anims.play("walk-right", true);
               break;
-            }
-          } else {
-            this.player.setVelocity(0, 0);
-            this.player.anims.play("idle",true);
-          }
-    });
-    
-    
-    this.physics.add.collider(this.player, this.plataformG);
-    this.physics.add.collider(this.player, this.plataform1);
-    this.physics.add.collider(this.player, this.plataform2);
-    this.physics.add.collider(this.player, this.plataform3);
-    //this.player.setCollideWorldBounds(true);
-    /*this.plataform1.setCollideWorldBounds(true);
-    this.physics.add.collider(this.plataform1, this.layerPiso);*/
-    
-        
-    this.layerPiso.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.player, this.layerPiso);
+              case this.joystick.angle >= 45 && this.joystick.angle < 135:
+                this.player.anims.play("walk-down", true);
+                break;
+                case this.joystick.angle >= 135 || this.joystick.angle < -135:
+                  this.player.anims.play("walk-left", true);
+                  break;
+                }
+              } else {
+                this.player.setVelocity(0, 0);
+                this.player.anims.play("idle",true);
+              }
+            });
+            
+            
+            this.physics.add.collider(this.player, this.plataformG);
+            this.physics.add.collider(this.player, this.plataform1);
+            this.physics.add.collider(this.player, this.plataform2);
+            this.physics.add.collider(this.player, this.plataform3);
+            //this.player.setCollideWorldBounds(true);
+            /*this.plataform1.setCollideWorldBounds(true);
+            this.physics.add.collider(this.plataform1, this.layerPiso);*/
+            
+            
+            this.layerPiso.setCollisionByProperty({ collides: true });
+            this.physics.add.collider(this.player, this.layerPiso);
   }
+  
+          
 }
 
 export default scene0;
