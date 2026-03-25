@@ -37,10 +37,11 @@ class scene0 extends Phaser.Scene {
       frameHeight: 8,
     });
 
-    this.load.spritesheet("buttons", "buttons.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
+    this.load.spritesheet("plataformG", "plataformG.png", {
+      frameWidth: 96,
+      frameHeight: 8,
+    });    
+
 
 
     /*this.load.audio("epic", "assets/epic.mp3");
@@ -117,28 +118,34 @@ class scene0 extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.plataform1 = this.physics.add.sprite(360, 709, "plataform");
+    this.plataformG = this.physics.add.sprite(431, 930, "plataformG");
+    this.plataformG.setImmovable(true);
+
+    this.plataform1 = this.physics.add.sprite(360, 1094, "plataform");
+    this.plataform1.setImmovable(true);
     this.plataform1.setVelocityX(100);
     
     setInterval(() => {
       this.plataform1.setVelocityX(this.plataform1.body.velocity.x * -1);
     }, 3400);
 
-    this.plataform2 = this.physics.add.sprite(1092, 590, "plataform");
+    this.plataform2 = this.physics.add.sprite(1092, 960, "plataform");
+    this.plataform2.setImmovable(true);
     this.plataform2.setVelocityY(-90);
 
     setInterval(() => {
       this.plataform2.setVelocityY(this.plataform2.body.velocity.y * -1);
-    }, 1050);
+    }, 1045);
 
-    this.plataform3 = this.physics.add.sprite(963, 510, "plataform");
+    this.plataform3 = this.physics.add.sprite(963, 910, "plataform");
+    this.plataform3.setImmovable(true);
     this.plataform3.setVelocityX(-100);
 
     setInterval(() => {
       this.plataform3.setVelocityX(this.plataform3.body.velocity.x * -1);
     }, 4000);
 
-    this.player = this.physics.add.sprite(92, 672, "player", 5);
+    this.player = this.physics.add.sprite(92, 1052, "player", 5);
     this.cameras.main.startFollow(this.player);
     this.player.anims.play("idle",true);
 
@@ -205,16 +212,18 @@ class scene0 extends Phaser.Scene {
           }
     });
     
-
-        
-    /*this.player.setCollideWorldBounds(true);
-    this.plataform1.setCollideWorldBounds(true);
+    
+    this.physics.add.collider(this.player, this.plataformG);
     this.physics.add.collider(this.player, this.plataform1);
-    this.physics.add.collider(this.plataform1, this.layerPiso);
+    this.physics.add.collider(this.player, this.plataform2);
+    this.physics.add.collider(this.player, this.plataform3);
+    //this.player.setCollideWorldBounds(true);
+    /*this.plataform1.setCollideWorldBounds(true);
+    this.physics.add.collider(this.plataform1, this.layerPiso);*/
     
         
     this.layerPiso.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.player, this.layerPiso);*/
+    this.physics.add.collider(this.player, this.layerPiso);
   }
 }
 
