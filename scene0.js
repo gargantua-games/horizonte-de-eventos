@@ -34,7 +34,7 @@ class scene0 extends Phaser.Scene {
 
     this.load.spritesheet("plataform", "plataform.png", {
       frameWidth: 64,
-      frameHeight: 32,
+      frameHeight: 8,
     });
 
     this.load.spritesheet("buttons", "buttons.png", {
@@ -117,15 +117,48 @@ class scene0 extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.plataform = this.physics.add.sprite(360, 720, "plataform");
+    this.plataform1 = this.physics.add.sprite(360, 709, "plataform");
+    this.plataform1.setVelocityX(100);
     
-      //setImterval
-    
-    
-    
-    
-    this.player = this.physics.add.sprite(92, 672, "player", 10)
+    setInterval(() => {
+      this.plataform1.setVelocityX(this.plataform1.body.velocity.x * -1);
+    }, 3400);
+
+    this.plataform2 = this.physics.add.sprite(1092, 590, "plataform");
+    this.plataform2.setVelocityY(-90);
+
+    setInterval(() => {
+      this.plataform2.setVelocityY(this.plataform2.body.velocity.y * -1);
+    }, 1050);
+
+    this.plataform3 = this.physics.add.sprite(963, 510, "plataform");
+    this.plataform3.setVelocityX(-100);
+
+    setInterval(() => {
+      this.plataform3.setVelocityX(this.plataform3.body.velocity.x * -1);
+    }, 4000);
+
+    this.player = this.physics.add.sprite(92, 672, "player", 5);
+    this.player.anims.play("idle",true);
     this.cameras.main.startFollow(this.player);
+
+    // Texto de posição do player atualizado a cada segundo
+    this.positionText = this.add.text(10, 10, "X: 0 Y: 0", {
+      fontSize: "18px",
+      fill: "#ffffff",
+      backgroundColor: "rgba(0,0,0,0.5)",
+      padding: { x: 6, y: 4 },
+    }).setScrollFactor(0);
+
+    this.time.addEvent({
+      delay: 1000,
+      loop: true,
+      callback: () => {
+        this.positionText.setText(
+          `X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`
+        );
+      },
+    });
     
     this.joystick = this.plugins.get("rexvirtualjoystickplugin").add(this, {
       x: 100,
@@ -170,9 +203,14 @@ class scene0 extends Phaser.Scene {
             this.player.setVelocity(0, 0);
             this.player.anims.play("idle",true);
           }
-        });
+    });
+    
+
         
     this.player.setCollideWorldBounds(true);
+    this.plataform1.setCollideWorldBounds(true);
+    this.physics.add.collider(this.player, this.plataform1);
+    this.physics.add.collider(this.plataform1, this.layerPiso);
     
         
     this.layerPiso.setCollisionByProperty({ collides: true });
