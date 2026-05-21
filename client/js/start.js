@@ -83,6 +83,7 @@ class start extends Phaser.Scene {
     // Click no player roxo abre scene1
     this.playerRoxo.on("pointerdown", () => {
       //this.scene.start("scene1");
+      this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene1" });
     });
@@ -90,6 +91,7 @@ class start extends Phaser.Scene {
     // Click no player vermelho abre scene0
     this.playerVermelho.on("pointerdown", () => {
       //this.scene.start("scene0");
+      this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene0" });
     });
@@ -108,20 +110,30 @@ class start extends Phaser.Scene {
       jumpPressed = !!pad.X;
     }
 
-
     const qe = this.input.keyboard.addKeys("Q,E");
 
     if (qe.Q.isDown) {
       //this.scene.start("scene1");
+      this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene1" });
     }
 
     if (qe.E.isDown || jumpPressed) {
       //this.scene.start("scene0");
+      this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene2" });
     }
+  }
+
+  webrtcGetMic() {
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        this.game.media = stream;
+      })
+      .catch((error) => console.error(error));
   }
 }
 

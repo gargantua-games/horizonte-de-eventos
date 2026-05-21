@@ -10,6 +10,10 @@ class scene1 extends Phaser.Scene {
     this.invulnerable = false;
   }
 
+  init() {
+    this.webrtcMakeCall();
+  }
+
   /*preload() {
     this.load.setPath("assets/");
 
@@ -72,7 +76,7 @@ class scene1 extends Phaser.Scene {
   create() {
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound
-      .add("trilhasonora", { loop: true, volume: 0.5 })
+      .add("trilhasonora", { loop: true, volume: 0.2 })
       .play();
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
 
@@ -1204,6 +1208,45 @@ class scene1 extends Phaser.Scene {
       this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
       this.porta2.anims.play("portafechando", true);
       this.fase4 = false;
+    });
+  }
+
+  webrtcMakeCall() {
+    this.game.localConnection = new RTCPeerConnection(this.game.iceServers);
+
+    this.game.localConnection.onicecandidate = ({ candidate }) => {
+      this.game.socket.emit("candidate", this.game.room, candidate);
+    };
+
+    this.game.localConnection.ontrack = ({ streams: [stream] }) => {
+      this.game.audio.srcObject = stream;
+    };
+
+    if (this.game.media) {
+      this.game.media
+        .getTracks()
+        .forEach((track) =>
+          this.game.localConnection.addTrack(track, this.game.media),
+        );
+    }
+
+    this.game.localConnection
+      .createOffer()
+      .then((offer) => this.game.localConnection.setLocalDescription(offer))
+      .then(() =>
+        this.game.socket.emit(
+          "offer",
+          this.game.room,
+          this.game.localConnection.localDescription,
+        ),
+      );
+
+    this.game.socket.on("answer", (description) => {
+      this.game.localConnection.setRemoteDescription(description);
+    });
+
+    this.game.socket.on("candidate", (candidate) => {
+      this.game.localConnection.addIceCandidate(candidate);
     });
   }
 } //fim

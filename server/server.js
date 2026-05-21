@@ -59,6 +59,18 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("offer", (room, description) => {
+    socket.to(room).emit("offer", description);
+  });
+
+  socket.on("candidate", (room, candidate) => {
+    socket.to(room).emit("candidate", candidate);
+  });
+
+  socket.on("answer", (room, description) => {
+    socket.to(room).emit("answer", description);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });

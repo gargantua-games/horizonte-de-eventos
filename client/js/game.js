@@ -6,8 +6,6 @@ import scene2 from "./scene2.js";
 import preloader from "./preloader.js";
 import gameover1 from "./gameover1.js";
 
-
-
 class Game extends Phaser.Game {
   constructor() {
     super(config);
@@ -21,6 +19,23 @@ class Game extends Phaser.Game {
     this.scene.add("preloader", preloader);
     this.scene.add("gameover1", gameover1);
     this.scene.start("start");
+
+    this.audio = document.querySelector("audio");
+    this.iceServers = {
+      iceServers: [
+        {
+          urls: "turn:feira-de-jogos.dev.br",
+          username: "adc20261",
+          credential: "adc20261",
+        },
+        {
+          urls: "stun:feira-de-jogos.dev.br",
+        },
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    };
 
     if (location.hostname.match(/localhost|127\.0\.0\.1/)) {
       this.socket = io("http://localhost:3000");

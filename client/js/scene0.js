@@ -28,6 +28,10 @@ class scene0 extends Phaser.Scene {
     this.movingTorreta = false;
   }
 
+  init() {
+    this.webrtcAnswerCall();
+  }
+
   startPlatformMovement() {
     if (this.fase5) {
       return;
@@ -165,7 +169,6 @@ class scene0 extends Phaser.Scene {
   }*/
 
   create() {
-
     this.keys = this.input.keyboard.addKeys({
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D,
@@ -179,7 +182,7 @@ class scene0 extends Phaser.Scene {
     const keyboard = this.keys;
 
     this.trilhasonora = this.sound
-      .add("trilhasonora", { loop: true, volume: 0.5 })
+      .add("trilhasonora", { loop: true, volume: 0.2 })
       .play();
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
 
@@ -232,10 +235,13 @@ class scene0 extends Phaser.Scene {
       .setScrollFactor(0.9, 1);
     this.layerNave = this.tilemap
       .createLayer("nave", [this.tilesetRemasterized])
-      .setPipeline("Light2D")
-      //.setScrollFactor(0.9, 1);
+      .setPipeline("Light2D");
+    //.setScrollFactor(0.9, 1);
     this.layerEnfeites = this.tilemap
-      .createLayer("enfeites", [this.tilesetRemasterizedEnfeites, this.tilesetRemasterized])
+      .createLayer("enfeites", [
+        this.tilesetRemasterizedEnfeites,
+        this.tilesetRemasterized,
+      ])
       .setPipeline("Light2D")
       .setScrollFactor(0.9, 1);
     this.layerVidro = this.tilemap
@@ -254,7 +260,6 @@ class scene0 extends Phaser.Scene {
       .createLayer("piso", [this.tilesetRemasterized])
       .setPipeline("Light2D")
       .setScrollFactor(0.9, 1);
-    
 
     this.physics.world.setBounds(
       0,
@@ -806,12 +811,12 @@ class scene0 extends Phaser.Scene {
     this.invisible2
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
-    
+
     this.invisible3 = this.physics.add.sprite(540, 300, "invisible");
     this.invisible3
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
-    
+
     this.anims.create({
       key: "torretaidle",
       frames: this.anims.generateFrameNumbers("torreta", {
@@ -853,8 +858,6 @@ class scene0 extends Phaser.Scene {
         this.life -= 1;
       }
     }, 500);
-
-
 
     this.light21 = this.lights
       .addLight(this.door21.x, this.door21.y - 20, 40)
@@ -962,7 +965,6 @@ class scene0 extends Phaser.Scene {
       .setIntensity(0)
       .setColor(0xf5f5f5);
 
-
     this.physics.add.overlap(
       this.player,
       this.engrenagens,
@@ -1069,8 +1071,8 @@ class scene0 extends Phaser.Scene {
 
       this.typeIaText(texto, 50);
       /*//if (this.doorOpen != 1) {
-        */this.iaBox.setVelocityX(100);
-        /*setTimeout(() => {
+       */ this.iaBox.setVelocityX(100);
+      /*setTimeout(() => {
           this.iaBox.setVelocityX(0);
         }, 3237);
       }*/
@@ -1078,12 +1080,10 @@ class scene0 extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.invisible3, () => {
       if (keyboard.action.isDown) {
-
         this.invisible3.disableBody(true, true);
         this.cameras.main.startFollow(this.player2, true);
         //this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
       }
-      
     });
 
     this.physics.add.overlap(
@@ -1318,8 +1318,6 @@ class scene0 extends Phaser.Scene {
       },
     });
 
-    
-
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
     this.game.socket.on("scene1", (state) => {
@@ -1347,26 +1345,23 @@ class scene0 extends Phaser.Scene {
           }, 1050);
         }
       }
-      
-     /* this.torreta.once("animationcomplete", (anim, frame) => {
+
+      /* this.torreta.once("animationcomplete", (anim, frame) => {
         if (anim.key === "torretaidle") {
           this.movingTorreta = true;   
         };
       });*/
-    
     });
 
     this.game.socket.on("scene1", (state) => {
       if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
         this.doorOpen = state.doorOpen;
       }
-      if(state.playerroxo) {
-        this.player2.setPosition(state.playerroxo.x, (state.playerroxo.y - 2631));
+      if (state.playerroxo) {
+        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y - 2631);
         //this.player2.anims.play(state.player.animation, true);
-        
       }
     });
-
   }
 
   typeIaText(text, speed = 50, onComplete = null) {
@@ -1487,17 +1482,14 @@ class scene0 extends Phaser.Scene {
       } else if (keyboard.right.isDown) {
         horizontal = 1;
       }
-      if (
-        keyboard.up.isDown ||
-        keyboard.space.isDown 
-      ) {
+      if (keyboard.up.isDown || keyboard.space.isDown) {
         jumpPressed = true;
       }
 
-      if(keyboard.exit.isDown) {
+      if (keyboard.exit.isDown) {
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
-        this.player.y - this.cameras.main.height / 2 - 120;
+          this.player.y - this.cameras.main.height / 2 - 120;
         this.invisible3.enableBody(true, 540, 300, true, true);
       }
     }
@@ -1559,7 +1551,11 @@ class scene0 extends Phaser.Scene {
         } else if (this.direction === false) {
           this.player.setFrame("61");
         }
-      } else if (vertical === 0 && !jumpPressed && this.player.body.velocity.y != 0) {
+      } else if (
+        vertical === 0 &&
+        !jumpPressed &&
+        this.player.body.velocity.y != 0
+      ) {
         this.doubleJump = true;
 
         if (this.direction === true) {
@@ -1654,9 +1650,9 @@ class scene0 extends Phaser.Scene {
       //se inimigo estiver no chão, ele segue o player
       this.torreta.anims.play("torretaidle", true);
       this.torreta.once("animationcomplete", (anim, frame) => {
-      if (anim.key === "torretaidle") {
-        this.movingTorreta = true;   
-        };
+        if (anim.key === "torretaidle") {
+          this.movingTorreta = true;
+        }
       });
       setInterval(() => {
         if (this.inimigo.y === 1837) {
@@ -1726,6 +1722,46 @@ class scene0 extends Phaser.Scene {
     jetBag.disableBody(true, true);
 
     this.jetPack = true;
+  }
+
+  webrtcAnswerCall() {
+    this.game.remoteConnection = new RTCPeerConnection(this.game.iceServers);
+
+    this.game.remoteConnection.onicecandidate = ({ candidate }) => {
+      this.game.socket.emit("candidate", this.game.room, candidate);
+    };
+
+    this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
+      this.game.audio.srcObject = stream;
+    };
+
+    if (this.game.media) {
+      this.game.media
+        .getTracks()
+        .forEach((track) =>
+          this.game.remoteConnection.addTrack(track, this.game.media),
+        );
+    }
+
+    this.game.socket.on("offer", (description) => {
+      this.game.remoteConnection
+        .setRemoteDescription(description)
+        .then(() => this.game.remoteConnection.createAnswer())
+        .then((answer) =>
+          this.game.remoteConnection.setLocalDescription(answer),
+        )
+        .then(() =>
+          this.game.socket.emit(
+            "answer",
+            this.game.room,
+            this.game.remoteConnection.localDescription,
+          ),
+        );
+    });
+
+    this.game.socket.on("candidate", (candidate) => {
+      this.game.remoteConnection.addIceCandidate(candidate);
+    });
   }
 }
 
