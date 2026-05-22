@@ -907,6 +907,37 @@ class scene1 extends Phaser.Scene {
         state.platform15.y - 1184,
       );
     });
+
+    this.iaBox = this.physics.add.sprite(400, 80, "iaBox");
+    this.iaBox
+      .setOrigin(0, 0)
+      .setScrollFactor(0)
+      .setPipeline("Light2D").body.allowGravity = false
+        .setScale(1.5);
+
+    
+    this.textoexplicativo = this.add
+      .text(400, 80, "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujo minigame você deve resolver", {
+        fontSize: "18px",
+        fill: "#92f7a0",
+        backgroundColor: "rgba(0,0,0,0.7)",
+        padding: { x: 6, y: 4 },
+        fontFamily: "sarpanchregular",
+      })
+      .setScrollFactor(0);
+
+      this.time.addEvent({
+        delay: 5000,
+        loop: true,
+        callback: () => {
+          this.textoexplicativo.destroy(
+          );
+        },
+      });
+
+    
+
+    
   } //fim create
 
   update() {

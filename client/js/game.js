@@ -5,6 +5,7 @@ import scene1 from "./scene1.js";
 import scene2 from "./scene2.js";
 import preloader from "./preloader.js";
 import gameover1 from "./gameover1.js";
+import gameover2 from "./gameover2.js";
 
 class Game extends Phaser.Game {
   constructor() {
@@ -18,6 +19,7 @@ class Game extends Phaser.Game {
     this.scene.add("scene2", scene2);
     this.scene.add("preloader", preloader);
     this.scene.add("gameover1", gameover1);
+    this.scene.add("gameover2", gameover2);
     this.scene.start("start");
 
     this.audio = document.querySelector("audio");
