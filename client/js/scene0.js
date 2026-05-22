@@ -26,6 +26,8 @@ class scene0 extends Phaser.Scene {
     this.platform12Interval = null;
     this.platform15Interval = null;
     this.movingTorreta = false;
+    this.camP2 = false;
+
   }
 
   init() {
@@ -169,6 +171,28 @@ class scene0 extends Phaser.Scene {
   }*/
 
   create() {
+
+    //const keyboard = this.keys;
+    const pad =
+      this.input.gamepad && this.input.gamepad.total > 0
+        ? this.input.gamepad.getPad(0)
+        : null;
+    let horizontal = 0;
+    let vertical = 0;
+    let jumpPressed = false;
+    let interectPressed = false;
+    let exitPressed = false;
+    let comunicationPressed = false;
+
+    /*if (pad && pad.axes.length > 0) {
+      horizontal = pad.axes[0].getValue();
+      vertical = pad.axes[1].getValue();
+      jumpPressed = !!pad.X;
+      interectPressed = !!pad.A;
+      exitPressed = !!pad.Y;
+      comunicationPressed = !!pad.L1;
+    }*/
+
     this.keys = this.input.keyboard.addKeys({
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D,
@@ -1078,13 +1102,15 @@ class scene0 extends Phaser.Scene {
       }*/
     });
 
-    this.physics.add.overlap(this.player, this.invisible3, () => {
-      if (keyboard.action.isDown) {
+
+    /*this.physics.add.overlap(this.player, this.invisible3, () => {
+      this.camP2 = true
+      if (keyboard.action.isDown || interectPressed) {
         this.invisible3.disableBody(true, true);
         this.cameras.main.startFollow(this.player2, true);
         //this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
       }
-    });
+    });*/
 
     this.physics.add.overlap(
       this.player,
@@ -1313,7 +1339,7 @@ class scene0 extends Phaser.Scene {
       loop: true,
       callback: () => {
         this.positionText.setText(
-          `X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`,
+          `X: ${Math.round(this.player.x)} Y: ${Math.round(this.player2.y)}`,
         );
       },
     });
@@ -1358,7 +1384,7 @@ class scene0 extends Phaser.Scene {
         this.doorOpen = state.doorOpen;
       }
       if (state.playerroxo) {
-        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y - 2631);
+        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2633);
         //this.player2.anims.play(state.player.animation, true);
       }
     });
@@ -1398,6 +1424,7 @@ class scene0 extends Phaser.Scene {
   }
 
   update() {
+
     this.cargaJPpercentage = this.cargaJp / 10;
 
     if (this.doorOpen >= 4) {
@@ -1451,31 +1478,58 @@ class scene0 extends Phaser.Scene {
     } else if (this.cargaJp === 0) {
       this.cargaJpText.setText("Carga: Sem Carga");
     }
+    
+  const estaSobreInvisible3 = this.physics.overlap(this.player, this.invisible3);
+    
+    if (!estaSobreInvisible3) {
+        this.camP2 = false;
+      }else if (estaSobreInvisible3) {
+        this.camP2 = true;
+      }
+    
 
+    
     const movingHorizontally = Math.abs(this.player.body.velocity.x) > 1;
     const onGround =
-      this.player.body.blocked.down || this.player.body.touching.down;
+    this.player.body.blocked.down || this.player.body.touching.down;
     if (movingHorizontally && onGround) {
       if (!this.passos.isPlaying) this.passos.play();
     } else if (this.passos.isPlaying) {
       this.passos.stop();
     }
-
+    
     const keyboard = this.keys;
     const pad =
-      this.input.gamepad && this.input.gamepad.total > 0
-        ? this.input.gamepad.getPad(0)
-        : null;
+    this.input.gamepad && this.input.gamepad.total > 0
+    ? this.input.gamepad.getPad(0)
+    : null;
     let horizontal = 0;
     let vertical = 0;
     let jumpPressed = false;
-
+    let interectPressed = false;
+    let exitPressed = false;
+    let comunicationPressed = false;
+    let reloadPressed = false;
+    
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
       vertical = pad.axes[1].getValue();
       jumpPressed = !!pad.X;
+      interectPressed = !!pad.A;
+      exitPressed = !!pad.Y;
+      comunicationPressed = !!pad.L1;
+      reloadPressed = !!pad.R1;
     }
 
+    if (this.camP2 && interectPressed) {
+      this.cameras.main.startFollow(this.player, true);
+      this.camP2 = false;
+    }
+
+    if (reloadPressed) {
+      window.location.reload();
+    }
+    
     if (keyboard) {
       if (keyboard.left.isDown) {
         horizontal = -1;
@@ -1486,7 +1540,7 @@ class scene0 extends Phaser.Scene {
         jumpPressed = true;
       }
 
-      if (keyboard.exit.isDown) {
+      if ((keyboard.exit.isDown || exitPressed) && this.camP2) {
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
           this.player.y - this.cameras.main.height / 2 - 120;

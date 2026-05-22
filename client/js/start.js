@@ -98,16 +98,19 @@ class start extends Phaser.Scene {
   }
 
   update() {
+
     const pad =
       this.input.gamepad && this.input.gamepad.total > 0
         ? this.input.gamepad.getPad(0)
         : null;
     let horizontal = 0;
     let jumpPressed = false;
+    let reloadPressed = false;
 
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
       jumpPressed = !!pad.X;
+      reloadPressed = !!pad.R1;
     }
 
     const qe = this.input.keyboard.addKeys("Q,E");
@@ -119,11 +122,15 @@ class start extends Phaser.Scene {
       this.scene.start("preloader", { startScene: "scene1" });
     }
 
-    if (qe.E.isDown || jumpPressed) {
+    if (qe.E.isDown || pad) {
       //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");
-      this.scene.start("preloader", { startScene: "scene2" });
+      this.scene.start("preloader", { startScene: "scene0" });
+    }
+
+    if (reloadPressed) {
+      window.location.reload();
     }
   }
 
