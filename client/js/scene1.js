@@ -3,7 +3,7 @@ class scene1 extends Phaser.Scene {
     super("scene1");
 
     this.speed = 200;
-    this.estoutrabalhando = true;
+    this.estoutrabalhando = false;
     this.doorOpen = 0;
     this.fase4 = true;
     this.vida = 3;
@@ -908,36 +908,46 @@ class scene1 extends Phaser.Scene {
       );
     });
 
-    this.iaBox = this.physics.add.sprite(400, 80, "iaBox");
-    this.iaBox
-      .setOrigin(0, 0)
-      .setScrollFactor(0)
-      .setPipeline("Light2D").body.allowGravity = false
-        .setScale(1.5);
+    //cria iaBox
+    this.iaBox = this.physics.add.sprite(400, -100, "iaBox");
+    this.iaBox.setOrigin(0, 0).setScrollFactor(0).setPipeline("Light2D");
+    if (this.iaBox.body) {
+      this.iaBox.body.allowGravity = false;
+    }
 
-    
+    const textoInicial =
+      "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujos desafios você deve resolver";
+
     this.textoexplicativo = this.add
-      .text(400, 80, "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujo minigame você deve resolver", {
-        fontSize: "18px",
+      .text(450, 80, "", {
+        fontSize: "10px",
         fill: "#92f7a0",
-        backgroundColor: "rgba(0,0,0,0.7)",
+        //backgroundColor: "rgba(0,0,0,0.7)",
         padding: { x: 6, y: 4 },
-        fontFamily: "sarpanchregular",
+        fontFamily: "sarpanchextrabold",
       })
-      .setScrollFactor(0);
+      .setScrollFactor(0)
+      .setOrigin(0, 0);
 
-      this.time.addEvent({
-        delay: 5000,
-        loop: true,
-        callback: () => {
-          this.textoexplicativo.destroy(
-          );
-        },
-      });
-
-    
-
-    
+    //desce a iaBox e depois escreve o texto explicativo
+    this.tweens.add({
+      targets: this.iaBox,
+      y: 80,
+      duration: 1200,
+      ease: "Power1",
+      onComplete: () => {
+        this.typeTextoExplicativo(textoInicial, 50, () => {
+          this.time.delayedCall(5000, () => {
+            if (this.textoexplicativo) {
+              this.textoexplicativo.destroy();
+            }
+            if (this.iaBox) {
+              this.iaBox.destroy();
+            }
+          });
+        });
+      },
+    });
   } //fim create
 
   update() {
@@ -1239,6 +1249,45 @@ class scene1 extends Phaser.Scene {
       this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
       this.porta2.anims.play("portafechando", true);
       this.fase4 = false;
+    });
+  }
+
+  typeTextoExplicativo(text, speed = 50, onComplete = null) {
+    if (!text || text.length === 0) {
+      if (this.textoexplicativo) {
+        this.textoexplicativo.setText("");
+      }
+      if (onComplete) {
+        onComplete();
+      }
+      return;
+    }
+
+    if (this.iaTypingEvent) {
+      this.iaTypingEvent.remove(false);
+      this.iaTypingEvent = null;
+    }
+
+    if (this.textoexplicativo) {
+      this.textoexplicativo.setText("");
+    }
+
+    let index = 0;
+    this.iaTypingEvent = this.time.addEvent({
+      delay: speed,
+      repeat: text.length - 1,
+      callback: () => {
+        index++;
+        if (this.textoexplicativo) {
+          this.textoexplicativo.setText(text.substring(0, index));
+        }
+        if (index >= text.length) {
+          this.iaTypingEvent = null;
+          if (onComplete) {
+            onComplete();
+          }
+        }
+      },
     });
   }
 
