@@ -104,12 +104,10 @@ class start extends Phaser.Scene {
         ? this.input.gamepad.getPad(0)
         : null;
     let horizontal = 0;
-    let jumpPressed = false;
     let reloadPressed = false;
 
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
-      jumpPressed = !!pad.X;
       reloadPressed = !!pad.R1;
     }
 
@@ -122,16 +120,15 @@ class start extends Phaser.Scene {
       this.scene.start("preloader", { startScene: "scene1" });
     }
 
-    if (qe.E.isDown || pad) {
+    if (reloadPressed) {
+      window.location.reload();
+    }else if (!reloadPressed && (qe.E.isDown || pad)) {
       //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene0" });
     }
 
-    if (reloadPressed) {
-      window.location.reload();
-    }
   }
 
   webrtcGetMic() {

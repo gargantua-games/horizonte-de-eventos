@@ -26,7 +26,7 @@ class scene0 extends Phaser.Scene {
     this.platform12Interval = null;
     this.platform15Interval = null;
     this.movingTorreta = false;
-    this.camP2 = false;
+    this.camP2 = true;
 
   }
 
@@ -45,7 +45,7 @@ class scene0 extends Phaser.Scene {
         if (this.platform12 && !this.fase5) {
           this.platform12.setVelocityX(this.platform12.body.velocity.x * -1);
         }
-      }, 2210);
+      }, 2300);
     }
 
     if (!this.platform15Interval) {
@@ -389,6 +389,86 @@ class scene0 extends Phaser.Scene {
       key: "jumpL",
       frames: this.anims.generateFrameNumbers("player", { start: 33, end: 36 }),
       frameRate: 6,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "idlecostas",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 0,
+        end: 1,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "idlefrente",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 4,
+        end: 5,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "idleesquerda",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 2,
+        end: 3,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "idledireita",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 6,
+        end: 7,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "andarcostas",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 28,
+        end: 35,
+      }),
+      frameRate: 11,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "andarfrente",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 44,
+        end: 51,
+      }),
+      frameRate: 11,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "andaresquerda",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 36,
+        end: 43,
+      }),
+      frameRate: 11,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "andardireita",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 52,
+        end: 59,
+      }),
+      frameRate: 11,
       repeat: -1,
     });
 
@@ -967,7 +1047,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1047,7 +1127,7 @@ class scene0 extends Phaser.Scene {
       this.laser.clear(true, true);
       this.jetBag
         .create(this.inimigo.x, this.inimigo.y, "jetBag")
-        .setScrollFactor(0.9, 1)
+        //.setScrollFactor(0.9, 1)
         .setPipeline("Light2D")
         .anims.play("jetBag-idle", true).body.allowGravity = false;
     });
@@ -1262,7 +1342,7 @@ class scene0 extends Phaser.Scene {
                 this.light14.setColor(0xff0000);
                 this.fase4 = true;
                 try {
-                  this.game.socket.emit("scene0", this.game.room, {
+                  this.game.socket.emit("fase4", this.game.room, {
                     fase4: {
                       key: this.fase4,
                     },
@@ -1287,7 +1367,7 @@ class scene0 extends Phaser.Scene {
             this.stopPlatformMovement();
             this.o2Ship = false;
             try {
-              this.game.socket.emit("scene0", this.game.room, {
+              this.game.socket.emit("fase5", this.game.room, {
                 fase5: {
                   key: this.fase5,
                 },
@@ -1379,13 +1459,13 @@ class scene0 extends Phaser.Scene {
       });*/
     });
 
-    this.game.socket.on("scene1", (state) => {
+    this.game.socket.on("fase4", (state) => {
       if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
         this.doorOpen = state.doorOpen;
       }
       if (state.playerroxo) {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2633);
-        //this.player2.anims.play(state.player.animation, true);
+        this.player2.anims.play(state.playerroxo.animation, true);
       }
     });
   }
@@ -1444,7 +1524,7 @@ class scene0 extends Phaser.Scene {
     }
     if (this.fase5 === false && this.energy === false) {
       try {
-        this.game.socket.emit("scene0", this.game.room, {
+        this.game.socket.emit("fase5", this.game.room, {
           platform12: {
             x: this.platform12.x,
             y: this.platform12.y,
@@ -1479,15 +1559,7 @@ class scene0 extends Phaser.Scene {
       this.cargaJpText.setText("Carga: Sem Carga");
     }
     
-  const estaSobreInvisible3 = this.physics.overlap(this.player, this.invisible3);
     
-    if (!estaSobreInvisible3) {
-        this.camP2 = false;
-      }else if (estaSobreInvisible3) {
-        this.camP2 = true;
-      }
-    
-
     
     const movingHorizontally = Math.abs(this.player.body.velocity.x) > 1;
     const onGround =
@@ -1514,17 +1586,13 @@ class scene0 extends Phaser.Scene {
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
       vertical = pad.axes[1].getValue();
-      jumpPressed = !!pad.X;
-      interectPressed = !!pad.A;
+      jumpPressed = !!pad.A;
+      interectPressed = !!pad.X;
       exitPressed = !!pad.Y;
       comunicationPressed = !!pad.L1;
       reloadPressed = !!pad.R1;
     }
 
-    if (this.camP2 && interectPressed) {
-      this.cameras.main.startFollow(this.player, true);
-      this.camP2 = false;
-    }
 
     if (reloadPressed) {
       window.location.reload();
@@ -1540,14 +1608,32 @@ class scene0 extends Phaser.Scene {
         jumpPressed = true;
       }
 
-      if ((keyboard.exit.isDown || exitPressed) && this.camP2) {
+     /* if ((keyboard.exit.isDown || exitPressed) && this.camP2 && this.player.velocityY === 0) {
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
           this.player.y - this.cameras.main.height / 2 - 120;
         this.invisible3.enableBody(true, 540, 300, true, true);
-      }
+      }*/
     }
 
+    const estaSobreInvisible3 = this.physics.overlap(this.player, this.invisible3);
+      
+      if (!estaSobreInvisible3) {
+        this.camP2 = true;
+          
+      } else if (estaSobreInvisible3) {
+        
+          if ((exitPressed) && !this.camP2) {
+          this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
+          this.cameras.main.scrollY =
+            this.player.y - this.cameras.main.height / 2 - 120;
+          this.invisible3.enableBody(true, 540, 300, true, true);
+        }else if (interectPressed) {
+        this.cameras.main.startFollow(this.player2, true);
+        this.camP2 = false;
+      }
+        }
+      
     if (horizontal < 0) {
       this.player.setVelocityX(200);
       this.direction = true;

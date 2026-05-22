@@ -885,10 +885,13 @@ class scene1 extends Phaser.Scene {
       },
     });
 
-    this.game.socket.on("scene0", (state) => {
+    this.game.socket.on("fase4", (state) => {
       if (state.fase4) {
         this.fase4 = state.fase4.key;
       }
+    });
+
+    this.game.socket.on("fase5", (state) => {
       if (state.player) {
         this.player2.setPosition(state.player.x, state.player.y - 1184);
         //   this.player2.sprite.anims.play(state.player.animation, true);
@@ -912,8 +915,8 @@ class scene1 extends Phaser.Scene {
     this.iaBox
       .setOrigin(0, 0)
       .setScrollFactor(0)
-      .setPipeline("Light2D").body.allowGravity = false
-        .setScale(1.5);
+      .setScale(1.5)
+      .setPipeline("Light2D").body.allowGravity = false;
 
     
     this.textoexplicativo = this.add
@@ -943,11 +946,11 @@ class scene1 extends Phaser.Scene {
   update() {
     if (this.fase4) {
       try {
-        this.game.socket.emit("scene1", this.game.room, {
+        this.game.socket.emit("fase4", this.game.room, {
           playerroxo: {
             x: this.playerroxo.x,
             y: this.playerroxo.y,
-            //animation: this.playerroxo.anims.currentAnim ? this.playerroxo.anims.currentAnim.key : null,
+            animation: this.playerroxo.anims.currentAnim ? this.playerroxo.anims.currentAnim.key : null,
           },
         });
       } catch (e) {
@@ -961,16 +964,21 @@ class scene1 extends Phaser.Scene {
     //const cursores = this.input.keyboard.createCursorKeys();
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
-    try {
-      this.game.socket.emit("scene1", this.game.room, {
-        jkl: {
-          J: jkl.J.isDown,
-          L: jkl.L.isDown,
-          K: jkl.K.isDown,
-        },
-      });
-    } catch (e) {
-      console.error("Error updating player:", e);
+
+    if (this.doorOpen === 2) {
+
+      try {
+        this.game.socket.emit("scene1", this.game.room, {
+          jkl: {
+            J: jkl.J.isDown,
+            L: jkl.L.isDown,
+            K: jkl.K.isDown,
+          },
+        });
+      } catch (e) {
+        console.error("Error updating player:", e);
+      }
+
     }
 
     this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y);
