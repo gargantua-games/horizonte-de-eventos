@@ -1,11 +1,11 @@
-class gameover1 extends Phaser.Scene {
+class gameover2 extends Phaser.Scene {
   constructor() {
-    super("gameover1");
+    super("gameover2");
   }
 
   //preload() {
-   // this.load.image("terminal", "assets/terminal.png");
-  //}
+    //this.load.image("terminal", "assets/terminal.png");
+ // }
 
   create() {
     const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
@@ -30,16 +30,23 @@ class gameover1 extends Phaser.Scene {
     );
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
 
-    const Text1 = "SIMULAÇÃO FRACASSADA";
-    const Text2 = "Você falhou.\nMais sorte da próxima vez";
+    const Text1 = "SIMULAÇÃO TERMINADA";
+    const Text2 = "COM SUCESSO";
+    const Text3 = "Parabéns...blá blá blá";
 
-    this.text1 = this.add.text(325, 110, "", {
+    this.text1 = this.add.text(345, 110, "", {
       fontFamily: "sarpanchregular",
       fontSize: "33px",
       fill: "#63ff8a",
     });
 
-    this.text2 = this.add.text(320, 200, "", {
+    this.text2 = this.add.text(420, 150, "", {
+      fontFamily: "sarpanchregular",
+      fontSize: "33px",
+      fill: "#63ff8a",
+    });
+
+    this.text3 = this.add.text(345, 190, "", {
       fontFamily: "sarpanchregular",
       fontSize: "25px",
       fill: "#63ff8a",
@@ -49,6 +56,8 @@ class gameover1 extends Phaser.Scene {
     let index1 = 0;
     let displayed2 = "";
     let index2 = 0;
+    let displayed3 = "";
+    let index3 = 0;
 
     const typeChar1 = () => {
       if (index1 < Text1.length) {
@@ -57,15 +66,25 @@ class gameover1 extends Phaser.Scene {
         this.time.delayedCall(100, typeChar1, [], this);
       } else {
         // quando terminar o Text1, aguarda um pouco e inicia o segundo
-        this.time.delayedCall(600, typeChar2, [], this);
-      }
+          this.time.delayedCall(100, typeChar2, [], this);
+        }
     };
 
     const typeChar2 = () => {
       if (index2 < Text2.length) {
         displayed2 += Text2[index2++];
         this.text2.setText(displayed2);
-        this.time.delayedCall(80, typeChar2, [], this);
+        this.time.delayedCall(100, typeChar2, [], this);
+      } else {
+        this.time.delayedCall(600, typeChar3, [], this);
+      }
+    };
+    
+    const typeChar3 = () => {
+      if (index3 < Text3.length) {
+        displayed3 += Text3[index3++];
+        this.text3.setText(displayed3);
+        this.time.delayedCall(80, typeChar3, [], this);
       }
     };
 
@@ -74,4 +93,4 @@ class gameover1 extends Phaser.Scene {
 
   update() {}
 }
-export default gameover1;
+export default gameover2;

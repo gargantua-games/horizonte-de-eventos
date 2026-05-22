@@ -40,6 +40,8 @@ class preloader extends Phaser.Scene {
   preload() {
     this.load.setPath("assets/");
 
+    this.load.image("terminal", "terminal.png");
+
     this.load.audio("passos", "walkamongus.mp3");
     this.load.audio("trilhasonora", "trilhasonora.mp3");
 
