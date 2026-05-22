@@ -3,7 +3,7 @@ class scene1 extends Phaser.Scene {
     super("scene1");
 
     this.speed = 200;
-    this.estoutrabalhando = false;
+    this.estoutrabalhando = true;
     this.doorOpen = 0;
     this.fase4 = true;
     this.vida = 3;
@@ -830,7 +830,7 @@ class scene1 extends Phaser.Scene {
     var spawninimigosx = Phaser.Math.Between(87, 1260);
     var spawninimigosy = Phaser.Math.Between(1200, 1400);
 
-    for (let i = 0; i < 3; i++) {
+    for (this.inimigosalienscount = 0; this.inimigosalienscount < 3; this.inimigosalienscount++) {
       spawninimigosx = Phaser.Math.Between(87, 1260);
       spawninimigosy = Phaser.Math.Between(1300, 1400);
       const enemy = this.inimigosaliens.create(
@@ -848,6 +848,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.inimigosaliens, this.limitesul);
     this.physics.add.collider(this.inimigosaliens, this.limiteoeste);
     this.physics.add.collider(this.inimigosaliens, this.limiteleste);
+    this.physics.add.collider(this.inimigosaliens, this.inimigosaliens);
     this.colliderAliensBox = this.physics.add.collider(
       this.caixa,
       this.inimigosaliens,
