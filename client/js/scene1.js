@@ -830,7 +830,7 @@ class scene1 extends Phaser.Scene {
     var spawninimigosx = Phaser.Math.Between(87, 1260);
     var spawninimigosy = Phaser.Math.Between(1200, 1400);
 
-    for (let i = 0; i < 3; i++) {
+    for (this.inimigosalienscount = 0; this.inimigosalienscount < 3; this.inimigosalienscount++) {
       spawninimigosx = Phaser.Math.Between(87, 1260);
       spawninimigosy = Phaser.Math.Between(1300, 1400);
       const enemy = this.inimigosaliens.create(
@@ -848,6 +848,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.inimigosaliens, this.limitesul);
     this.physics.add.collider(this.inimigosaliens, this.limiteoeste);
     this.physics.add.collider(this.inimigosaliens, this.limiteleste);
+    this.physics.add.collider(this.inimigosaliens, this.inimigosaliens);
     this.colliderAliensBox = this.physics.add.collider(
       this.caixa,
       this.inimigosaliens,
@@ -918,29 +919,36 @@ class scene1 extends Phaser.Scene {
       .setScale(1.5)
       .setPipeline("Light2D").body.allowGravity = false;
 
-    
     this.textoexplicativo = this.add
-      .text(400, 80, "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujo minigame você deve resolver", {
-        fontSize: "18px",
+      .text(450, 80, "", {
+        fontSize: "10px",
         fill: "#92f7a0",
-        backgroundColor: "rgba(0,0,0,0.7)",
+        //backgroundColor: "rgba(0,0,0,0.7)",
         padding: { x: 6, y: 4 },
-        fontFamily: "sarpanchregular",
+        fontFamily: "sarpanchextrabold",
       })
-      .setScrollFactor(0);
+      .setScrollFactor(0)
+      .setOrigin(0, 0);
 
-      this.time.addEvent({
-        delay: 5000,
-        loop: true,
-        callback: () => {
-          this.textoexplicativo.destroy(
-          );
-        },
-      });
-
-    
-
-    
+    //desce a iaBox e depois escreve o texto explicativo
+    this.tweens.add({
+      targets: this.iaBox,
+      y: 80,
+      duration: 1200,
+      ease: "Power1",
+      onComplete: () => {
+        this.typeTextoExplicativo(textoInicial, 50, () => {
+          this.time.delayedCall(5000, () => {
+            if (this.textoexplicativo) {
+              this.textoexplicativo.destroy();
+            }
+            if (this.iaBox) {
+              this.iaBox.destroy();
+            }
+          });
+        });
+      },
+    });
   } //fim create
 
   update() {
@@ -1247,6 +1255,45 @@ class scene1 extends Phaser.Scene {
       this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
       this.porta2.anims.play("portafechando", true);
       this.fase4 = false;
+    });
+  }
+
+  typeTextoExplicativo(text, speed = 50, onComplete = null) {
+    if (!text || text.length === 0) {
+      if (this.textoexplicativo) {
+        this.textoexplicativo.setText("");
+      }
+      if (onComplete) {
+        onComplete();
+      }
+      return;
+    }
+
+    if (this.iaTypingEvent) {
+      this.iaTypingEvent.remove(false);
+      this.iaTypingEvent = null;
+    }
+
+    if (this.textoexplicativo) {
+      this.textoexplicativo.setText("");
+    }
+
+    let index = 0;
+    this.iaTypingEvent = this.time.addEvent({
+      delay: speed,
+      repeat: text.length - 1,
+      callback: () => {
+        index++;
+        if (this.textoexplicativo) {
+          this.textoexplicativo.setText(text.substring(0, index));
+        }
+        if (index >= text.length) {
+          this.iaTypingEvent = null;
+          if (onComplete) {
+            onComplete();
+          }
+        }
+      },
     });
   }
 

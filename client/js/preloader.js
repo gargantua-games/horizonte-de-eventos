@@ -196,7 +196,7 @@ class preloader extends Phaser.Scene {
 
     this.load.font("sarpanchregular", "sarpanchregular.otf");
 
-    this.load.font("sarpnchextrabold", "sarpanchextrabold.otf");
+    this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
   }
 
   create() {
