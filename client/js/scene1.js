@@ -8,6 +8,7 @@ class scene1 extends Phaser.Scene {
     this.fase4 = true;
     this.vida = 3;
     this.invulnerable = false;
+    this.termoativo = true;
   }
 
   init() {
@@ -752,8 +753,13 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles2);
     this.physics.add.collider(this.playerroxo, this.consoles3);
     this.physics.add.collider(this.playerroxo, this.consoles4);
-    this.physics.add.collider(this.playerroxo, this.consoles5, () => {
+    this.physics.add.collider(this.playerroxo, this.consoles5, () => { 
+      if (this.termoativo === true) {
+        this.scene.switch("termo");
+      }
+      this.termoativo = false;
       this.doorOpen = 1;
+      //this.avisoconsole.disableBody(true, true);
       try { 
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:

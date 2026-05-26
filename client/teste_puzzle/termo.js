@@ -327,8 +327,10 @@ export default class termo extends Phaser.Scene {
         this.add.text(400, 300, "SISTEMA DESBLOQUEADO!", { fontSize: '32px', fill: '#00ff00', backgroundColor: '#000', fontStyle: 'bold' }).setOrigin(0.5);
         
         this.time.delayedCall(2000, () => {
-            this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+            //this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
             this.scene.stop();
+            this.scene.switch("scene1");
+            this.termoativo = false;
         });
     }
 
