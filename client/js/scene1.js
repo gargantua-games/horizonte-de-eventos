@@ -923,8 +923,8 @@ class scene1 extends Phaser.Scene {
       "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujos desafios você deve resolver";
 
     this.textoexplicativo = this.add
-      .text(450, 80, "", {
-        fontSize: "10px",
+      .text(460, 80, "", {
+        fontSize: "15px",
         fill: "#92f7a0",
         //backgroundColor: "rgba(0,0,0,0.7)",
         padding: { x: 6, y: 4 },

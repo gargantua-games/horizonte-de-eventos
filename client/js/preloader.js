@@ -5,7 +5,7 @@ class preloader extends Phaser.Scene {
 
   init(data) {
     this.nextScene = (data && data.startScene) || "scene1";
-    const bg = this.add.image(0, 0, "capa").setOrigin(0, 0).setDepth(0);
+    const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
     const imageRatio = bg.width / bg.height;
     const screenRatio = this.scale.width / this.scale.height;
 
@@ -27,9 +27,9 @@ class preloader extends Phaser.Scene {
     );
     this.cameras.main.setBackgroundColor("#000000");
 
-    this.add.rectangle(550, 300, 468, 32).setStrokeStyle(1, 0x62d997).setScale(0.8);
+    this.add.rectangle(540, 200, 468, 32).setStrokeStyle(1, 0x63ff8a).setScale(0.8);
     const bar = this.add
-      .rectangle(596 - 230, 300, 4, 28, 0x38a669)
+      .rectangle(586 - 230, 200, 4, 28, 0x63ff8a)
       .setScale(0.8);
 
     this.load.on("progress", (progress) => {

@@ -12,6 +12,7 @@ class start extends Phaser.Scene {
     this.load.image("capa", "assets/fundocapatitulo.png");
     this.load.image("playroxo", "assets/playerroxocapa2.png");
     this.load.image("playvermelho", "assets/playervermelhocapa.png");
+    this.load.image("terminal", "assets/terminal.png");
     /*this.load.setPath("assets/assets-usados");
     this.load.image("start", "Startsceneredimencionada.png");
     this.load.spritesheet("gargantuac", "gargantuac.png", {
