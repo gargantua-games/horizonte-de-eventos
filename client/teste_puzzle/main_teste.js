@@ -1,8 +1,7 @@
 import QuebraCabeca from './quebraCabeca.js';
 import Termo from './termo.js';
 import Sudoku from './sudoku.js';
-import Tetris from './tetris.js';
-
+import StratagemHero from './stratagemHero.js';
 // Cena simulada para agir como a tua "scene1"
 class CenaFalsa extends Phaser.Scene {
     constructor() {
@@ -14,9 +13,9 @@ class CenaFalsa extends Phaser.Scene {
 
         // =========================================================
         // MUDAR AQUI PARA TESTAR OUTRO PUZZLE
-        // Substitui 'QuebraCabeca' por 'Termo', 'Sudoku' ou 'Tetris'
+        // Substitui 'QuebraCabeca' por 'Termo', 'Sudoku' 
         // =========================================================
-        let puzzleParaTestar = 'termo'; 
+        let puzzleParaTestar = 'stratagemHero'; 
         
         this.scene.launch(puzzleParaTestar, { portaId: 1, cenaOrigem: 'CenaFalsa' });
     }
@@ -48,7 +47,7 @@ const config = {
     height: 600,
     backgroundColor: '#000000',
     // Adiciona aqui todas as cenas de puzzle que queres que o Phaser conheça
-    scene: [CenaFalsa, QuebraCabeca, Termo, Sudoku, Tetris]
+    scene: [CenaFalsa, QuebraCabeca, Termo, Sudoku]
 };
 
 const game = new Phaser.Game(config);
