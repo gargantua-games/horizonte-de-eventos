@@ -405,6 +405,12 @@ class scene1 extends Phaser.Scene {
     this.porta2.setAngle(90);
     this.porta2.setSize(32, 128);
 
+    this.delayedCall = this.time.delayedCall(14000, () => {
+      this.avisoconsole = this.physics.add.sprite(907, 395, "avisoconsole");
+      this.avisoconsole.body.allowGravity = false;
+    });
+
+
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
       allowGravity: false,
@@ -748,7 +754,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles4);
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       this.doorOpen = 1;
-      try {
+      try { 
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:
             {
@@ -923,8 +929,8 @@ class scene1 extends Phaser.Scene {
       "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujos desafios você deve resolver";
 
     this.textoexplicativo = this.add
-      .text(450, 80, "", {
-        fontSize: "10px",
+      .text(460, 80, "", {
+        fontSize: "15px",
         fill: "#92f7a0",
         //backgroundColor: "rgba(0,0,0,0.7)",
         padding: { x: 6, y: 4 },

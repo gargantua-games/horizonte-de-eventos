@@ -564,15 +564,19 @@ class scene0 extends Phaser.Scene {
 
     this.o2Text = this.add
       .text(100, 100, "O2: " + this.o2 + "%", {
-        fontSize: "16px",
+        fontSize: "14px",
+        fontFamily: "sarpanchextrabold",
         fill: "#ffffff",
+        backgroundColor: "rgba(0,0,0,0.5)",
       })
       .setScrollFactor(0);
 
     this.scoreText = this.add
       .text(100, 80, "Engrenagens: " + this.score + "/4", {
         fontSize: "16px",
-        fill: "#000",
+        fontFamily: "sarpanch",
+        fill: "#ffffff",
+        backgroundColor: "rgba(0,0,0,0.5)",
       })
       .setScrollFactor(0);
 
@@ -1047,7 +1051,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(1256,2356, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
