@@ -1047,7 +1047,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(1256,2356, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1185,7 +1185,7 @@ class scene0 extends Phaser.Scene {
 
     /*this.physics.add.overlap(this.player, this.invisible3, () => {
       this.camP2 = true
-      if (keyboard.action.isDown || interectPressed) {
+     /* if (keyboard.action.isDown || interectPressed) {
         this.invisible3.disableBody(true, true);
         this.cameras.main.startFollow(this.player2, true);
         //this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
@@ -1458,15 +1458,17 @@ class scene0 extends Phaser.Scene {
         };
       });*/
     });
-
-    this.game.socket.on("fase4", (state) => {
+    this.game.socket.on("scene1", (state) => {
       if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
-        this.doorOpen = state.doorOpen;
+        this.doorOpen = state.doorOpen.key;
       }
-      if (state.playerroxo) {
+    }
+)
+    this.game.socket.on("fase4", (state) => {
+      //if (state.playerroxo) {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2633);
         this.player2.anims.play(state.playerroxo.animation, true);
-      }
+      //}
     });
   }
 
@@ -1623,12 +1625,12 @@ class scene0 extends Phaser.Scene {
           
       } else if (estaSobreInvisible3) {
         
-          if ((exitPressed) && !this.camP2) {
+          if ((exitPressed || keyboard.exit.isDown) && !this.camP2) {
           this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
           this.cameras.main.scrollY =
             this.player.y - this.cameras.main.height / 2 - 120;
           this.invisible3.enableBody(true, 540, 300, true, true);
-        }else if (interectPressed) {
+        }else if (interectPressed || keyboard.action.isDown) {
         this.cameras.main.startFollow(this.player2, true);
         this.camP2 = false;
       }

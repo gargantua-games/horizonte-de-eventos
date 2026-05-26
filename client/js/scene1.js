@@ -734,9 +734,9 @@ class scene1 extends Phaser.Scene {
       try {
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:
-            /*{
+            {
             key: this.doorOpen,
-          },*/ this.doorOpen,
+          },
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -751,9 +751,9 @@ class scene1 extends Phaser.Scene {
       try {
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:
-            /*{
+            {
             key: this.doorOpen,
-          },*/ this.doorOpen,
+          },
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -764,9 +764,9 @@ class scene1 extends Phaser.Scene {
       try {
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:
-            /*{
+            {
             key: this.doorOpen,
-          },*/ this.doorOpen,
+          },
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -780,9 +780,9 @@ class scene1 extends Phaser.Scene {
       try {
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:
-            /*{
+            {
             key: this.doorOpen,
-          },*/ this.doorOpen,
+          },
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -919,6 +919,9 @@ class scene1 extends Phaser.Scene {
       .setScale(1.5)
       .setPipeline("Light2D").body.allowGravity = false;
 
+      const textoInicial =
+      "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujos desafios você deve resolver";
+
     this.textoexplicativo = this.add
       .text(450, 80, "", {
         fontSize: "10px",
@@ -952,6 +955,7 @@ class scene1 extends Phaser.Scene {
   } //fim create
 
   update() {
+
     if (this.fase4) {
       try {
         this.game.socket.emit("fase4", this.game.room, {

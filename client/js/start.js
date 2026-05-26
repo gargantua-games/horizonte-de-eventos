@@ -137,7 +137,7 @@ class start extends Phaser.Scene {
       .then((stream) => {
         this.game.media = stream;
       })
-      .catch((error) => console.error(error));
+    //.catch((error) => console.error(error));
   }
 }
 
