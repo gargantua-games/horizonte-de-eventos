@@ -42,6 +42,8 @@ class preloader extends Phaser.Scene {
 
     this.load.image("terminal", "terminal.png");
 
+    this.load.image("avisoconsole", "avisoconsole.png");
+
     this.load.audio("passos", "walkamongus.mp3");
     this.load.audio("trilhasonora", "trilhasonora.mp3");
 

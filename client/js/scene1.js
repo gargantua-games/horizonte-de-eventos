@@ -405,6 +405,12 @@ class scene1 extends Phaser.Scene {
     this.porta2.setAngle(90);
     this.porta2.setSize(32, 128);
 
+    this.delayedCall = this.time.delayedCall(14000, () => {
+      this.avisoconsole = this.physics.add.sprite(907, 395, "avisoconsole");
+      this.avisoconsole.body.allowGravity = false;
+    });
+
+
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
       allowGravity: false,
@@ -748,7 +754,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles4);
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       this.doorOpen = 1;
-      try {
+      try { 
         this.game.socket.emit("scene1", this.game.room, {
           doorOpen:
             {
