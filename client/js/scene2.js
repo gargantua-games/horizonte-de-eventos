@@ -1,103 +1,131 @@
 class scene2 extends Phaser.Scene {
   constructor() {
     super("scene2");
-
-    this.engrenagens = 0;
-    
   }
+
+  init(data) {
+    // Agora o máximo é 4 cartões (0, 1, 2, 3 ou 4)
+    this.engrenagem = data.engrenagem !== undefined ? Phaser.Math.Clamp(data.engrenagem, 0, 4) : 0;
+  }
+
   create() {
-  
-
     this.physics.world.gravity.y = 0;
-
-    this.physics.world.setBounds(
-      150,
-      0,
-      800,
-      2000,
-    );
-
-    this.cameras.main.setBounds(0, 0, 800, 2000);  
-
-  
+    this.physics.world.setBounds(0, 0, 2000, 800);
+    this.cameras.main.setBounds(0, 0, 2000, 800);  
 
     this.space = this.add.sprite(0, 0, "space1");
-    this.space.setOrigin(0, 0).setScrollFactor(0.9, 0.9);
+    this.space.setOrigin(0, 0).setDisplaySize(2000, 800).setScrollFactor(0.5);
 
-    this.nave = this.physics.add.sprite(535, 1965, "nave").setScale(0.5)//.body.setGravity(0, 0)//.setAngle(90);
-    this.enemy = this.physics.add.group({
-      pipeline: "Light2D",
-    })
+    // LÓGICA DO SPRITE DA NAVE
+    // Se tem 0 engrenagens, vira 'naves1'. Se tem 4, vira 'naves5'.
+    let texturaNave = "naves" + (this.engrenagem + 1);
 
-    this.bullets = this.physics.add.group({
-      pipeline: "Light2D",
-    })
-
-    this.enemy1 = this.enemy.create(212, 1650, "nave").setScale(0.5).setAngle(180).setVelocityX(100);
-
-    setInterval(() => {
-      this.enemy1.setVelocityX(this.enemy1.body.velocity.x * -1);
-    }, 6800);
-
-    setInterval(() => { 
-      this.bullets.create(this.enemy1.x, this.enemy1.y, "torreta", 13).setSize(17,27).setVelocityY(200);
-    }, 1133);
-
-    //this.enemy1
-
+    this.nave = this.physics.add.sprite(100, 400, texturaNave).setScale(0.5);
     this.nave.setCollideWorldBounds(true);
-    //this.enemy.setCollideWorldBounds(true);
+    this.cameras.main.startFollow(this.nave, true, 0.1, 0.1);
 
-    this.cameras.main.startFollow(this.nave, true);
+    this.playerBullets = this.physics.add.group();
+    this.enemies = this.physics.add.group();
+    this.enemyBullets = this.physics.add.group();
 
-    this.positionText = this.add
-      .text(10, 10, "Nave: 0, 0", {
-        font: "16px Arial",
-        fill: "#ffffff",
-      })
-      .setScrollFactor(0);
+    this.nextFire = 0;
 
-    this.time.addEvent({
-      delay: 1000,
-      loop: true,
-      callback: () => {
-        this.positionText.setText(
-          `Nave: ${Math.round(this.nave.x)}, ${Math.round(this.nave.y)}`
-        );
-      },
-    });
+    this.criarInimigos();
+
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    this.statusText = this.add.text(10, 10, "", { font: "16px Arial", fill: "#ffffff" }).setScrollFactor(0);
   }
 
-  update() {
+  update(time, delta) {
+    const speed = 300;
 
-    const cursors = this.input.keyboard.createCursorKeys();
-    const speed = 200;
-
-    if (cursors.left.isDown) {
-      this.nave.setVelocityX(-speed);
-      //this.nave.setAngle(-90);
-    } else if (cursors.right.isDown) {
-      this.nave.setVelocityX(speed);
-      //this.nave.setAngle(90);
-    } else {
-      this.nave.setVelocityX(0);
-    }
-
-    if (cursors.up.isDown) {
+    if (this.cursors.up.isDown) {
       this.nave.setVelocityY(-speed);
-    } else if (cursors.down.isDown) {
+    } else if (this.cursors.down.isDown) {
       this.nave.setVelocityY(speed);
     } else {
       this.nave.setVelocityY(0);
     }
-  }
-   
-  /*  // add the same image centered on screen
-    const cam = this.cameras.main;
-    const cx = cam.width / 2;
-    const cy = cam.height / 2;
-    this.centerImage = this.add.image(cx, cy, "space1");
-    this.centerImage.setOrigin(0.5, 0.5).setScrollFactor(0);*/
 
+    if (this.cursors.left.isDown) {
+      this.nave.setVelocityX(-speed);
+    } else if (this.cursors.right.isDown) {
+      this.nave.setVelocityX(speed);
+    } else {
+      this.nave.setVelocityX(0); 
+    }
+
+    const mouseClicado = this.input.activePointer.isDown;
+    if ((this.spaceKey.isDown || mouseClicado) && time > this.nextFire) {
+      this.atirar(time);
+    }
+
+    this.playerBullets.getChildren().forEach((bullet) => {
+      if (bullet.x > this.cameras.main.scrollX + 850) {
+        bullet.destroy();
+      }
+    });
+
+    this.statusText.setText(`Cartões: ${this.engrenagem}/4 | Pos: ${Math.round(this.nave.x)}, ${Math.round(this.nave.y)}`);
   }
+
+  criarInimigos() {
+    // Trocado "nave" por "naveet" em todos os inimigos
+    let e1 = this.enemies.create(600, 300, "naveet").setScale(0.5).setAngle(-90);
+    this.configurarMovimentoInimigo(e1, 100);
+
+    let e2 = this.enemies.create(1000, 500, "naveet").setScale(0.5).setAngle(-90);
+    this.configurarMovimentoInimigo(e2, 120);
+
+    let e3 = this.enemies.create(1400, 200, "naveet").setScale(0.5).setAngle(-90);
+    this.configurarMovimentoInimigo(e3, 150);
+
+    // Boss com tamanho maior
+    this.boss = this.enemies.create(1800, 400, "naveet").setScale(1.2).setAngle(-90);
+    this.boss.isBoss = true;
+    this.boss.hp = 50; 
+    this.configurarMovimentoInimigo(this.boss, 80);
+  }
+
+  configurarMovimentoInimigo(inimigo, velocidadeY) {
+    inimigo.body.setVelocityY(velocidadeY);
+    
+    this.time.addEvent({
+      delay: 2000,
+      loop: true,
+      callback: () => {
+        if (inimigo && inimigo.active) {
+          inimigo.body.setVelocityY(inimigo.body.velocity.y * -1);
+        }
+      }
+    });
+
+    this.time.addEvent({
+      delay: inimigo.isBoss ? 800 : 1500,
+      loop: true,
+      callback: () => {
+        if (inimigo && inimigo.active) {
+          this.enemyBullets.create(inimigo.x, inimigo.y, "torreta")
+            .setVelocityX(-250); 
+        }
+      }
+    });
+  }
+
+  atirar(tempoAtual) {
+    // Calculos de dano e tiro usando engrenagem (0 a 4)
+    const cadenciaTiro = 500 - (this.engrenagem * 80); 
+    const velocidadeTiro = 400 + (this.engrenagem * 75); 
+    const danoTiro = 1 + this.engrenagem; 
+
+    let tiro = this.playerBullets.create(this.nave.x + 40, this.nave.y, "torreta");
+    tiro.setVelocityX(velocidadeTiro);
+    tiro.dano = danoTiro; 
+
+    this.nextFire = tempoAtual + cadenciaTiro;
+  }
+}
+
 export default scene2;

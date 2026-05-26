@@ -111,9 +111,9 @@ class start extends Phaser.Scene {
       reloadPressed = !!pad.R1;
     }
 
-    const qe = this.input.keyboard.addKeys("Q,E");
+    const qer = this.input.keyboard.addKeys("Q,E,R");
 
-    if (qe.Q.isDown) {
+    if (qer.Q.isDown) {
       //this.scene.start("scene1");
       this.webrtcGetMic();
       this.scene.stop("start");
@@ -122,11 +122,17 @@ class start extends Phaser.Scene {
 
     if (reloadPressed) {
       window.location.reload();
-    }else if (!reloadPressed && (qe.E.isDown || pad)) {
+    }else if (!reloadPressed && (qer.E.isDown || pad)) {
       //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene0" });
+    }
+        if (qer.R.isDown) {
+      //this.scene.start("scene1");
+      this.webrtcGetMic();
+      this.scene.stop("start");
+      this.scene.start("preloader", { startScene: "scene2" });
     }
 
   }
