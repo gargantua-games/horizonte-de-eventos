@@ -1484,7 +1484,7 @@ class scene0 extends Phaser.Scene {
 )
     this.game.socket.on("scene1", (state) => {
       if (state.playerroxo) {
-        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2633);
+        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2625);
         this.player2.anims.play(state.playerroxo.animation, true);
       }
     });
@@ -1662,8 +1662,10 @@ class scene0 extends Phaser.Scene {
           this.invisible3.enableBody(true, 540, 300, true, true);
          this.layerEnfeites.setScrollFactor(0.9, 1);
         }else if (interectPressed || keyboard.action.isDown) {
-        this.cameras.main.startFollow(this.player2, true);
-            this.camP2 = false;
+          this.cameras.main.startFollow(this.cannon, true);
+          this.cameras.main.scrollY =
+      this.cannon.y - this.cameras.main.height / 2 - 120;
+          this.camP2 = false;
           this.movingP1 = false;
           this.layerEnfeites.setScrollFactor(1);
       }
