@@ -3,7 +3,7 @@ class scene1 extends Phaser.Scene {
     super("scene1");
 
     this.speed = 200;
-    this.estoutrabalhando = false;
+    this.estoutrabalhando = true;
     this.doorOpen = 0;
     this.fase4 = true;
     this.vida = 3;
@@ -785,7 +785,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       if (!this.puzzleAberto) {
         this.puzzleAberto = true;
-        this.scene.launch("termo", { portaId: 1, cenaOrigem: "scene1" });
+        this.scene.switch("termo", { portaId: 1, cenaOrigem: "scene1" });
       }
     });
     this.physics.add.collider(this.playerroxo, this.consoles6, () => {
