@@ -135,6 +135,21 @@ class preloader extends Phaser.Scene {
       frameHeight: 32,
     });
 
+    this.load.spritesheet("turret", "turret.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
+
+   this.load.spritesheet("cannon", "cannon.png", {
+      frameWidth: 64,
+      frameHeight: 64,
+   });
+    
+   this.load.spritesheet("bulletP1", "laserBullet.png", {
+      frameWidth: 12,
+      frameHeight: 12,
+    });
+
     //preload do tilemap da faseortogonal
     this.load.tilemapTiledJSON(
       "faseortogonal",
