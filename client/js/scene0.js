@@ -1059,7 +1059,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(1256,2356, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1069,10 +1069,10 @@ class scene0 extends Phaser.Scene {
     this.player2 = this.add.sprite(92, 3890, "playerroxo", 3);
     this.player2.setPipeline("Light2D");
 
-    this.cannon = this.add.sprite(658, 4330, "cannon");
+    this.cannon = this.add.sprite(658, 4336, "cannon");
     this.cannon.setPipeline("Light2D");
 
-    this.turretP1 = this.add.sprite(658, 4331, "turret");
+    this.turretP1 = this.add.sprite(658, 4337, "turret");
     this.turretP1.setPipeline("Light2D");
 
     //inimigo
@@ -1531,7 +1531,7 @@ class scene0 extends Phaser.Scene {
 
     if (this.doorOpen >= 4) {
       try {
-        this.game.socket.emit("scene0", this.game.room, {
+        this.game.socket.emit("scene1", this.game.room, {
           player: {
             x: this.player.x,
             y: this.player.y,
@@ -1560,6 +1560,20 @@ class scene0 extends Phaser.Scene {
         console.error("Error updating player:", e);
       }
     }
+
+    //if (this.fase4) {
+       try {
+        this.game.socket.emit("scene1", this.game.room, {
+          cannon: {
+            angle: this.angleCannon,
+            //shoot: interectPressed,
+          },
+        });
+      } catch (e) {
+        console.error("Error updating player:", e);
+      }
+   // }
+
     if (this.fase5 === false && this.energy === true) {
       this.lights.enable().setAmbientColor(0xe0f7ff);
     } else if (this.fase5 === true && this.energy === false) {
@@ -1646,10 +1660,12 @@ class scene0 extends Phaser.Scene {
           this.cameras.main.scrollY =
             this.player.y - this.cameras.main.height / 2 - 120;
           this.invisible3.enableBody(true, 540, 300, true, true);
+         this.layerEnfeites.setScrollFactor(0.9, 1);
         }else if (interectPressed || keyboard.action.isDown) {
         this.cameras.main.startFollow(this.player2, true);
             this.camP2 = false;
           this.movingP1 = false;
+          this.layerEnfeites.setScrollFactor(1);
       }
       }
     
@@ -1883,6 +1899,9 @@ class scene0 extends Phaser.Scene {
               .body.setSize(30, 37)
               .setOffset(55, 17);
             this.inimigo.flipX = false;
+          }else if (0 < (this.player.x - this.inimigo.x) < 0) {
+            this.inimigo
+              .setVelocityX(0)
           }
         } else if (this.inimigo.y != 1837) {
           this.inimigo.setVelocityX(0).setFrame("14");
@@ -1923,7 +1942,6 @@ class scene0 extends Phaser.Scene {
   }
 
   collectEng(player, engrenagens) {
-    //this.iaBox.setVelocityX(-100);
 
     this.score += 1;
     this.scoreText.setText("Engrenagens: " + this.score + "/4");
