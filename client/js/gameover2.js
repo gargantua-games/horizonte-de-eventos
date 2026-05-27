@@ -32,7 +32,7 @@ class gameover2 extends Phaser.Scene {
 
     const Text1 = "SIMULAÇÃO TERMINADA";
     const Text2 = "COM SUCESSO";
-    const Text3 = "Parabéns...blá blá blá";
+    const Text3 = "Parabéns, você conseguiu\nescapar da nave a tempo e\nconcluiu a simulação com êxito!"
 
     this.text1 = this.add.text(345, 110, "", {
       fontFamily: "sarpanchregular",

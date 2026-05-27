@@ -1,80 +1,345 @@
 export default class termo extends Phaser.Scene {
-    constructor() { super("termo"); }
+    constructor() {
+        super("termo");
+    }
 
     init(data) {
         this.portaId = data.portaId;
         this.cenaOrigem = data.cenaOrigem;
-    }
 
-    create() {
-        this.palavraCerta = "PERDI"; // Palavra a adivinhar
+        // O teu novo banco de dados (Array) com palavras de 5 letras
+        this.bancoPalavras = [
+            "PORTA", "SENHA", "FUGIR", "NAVES", "ALIEN", 
+            "ASTRO", "VACUO", "SAGAZ", "REVES", "LIMBO", 
+            "HEROI", "TEMPO", "TERRA", "COSMO", "PERDI", "FROTA"
+        ];
+
+        // O Phaser pega numa palavra aleatória deste array sempre que a cena inicia ou reinicia
+        this.palavraSecreta = Phaser.Utils.Array.GetRandom(this.bancoPalavras);
+
+        // Variáveis de controle do Termo
+        this.maxTentativas = 6;
+        this.letrasMax = 5;
         this.tentativaAtual = 0;
         this.letraAtual = 0;
-        this.grelha = [];
-        this.gameOver = false;
+        this.palavraAtual = "";
+        this.historicoChutes = [];
+        this.jogoTerminou = false;
 
-        this.add.text(400, 50, "Descobre a Palavra (5 Letras)", { fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+        // Variáveis de controle do Mini-puzzle de Memória
+        this.modalAberto = false;
+        this.cartasViradas = [];
+        this.paresEncontrados = 0;
+        this.bloqueioCliquesMemoria = false;
+    }
+    create() {
+        // Fundo principal do Terminal
+        this.add.rectangle(400, 300, 800, 600, 0x121213);
+        this.add.text(400, 40, "ADIVINHE A PALAVRA", { fontSize: '28px', fill: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
 
-        // Criar grelha 6x5
-        for (let i = 0; i < 6; i++) {
-            this.grelha[i] = [];
-            for (let j = 0; j < 5; j++) {
-                let rect = this.add.rectangle(250 + j * 60, 150 + i * 60, 50, 50, 0x333333).setStrokeStyle(2, 0xffffff);
-                let txt = this.add.text(250 + j * 60, 150 + i * 60, "", { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
-                this.grelha[i].push({ rect: rect, txt: txt, valor: "" });
+        this.grelhaQuadrados = [];
+        this.grelhaTextos = [];
+
+        // 1. CRIAR A GRELHA DO TERMO (6 linhas x 5 colunas)
+        const tamQuadrado = 55;
+        const espaco = 8;
+        const inicioX = 400 - ((tamQuadrado + espaco) * 2.5) + (tamQuadrado / 2);
+        const inicioY = 100;
+
+        for (let l = 0; l < this.maxTentativas; l++) {
+            this.grelhaQuadrados[l] = [];
+            this.grelhaTextos[l] = [];
+            for (let c = 0; c < this.letrasMax; c++) {
+                let x = inicioX + c * (tamQuadrado + espaco);
+                let y = inicioY + l * (tamQuadrado + espaco);
+
+                let rect = this.add.rectangle(x, y, tamQuadrado, tamQuadrado, 0x121213).setStrokeStyle(2, 0x3a3a3c);
+                let txt = this.add.text(x, y, "", { fontSize: '26px', fill: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
+
+                this.grelhaQuadrados[l][c] = rect;
+                this.grelhaTextos[l][c] = txt;
             }
         }
 
-        this.input.keyboard.on('keydown', this.tratarTeclado, this);
+        // 2. BOTÃO DE PEDIR DICA
+        this.btnDicaBg = this.add.rectangle(400, 500, 200, 45, 0xb59f3b).setInteractive();
+        this.btnDicaTexto = this.add.text(400, 500, "🧩 PEDIR DICA", { fontSize: '16px', fill: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+        
+        this.btnDicaBg.on('pointerdown', () => this.abrirPuzzleDica());
+
+        // Texto que exibirá a dica gerada
+        this.txtMensagemDica = this.add.text(400, 550, "", { fontSize: '16px', fill: '#b59f3b', fontStyle: 'bold' }).setOrigin(0.5);
+
+        // 3. CAPTURA DO TECLADO FÍSICO
+        this.input.keyboard.on('keydown', (event) => this.tratarInputTeclado(event));
+
+        // 4. PREPARAR COMPONENTES DO MODAL (Ficam invisíveis/desativados no início)
+        this.criarModalMemoria();
     }
 
-    tratarTeclado(event) {
-        if (this.gameOver) return;
+    tratarInputTeclado(event) {
+        // Se o jogo acabou ou o modal do puzzle estiver aberto, ignora a digitação do Termo
+        if (this.jogoTerminou || this.modalAberto) return;
 
         let tecla = event.key.toUpperCase();
 
-        if (tecla === 'ENTER' && this.letraAtual === 5) {
-            this.verificarPalavra();
-        } else if (tecla === 'BACKSPACE' && this.letraAtual > 0) {
-            this.letraAtual--;
-            this.grelha[this.tentativaAtual][this.letraAtual].txt.setText("");
-            this.grelha[this.tentativaAtual][this.letraAtual].valor = "";
-        } else if (/^[A-Z]$/.test(tecla) && this.letraAtual < 5) {
-            this.grelha[this.tentativaAtual][this.letraAtual].txt.setText(tecla);
-            this.grelha[this.tentativaAtual][this.letraAtual].valor = tecla;
+        if (/^[A-ZÁÀÂÃÉÈÊÍÏÓÒÔÕÚÇ]$/.test(tecla) && this.letraAtual < this.letrasMax) {
+            // Remove acentos simples para padronizar o input do Termo
+            tecla = tecla.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            
+            this.grelhaTextos[this.tentativaAtual][this.letraAtual].setText(tecla);
+            this.palavraAtual += tecla;
             this.letraAtual++;
+        } 
+        else if (tecla === "BACKSPACE" && this.letraAtual > 0) {
+            this.letraAtual--;
+            this.grelhaTextos[this.tentativaAtual][this.letraAtual].setText("");
+            this.palavraAtual = this.palavraAtual.slice(0, -1);
+        } 
+        else if (tecla === "ENTER") {
+            this.fazerJogada();
         }
     }
 
-    verificarPalavra() {
-        let palavraInserida = this.grelha[this.tentativaAtual].map(celula => celula.valor).join("");
-        let corretas = 0;
+    fazerJogada() {
+        if (this.palavraAtual.length !== this.letrasMax) {
+            this.cameras.main.shake(200, 0.01); // Efeito visual de erro
+            return;
+        }
 
+        this.historicoChutes.push(this.palavraAtual);
+        let coresResultado = Array(5).fill(0x3a3a3c); // Cinza padrão
+        let letrasRestantesSecreta = this.palavraSecreta.split("");
+
+        // Passo 1: Validar Verdes
         for (let i = 0; i < 5; i++) {
-            let celula = this.grelha[this.tentativaAtual][i];
-            if (celula.valor === this.palavraCerta[i]) {
-                celula.rect.setFillStyle(0x00ff00); // Verde (certo na posição certa)
-                corretas++;
-            } else if (this.palavraCerta.includes(celula.valor)) {
-                celula.rect.setFillStyle(0xffff00); // Amarelo (certo na posição errada)
-            } else {
-                celula.rect.setFillStyle(0x555555); // Cinzento (errado)
+            if (this.palavraAtual[i] === this.palavraSecreta[i]) {
+                coresResultado[i] = 0x538d4e; // Verde hex
+                letrasRestantesSecreta[i] = null;
             }
         }
 
-        if (corretas === 5) {
-            this.gameOver = true;
-            this.time.delayedCall(1000, () => {
-                this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
-                this.scene.stop();
-            });
-        } else {
-            this.tentativaAtual++;
-            this.letraAtual = 0;
-            if (this.tentativaAtual >= 6) {
-                // Falhou - Podes adicionar lógica de reiniciar aqui
-                this.scene.restart();
+        // Passo 2: Validar Amarelos
+        for (let i = 0; i < 5; i++) {
+            if (coresResultado[i] === 0x538d4e) continue;
+            let indexNaSecreta = letrasRestantesSecreta.indexOf(this.palavraAtual[i]);
+            if (indexNaSecreta !== -1) {
+                coresResultado[i] = 0xb59f3b; // Amarelo hex
+                letrasRestantesSecreta[indexNaSecreta] = null;
             }
         }
+
+        // Passo 3: Animação de Giro (Flip) idêntica ao CSS
+        let acertos = 0;
+        for (let i = 0; i < 5; i++) {
+            let quadrado = this.grelhaQuadrados[this.tentativaAtual][i];
+            let corFinal = coresResultado[i];
+            if (corFinal === 0x538d4e) acertos++;
+
+            this.time.delayedCall(i * 200, () => {
+                this.tweens.add({
+                    targets: quadrado,
+                    scaleY: 0,
+                    duration: 250,
+                    yoyo: true,
+                    onYoyo: () => {
+                        quadrado.setFillStyle(corFinal);
+                        quadrado.setStrokeStyle(0);
+                    }
+                });
+            });
+        }
+
+        // Atualização dos estados de rodada
+        this.tentativaAtual++;
+        this.letraAtual = 0;
+        this.palavraAtual = "";
+
+        // Checar Fim de Jogo
+        this.time.delayedCall(1500, () => {
+            if (acertos === 5) {
+                this.vencerJogo();
+            } else if (this.tentativaAtual >= this.maxTentativas) {
+                this.derrotaJogo();
+            }
+        });
+    }
+
+    // === SISTEMA DO MINI-PUZZLE (MODAL) ===
+
+    criarModalMemoria() {
+        // Criamos um Container para agrupar tudo do modal e facilitar esconder/mostrar
+        this.modalContainer = this.add.container(0, 0).setDepth(10).setVisible(false);
+
+        // Fundo escurecido bloqueador de cliques no fundo
+        let cortina = this.add.rectangle(400, 300, 800, 600, 0x000000, 0.9).setInteractive();
+        
+        // Caixa do painel
+        let painel = this.add.rectangle(400, 300, 400, 400, 0x1e1e20).setStrokeStyle(3, 0x3a3a3c);
+        let titulo = this.add.text(400, 140, "Resolva o puzzle para ganhar a dica!", { fontSize: '18px', fill: '#fff', fontStyle: 'bold' }).setOrigin(0.5);
+        let subtitulo = this.add.text(400, 170, "Encontre os 3 pares de símbolos espaciais.", { fontSize: '14px', fill: '#aaa' }).setOrigin(0.5);
+
+        this.modalContainer.add([cortina, painel, titulo, subtitulo]);
+
+        // Criar o tabuleiro interno de cartas (grelha de 3 colunas x 2 linhas)
+        this.cartasObjetos = [];
+        let emojis = ['🚀', '🚀', '🌟', '🌟', '🛸', '🛸'];
+        
+        let indexEmoji = 0;
+        for (let linha = 0; linha < 2; linha++) {
+            for (let col = 0; col < 3; col++) {
+                let x = 290 + (col * 110);
+                let y = 260 + (linha * 120);
+
+                // Fundo da carta
+                let cardBg = this.add.rectangle(x, y, 90, 100, 0x3a3a3c).setInteractive();
+                // Texto com o emoji oculto
+                let cardTxt = this.add.text(x, y, "", { fontSize: '40px' }).setOrigin(0.5);
+
+                cardBg.txtAssociado = cardTxt;
+                cardBg.resolvida = false;
+
+                cardBg.on('pointerdown', () => this.virarCartaMemoria(cardBg));
+
+                this.modalContainer.add([cardBg, cardTxt]);
+                this.cartasObjetos.push(cardBg);
+            }
+        }
+    }
+
+    abrirPuzzleDica() {
+        if (this.tentativaAtual === 0) {
+            this.txtMensagemDica.setText("⚠️ Tente pelo menos uma palavra antes!");
+            return;
+        }
+        
+        this.modalAberto = true;
+        this.paresEncontrados = 0;
+        this.cartasViradas = [];
+        this.bloqueioCliquesMemoria = false;
+
+        // Embaralhar emojis e resetar cartas visuais
+        let emojis = ['🚀', '🚀', '🌟', '🌟', '🛸', '🛸'];
+        Phaser.Utils.Array.Shuffle(emojis);
+
+        this.cartasObjetos.forEach((card, idx) => {
+            card.valorSecreto = emojis[idx];
+            card.resolvida = false;
+            card.setFillStyle(0x3a3a3c);
+            card.txtAssociado.setText("");
+        });
+
+        this.modalContainer.setVisible(true);
+    }
+
+    virarCartaMemoria(card) {
+        if (this.bloqueioCliquesMemoria || card.resolvida || this.cartasViradas.includes(card)) return;
+
+        // Revelar carta
+        card.setFillStyle(0xffffff);
+        card.txtAssociado.setText(card.valorSecreto);
+        this.cartasViradas.push(card);
+
+        if (this.cartasViradas.length === 2) {
+            this.bloqueioCliquesMemoria = true;
+            this.time.delayedCall(800, () => this.checarParMemoria());
+        }
+    }
+
+    checarParMemoria() {
+        let [c1, c2] = this.cartasViradas;
+
+        if (c1.valorSecreto === c2.valorSecreto) {
+            c1.resolvida = true;
+            c2.resolvida = true;
+            this.paresEncontrados++;
+            
+            if (this.paresEncontrados === 3) {
+                this.time.delayedCall(500, () => this.vencerPuzzleDica());
+            }
+        } else {
+            // Desvirar cartas (voltar ao cinza)
+            c1.setFillStyle(0x3a3a3c);
+            c1.txtAssociado.setText("");
+            c2.setFillStyle(0x3a3a3c);
+            c2.txtAssociado.setText("");
+        }
+
+        this.cartasViradas = [];
+        this.bloqueioCliquesMemoria = false;
+    }
+
+    vencerPuzzleDica() {
+        this.modalContainer.setVisible(false);
+        this.modalAberto = false;
+
+        // Desativar o botão de Dica (igual ao teu script HTML)
+        this.btnDicaBg.disableInteractive();
+        this.btnDicaBg.setFillStyle(0x555555);
+        this.btnDicaTexto.setText("DICA UTILIZADA");
+
+        this.gerarDicaLogica();
+    }
+
+    gerarDicaLogica() {
+        let letrasDescobertas = new Set();
+        let posicoesCorretas = new Set();
+
+        // Processa o histórico igualzinho ao teu algoritmo
+        for (let i = 0; i < this.historicoChutes.length; i++) {
+            let chute = this.historicoChutes[i];
+            for (let j = 0; j < 5; j++) {
+                if (chute[j] === this.palavraSecreta[j]) {
+                    posicoesCorretas.add(j);
+                    letrasDescobertas.add(chute[j]);
+                } else if (this.palavraSecreta.includes(chute[j])) {
+                    letrasDescobertas.add(chute[j]);
+                }
+            }
+        }
+
+        // Regra 1: Revelar posição exata de uma letra amarela existente
+        for (let letra of letrasDescobertas) {
+            let indexReal = this.palavraSecreta.indexOf(letra);
+            if (!posicoesCorretas.has(indexReal)) {
+                this.txtMensagemDica.setText(`💡 DICA: A letra ${letra} fica exatamente na posição ${indexReal + 1}.`);
+                return;
+            }
+        }
+
+        // Regra 2: Revelar uma letra nova (oculta) da palavra
+        for (let i = 0; i < 5; i++) {
+            let letraSecreta = this.palavraSecreta[i];
+            if (!letrasDescobertas.has(letraSecreta)) {
+                this.txtMensagemDica.setText(`💡 DICA: A palavra contém a letra ${letraSecreta} (posição oculta).`);
+                return;
+            }
+        }
+
+        // Fallback
+        this.txtMensagemDica.setText("💡 DICA: Concentre-se nas vogais restantes!");
+    }
+
+    // === TÉRMINOS DE JOGO ===
+
+    vencerJogo() {
+        this.jogoTerminou = true;
+        this.add.text(400, 300, "SISTEMA DESBLOQUEADO!", { fontSize: '32px', fill: '#00ff00', backgroundColor: '#000', fontStyle: 'bold' }).setOrigin(0.5);
+        
+        this.time.delayedCall(2000, () => {
+            //this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+            this.scene.stop();
+            this.scene.switch("scene1");
+            this.termoativo = false;
+        });
+    }
+
+    derrotaJogo() {
+        this.jogoTerminou = true;
+        this.add.text(400, 300, `FIM DE JOGO!\nPALAVRA: ${this.palavraSecreta}`, { fontSize: '28px', fill: '#ff0000', backgroundColor: '#000', align: 'center', fontStyle: 'bold' }).setOrigin(0.5);
+        
+        this.time.delayedCall(3000, () => {
+            this.scene.restart();
+        });
     }
 }

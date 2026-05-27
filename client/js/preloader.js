@@ -5,7 +5,7 @@ class preloader extends Phaser.Scene {
 
   init(data) {
     this.nextScene = (data && data.startScene) || "scene1";
-    const bg = this.add.image(0, 0, "capa").setOrigin(0, 0).setDepth(0);
+    const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
     const imageRatio = bg.width / bg.height;
     const screenRatio = this.scale.width / this.scale.height;
 
@@ -27,9 +27,9 @@ class preloader extends Phaser.Scene {
     );
     this.cameras.main.setBackgroundColor("#000000");
 
-    this.add.rectangle(550, 300, 468, 32).setStrokeStyle(1, 0x62d997).setScale(0.8);
+    this.add.rectangle(540, 200, 468, 32).setStrokeStyle(1, 0x63ff8a).setScale(0.8);
     const bar = this.add
-      .rectangle(596 - 230, 300, 4, 28, 0x38a669)
+      .rectangle(586 - 230, 200, 4, 28, 0x63ff8a)
       .setScale(0.8);
 
     this.load.on("progress", (progress) => {
@@ -41,6 +41,8 @@ class preloader extends Phaser.Scene {
     this.load.setPath("assets/");
 
     this.load.image("terminal", "terminal.png");
+
+    this.load.image("avisoconsole", "avisoconsole.png");
 
     this.load.audio("passos", "walkamongus.mp3");
     this.load.audio("trilhasonora", "trilhasonora.mp3");
@@ -59,12 +61,8 @@ class preloader extends Phaser.Scene {
       frameWidth: 322,
       frameHeight: 51,
     });
-
-    this.load.spritesheet("nave", "naveet.png", {
-      frameWidth: 322,
-      frameHeight: 51,
-    });
-
+    
+    
     this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");
 
     this.load.image("remasterized", "assets-usados/remasterized.png");
@@ -212,6 +210,17 @@ class preloader extends Phaser.Scene {
     this.load.font("sarpanchregular", "sarpanchregular.otf");
 
     this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
+
+    // Exemplo de como você vai ter de carregar os tiros no futuro:
+    this.load.image("ativaraliens", "ativaraliens.png")
+    this.load.image("nave-1", "naves/nave-1.png");
+    this.load.image("nave-2", "naves/nave-2.png");
+    this.load.image("nave-3", "naves/nave-3.png");
+    this.load.image("nave-4", "naves/nave-4.png");
+    this.load.image("nave-5", "naves/nave-5.png");
+    this.load.image("naveet", "naves/naveet.png");
+    // this.load.image("tiro_player1", "naves/tiro1.png");
+    // this.load.image("tiro_inimigo", "naves/tiro_et.png");
   }
 
   create() {
