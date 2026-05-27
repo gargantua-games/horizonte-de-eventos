@@ -576,6 +576,12 @@ class scene1 extends Phaser.Scene {
     this.consolew6.body.allowGravity = false;
     this.consolew6.setImmovable(true);
 
+    this.cannon = this.add.sprite(658, 1709, "cannon");
+    this.cannon.setPipeline("Light2D");
+
+   this.turretP1 = this.add.sprite(658, 1710, "turret");
+   this.turretP1.setPipeline("Light2D");
+
     //exterior da nave antenas
     this.antenas = this.physics.add.group({
       allowGravity: false,
@@ -830,6 +836,23 @@ class scene1 extends Phaser.Scene {
       pipeline: "Light2D",
     });
 
+    var spawninimigosx = Phaser.Math.Between(87, 1260);
+    var spawninimigosy = Phaser.Math.Between(1200, 1400);
+
+    for (this.inimigosalienscount = 0; this.inimigosalienscount < 3; this.inimigosalienscount++) {
+      spawninimigosx = Phaser.Math.Between(87, 1260);
+      spawninimigosy = Phaser.Math.Between(1300, 1400);
+      const enemy = this.inimigosaliens.create(
+        spawninimigosx,
+        spawninimigosy,
+        "inimigo3",
+      );
+      enemy.body.setSize(30, 37);
+      enemy.lastDirection = "horizontal";
+      enemy.lastFlipX = false;
+      enemy.isAttacking = false;
+    }
+
     this.physics.add.collider(this.inimigosaliens, this.limitenorte);
     this.physics.add.collider(this.inimigosaliens, this.limitesul);
     this.physics.add.collider(this.inimigosaliens, this.limiteoeste);
@@ -842,16 +865,6 @@ class scene1 extends Phaser.Scene {
       null,
       this,
     ); //this.enemyAttack, null, this);
-
-    var spawninimigosx = Phaser.Math.Between(97, 1160);
-    var spawninimigosy = Phaser.Math.Between(1293, 1396);
-
-    this.alien1 = this.inimigosaliens.create(
-      spawninimigosx,
-      spawninimigosy,
-      "inimigo3",
-    );
-    this.alien1.body.setSize(30, 37);
 
     this.layerParede.setCollisionByProperty({ collides: true });
 
@@ -948,8 +961,18 @@ class scene1 extends Phaser.Scene {
         });
       },
     });
+
+  this.game.socket.on("scene1", (state) => {
+      if (state.cannon) {
+        this.cannon.setAngle(state.cannon.angle);
+      }
+    });
+
   } //fim create
 
+  update() {
+
+    if (this.fase4) {
   update(time, delta) {
     if (this.positionP2) {
       try {
@@ -1152,49 +1175,69 @@ class scene1 extends Phaser.Scene {
       }
     }
 
-    if (this.alien1 && this.alien1.isAttacking) {
-      const enemy = this.alien1;
-      if (enemy.lastDirection === "horizontal") {
-        enemy.anims.play("enemyAtaque", true);
-        enemy.setFlipX(enemy.lastFlipX);
-        enemy.setVelocity(0, 0);
-      } else if (enemy.lastDirection === "up") {
-        enemy.anims.play("enemyAtaqueCima", true);
-        enemy.setFlipX(false);
-        enemy.setVelocity(0, 0);
-      } else {
-        enemy.anims.play("enemyAtaqueBaixo", true);
-        enemy.setFlipX(false);
-        enemy.setVelocity(0, 0);
-      }
-    }
+    // Movimento dos inimigos aliens
+    if (this.inimigosaliens) {
+      this.inimigosaliens.children.each((enemy) => {
+        const dx = this.playerroxo.x - enemy.x;
+        const dy = this.playerroxo.y - enemy.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const isTouchingCaixa = this.physics.overlap(enemy, this.caixa);
 
-    if (this.fase4) {
-      if (this.playerroxo.x - this.alien1.x > 5) {
-        this.alien1
-          .setVelocityX(120)
-          .anims.play("enemyWalk", true)
-          .body.setSize(30, 37)
-          .setOffset(33, 17);
-        this.alien1.flipX = true;
-      } else if (this.playerroxo.x - this.alien1.x < -5) {
-        this.alien1
-          .setVelocityX(-120)
-          .anims.play("enemyWalk", true)
-          .body.setSize(30, 37)
-          .setOffset(55, 17);
-        this.alien1.flipX = false;
-      }
-      if (this.playerroxo.y - this.alien1.y > 5) {
-        this.alien1.setVelocityY(120).anims.play("enemyWalk", true);
-      } else if (this.playerroxo.y - this.alien1.y < -5) {
-        this.alien1.setVelocityY(-120).anims.play("enemyWalk", true);
-      }
+        if (distance > 0) {
+          enemy.setVelocityX((dx / distance) * 80);
+          enemy.setVelocityY((dy / distance) * 80);
+        } else {
+          enemy.setVelocity(0, 0);
+        }
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          enemy.lastDirection = "horizontal";
+          enemy.lastFlipX = dx > 0;
+        } else if (dy < 0) {
+          enemy.lastDirection = "up";
+        } else {
+          enemy.lastDirection = "down";
+        }
+
+        if (isTouchingCaixa) {
+          enemy.isAttacking = true;
+        } else {
+          enemy.isAttacking = false;
+        }
+
+        if (enemy.isAttacking) {
+          if (enemy.lastDirection === "horizontal") {
+            enemy.anims.play("enemyAtaque", true);
+            enemy.setFlipX(enemy.lastFlipX);
+            enemy.setVelocity(0, 0);
+          } else if (enemy.lastDirection === "up") {
+            enemy.anims.play("enemyAtaqueCima", true);
+            enemy.setFlipX(false);
+            enemy.setVelocity(0, 0);
+          } else {
+            enemy.anims.play("enemyAtaqueBaixo", true);
+            enemy.setFlipX(false);
+            enemy.setVelocity(0, 0);
+          }
+        } else if (distance > 0) {
+          if (Math.abs(dx) > Math.abs(dy)) {
+            enemy.anims.play("enemyWalk", true);
+            enemy.setFlipX(dx > 0);
+          } else if (dy < 0) {
+            enemy.anims.play("enemyWalkCima", true);
+            enemy.setFlipX(false);
+          } else {
+            enemy.anims.play("enemyWalkBaixo", true);
+            enemy.setFlipX(false);
+          }
+        } else {
+          enemy.anims.stop();
+        }
+      });
     }
   } // fim update
 
-  perdervida(caixa, inimigosalien) {
-    this.alien1.anims.play("enemyAtack");
+  perdervida(caixa, alien) {
     // Verifica se já está em cooldown de invencibilidade
     if (this.invulnerable) {
       return;
@@ -1259,7 +1302,6 @@ class scene1 extends Phaser.Scene {
       this.porta.anims.play("portaabrindo", true);
       this.time.delayedCall(1000, () => {
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
-        this.positionP2 = true;
         this.porta.anims.play("portafechando", true);
       });
     }
