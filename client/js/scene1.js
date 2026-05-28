@@ -973,7 +973,7 @@ class scene1 extends Phaser.Scene {
     });
   } //fim create
 
-  update() {
+  update(time,delta) {
 
     if (this.fase4) {
       // update(time, delta) {
@@ -992,6 +992,7 @@ class scene1 extends Phaser.Scene {
           console.error("Error updating player:", e);
         }
       }
+    }
 
       const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
       const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
@@ -1238,7 +1239,6 @@ class scene1 extends Phaser.Scene {
           }
         });
       }
-    }
     // fim update
   }
 
@@ -1317,7 +1317,6 @@ class scene1 extends Phaser.Scene {
     this.time.delayedCall(1000, () => {
       this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
       this.porta2.anims.play("portafechando", true);
-      this.fase4 = false;
     });
   }
 
