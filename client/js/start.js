@@ -96,6 +96,8 @@ class start extends Phaser.Scene {
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene0" });
     });
+
+    this.padStartTriggered = false;
   }
 
   update() {
@@ -106,11 +108,16 @@ class start extends Phaser.Scene {
         : null;
     let horizontal = 0;
     let reloadPressed = false;
+    //let padPressed = false;
 
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
       reloadPressed = !!pad.R1;
     }
+    const padPressed = !!pad && Array.isArray(pad.buttons)
+      ? pad.buttons.some((button) => button && (button.pressed || button.value > 0.1))
+      : false;
+
 
     const qer = this.input.keyboard.addKeys("Q,E,R");
 
@@ -123,11 +130,14 @@ class start extends Phaser.Scene {
 
     if (reloadPressed) {
       window.location.reload();
-    }else if (!reloadPressed && (qer.E.isDown || pad)) {
+    } else if (!reloadPressed && (qer.E.isDown || (padPressed && !this.padStartTriggered))) {
       //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene0" });
+      this.padStartTriggered = true;
+    } else if (!padPressed) {
+      this.padStartTriggered = false;
     }
         if (qer.R.isDown) {
       //this.scene.start("scene1");

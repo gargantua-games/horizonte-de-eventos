@@ -973,8 +973,10 @@ class scene1 extends Phaser.Scene {
     });
   } //fim create
 
-  update(time, delta) {
+  update() {
+
     if (this.fase4) {
+      // update(time, delta) {
       if (this.positionP2) {
         try {
           this.game.socket.emit("scene1", this.game.room, {
