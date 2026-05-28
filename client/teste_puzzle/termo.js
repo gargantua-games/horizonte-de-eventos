@@ -416,6 +416,7 @@ export default class termo extends Phaser.Scene {
         console.error("Erro ao notificar cena origem:", e);
       }
       this.scene.stop();
+      this.scene.switch(this.cenaOrigem); // Volta para a cena de origem após vencer
     });
   }
 

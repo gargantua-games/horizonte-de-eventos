@@ -3,7 +3,7 @@ class scene1 extends Phaser.Scene {
     super("scene1");
 
     this.speed = 200;
-    this.estoutrabalhando = false;
+    this.estoutrabalhando = true;
     this.doorOpen = 0;
     this.fase4 = true;
     this.vida = 3;
@@ -579,8 +579,8 @@ class scene1 extends Phaser.Scene {
     this.cannon = this.add.sprite(658, 1709, "cannon");
     this.cannon.setPipeline("Light2D");
 
-   this.turretP1 = this.add.sprite(658, 1710, "turret");
-   this.turretP1.setPipeline("Light2D");
+    this.turretP1 = this.add.sprite(658, 1710, "turret");
+    this.turretP1.setPipeline("Light2D");
 
     //exterior da nave antenas
     this.antenas = this.physics.add.group({
@@ -747,7 +747,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
       if (!this.puzzleAberto) {
         this.puzzleAberto = true;
-        this.scene.launch("termo", { portaId: 4, cenaOrigem: "scene1" });
+        this.scene.launch("tetravex", { portaId: 4, cenaOrigem: "scene1" });
       }
     });
     /*this.doorOpen = 4;
@@ -767,7 +767,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles4, () => {
       if (!this.puzzleAberto) {
         this.puzzleAberto = true;
-        this.scene.launch("termo", { portaId: 2, cenaOrigem: "scene1" });
+        this.scene.launch("sudoku", { portaId: 2, cenaOrigem: "scene1" });
       }
     });
 
@@ -785,13 +785,13 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       if (!this.puzzleAberto) {
         this.puzzleAberto = true;
-        this.scene.launch("termo", { portaId: 1, cenaOrigem: "scene1" });
+        this.scene.switch("termo", { portaId: 1, cenaOrigem: "scene1" });
       }
     });
     this.physics.add.collider(this.playerroxo, this.consoles6, () => {
       if (!this.puzzleAberto) {
         this.puzzleAberto = true;
-        this.scene.launch("termo", { portaId: 3, cenaOrigem: "scene1" });
+        this.scene.launch("quebraCabeca", { portaId: 3, cenaOrigem: "scene1" });
       }
     });
     /*this.doorOpen = 3;
@@ -839,7 +839,11 @@ class scene1 extends Phaser.Scene {
     var spawninimigosx = Phaser.Math.Between(87, 1260);
     var spawninimigosy = Phaser.Math.Between(1200, 1400);
 
-    for (this.inimigosalienscount = 0; this.inimigosalienscount < 3; this.inimigosalienscount++) {
+    for (
+      this.inimigosalienscount = 0;
+      this.inimigosalienscount < 3;
+      this.inimigosalienscount++
+    ) {
       spawninimigosx = Phaser.Math.Between(87, 1260);
       spawninimigosy = Phaser.Math.Between(1300, 1400);
       const enemy = this.inimigosaliens.create(
@@ -962,12 +966,11 @@ class scene1 extends Phaser.Scene {
       },
     });
 
-  this.game.socket.on("scene1", (state) => {
+    this.game.socket.on("scene1", (state) => {
       if (state.cannon) {
         this.cannon.setAngle(state.cannon.angle);
       }
     });
-
   } //fim create
 
   update() {
@@ -1236,7 +1239,8 @@ class scene1 extends Phaser.Scene {
         });
       }
     }
-  }  // fim update
+    // fim update
+  }
 
   perdervida(caixa, alien) {
     // Verifica se já está em cooldown de invencibilidade

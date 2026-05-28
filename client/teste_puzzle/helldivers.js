@@ -1,6 +1,6 @@
-export default class stratagemHero extends Phaser.Scene {
+export default class helldivers extends Phaser.Scene {
     constructor() {
-        super("stratagemHero");
+        super("helldivers");
     }
 
     init(data) {
@@ -165,7 +165,7 @@ export default class stratagemHero extends Phaser.Scene {
 
     falharSequencia(mensagem) {
         // Bloqueia inputs rapidamente e pisca em vermelho
-        this.cameras.main.flash(300, 255, 0, 0);
+        //this.cameras.main.flash(300, 255, 0, 0);
         this.txtNomeEstratagema.setText(mensagem);
         this.txtNomeEstratagema.setStyle({ fill: '#ff3333' });
         
@@ -224,4 +224,3 @@ export default class stratagemHero extends Phaser.Scene {
         });
     }
 }
-
