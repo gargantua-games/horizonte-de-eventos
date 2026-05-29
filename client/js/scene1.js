@@ -3,18 +3,22 @@ class scene1 extends Phaser.Scene {
     super("scene1");
 
     this.speed = 200;
-    this.estoutrabalhando = true;
+    this.estoutrabalhando = false;
     this.doorOpen = 0;
     this.fase4 = true;
     this.vida = 3;
     this.invulnerable = false;
-    this.positionP2 = false;
+    //this.positionP2 = false;
     this.puzzleAberto = false;
     this.portaOverlapTime = 0;
     this.porta2OverlapTime = 0;
     this.portalTeleported = false;
     this.portal2Teleported = false;
     //this.termoativo = true;
+    this.bulletP1 = true;
+    this.shoot = false;
+    this.angleCannon = 0;
+    this.inimigosalienscount = 0;
   }
 
   init() {
@@ -414,6 +418,11 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.body.allowGravity = false;
     });
 
+   this.laserP1 = this.physics.add.group({
+     allowGravity: false,
+     immovable: true,
+    });
+
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
       allowGravity: false,
@@ -576,10 +585,10 @@ class scene1 extends Phaser.Scene {
     this.consolew6.body.allowGravity = false;
     this.consolew6.setImmovable(true);
 
-    this.cannon = this.add.sprite(658, 1709, "cannon");
+    this.cannon = this.add.sprite(656, 1712, "cannon");
     this.cannon.setPipeline("Light2D");
 
-    this.turretP1 = this.add.sprite(658, 1710, "turret");
+    this.turretP1 = this.add.sprite(656, 1713, "turret");
     this.turretP1.setPipeline("Light2D");
 
     //exterior da nave antenas
@@ -657,7 +666,7 @@ class scene1 extends Phaser.Scene {
     this.limiteporta.setSize(128, 32);
     this.limiteporta.setImmovable(true);
 
-    this.limitenorte = this.physics.add.sprite(670, 1270, "bigboss"); //662, 1347 667 1460
+    this.limitenorte = this.physics.add.sprite(670, 1317, "bigboss"); //662, 1347 667 1460
     this.limitenorte.body.allowGravity = false;
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
@@ -818,10 +827,10 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.overlap(this.playerroxo, this.porta, null, null, this);
     this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
-
+    
     /*this.physics.add.overlap(this.playerroxo, this.porta, () => {
       this.doorOpen += 1;
-    });*/
+      });*/
 
     if (this.estoutrabalhando === false) {
       this.physics.add.collider(this.playerroxo, this.limitenorte);
@@ -829,33 +838,16 @@ class scene1 extends Phaser.Scene {
       this.physics.add.collider(this.playerroxo, this.limiteoeste);
       this.physics.add.collider(this.playerroxo, this.limiteleste);
     }
-
+    
     this.inimigosaliens = this.physics.add.group({
       allowGravity: false,
       immovable: false,
       pipeline: "Light2D",
     });
+    
+    
 
-    var spawninimigosx = Phaser.Math.Between(87, 1260);
-    var spawninimigosy = Phaser.Math.Between(1200, 1400);
-
-    for (
-      this.inimigosalienscount = 0;
-      this.inimigosalienscount < 3;
-      this.inimigosalienscount++
-    ) {
-      spawninimigosx = Phaser.Math.Between(87, 1260);
-      spawninimigosy = Phaser.Math.Between(1300, 1400);
-      const enemy = this.inimigosaliens.create(
-        spawninimigosx,
-        spawninimigosy,
-        "inimigo3",
-      );
-      enemy.body.setSize(30, 37);
-      enemy.lastDirection = "horizontal";
-      enemy.lastFlipX = false;
-      enemy.isAttacking = false;
-    }
+    
 
     this.physics.add.collider(this.inimigosaliens, this.limitenorte);
     this.physics.add.collider(this.inimigosaliens, this.limitesul);
@@ -869,8 +861,10 @@ class scene1 extends Phaser.Scene {
       null,
       this,
     ); //this.enemyAttack, null, this);
-
+    
     this.layerParede.setCollisionByProperty({ collides: true });
+
+    this.physics.add.overlap(this.inimigosaliens, this.laserP1, this.killEnemy, null, this);
 
     //camera
     this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
@@ -966,33 +960,87 @@ class scene1 extends Phaser.Scene {
       },
     });
 
-    this.game.socket.on("scene1", (state) => {
+    this.game.socket.on("scene0", (state) => {
       if (state.cannon) {
-        this.cannon.setAngle(state.cannon.angle);
+        this.angleCannon = state.cannon.angle;
+        this.shoot = state.cannon.shooting;
+
       }
     });
-  } //fim create
-
-  update(time,delta) {
-
-    if (this.fase4) {
-      // update(time, delta) {
-      if (this.positionP2) {
-        try {
-          this.game.socket.emit("scene1", this.game.room, {
-            playerroxo: {
-              x: this.playerroxo.x,
-              y: this.playerroxo.y,
-              animation: this.playerroxo.anims.currentAnim
-                ? this.playerroxo.anims.currentAnim.key
-                : null,
-            },
-          });
-        } catch (e) {
-          console.error("Error updating player:", e);
+  } 
+  
+  update(time, delta) {
+    
+    this.cannon.setAngle(this.angleCannon)
+    
+    
+    //if (this.fase4) {
+      
+    //if (this.positionP2) {
+      try {
+        this.game.socket.emit("scene1", this.game.room, {
+          playerroxo: {
+            x: this.playerroxo.x,
+            y: this.playerroxo.y,
+            animation: this.playerroxo.anims.currentAnim
+            ? this.playerroxo.anims.currentAnim.key
+            : null,
+          },
+        });
+      } catch (e) {
+        console.error("Error updating player:", e);
+      }
+      //}
+    //}
+    
+      if (this.shoot && this.bulletP1) {
+    
+        this.bulletP1 = false;
+        setTimeout(() => {
+            this.bulletP1 = true;
+          }, 800);
+      
+        if (this.angleCannon === 0) {
+        this.laserP1
+          .create(this.cannon.x, (this.cannon.y - 20), "bulletP1")
+          .setVelocityY(-200)
+        }else  if (this.angleCannon === 80) {
+          this.laserP1
+          .create((this.cannon.x + 30), (this.cannon.y - 5), "bulletP1")
+          .setVelocityY(-33)
+          .setVelocityX(165)
+        }else  if (this.angleCannon === -80) {
+          this.laserP1
+          .create((this.cannon.x - 30), (this.cannon.y - 5), "bulletP1")
+          .setVelocityY(-33)
+          .setVelocityX(-165)
+        }else  if (this.angleCannon === 50) {
+          this.laserP1
+          .create((this.cannon.x + 20), (this.cannon.y - 15), "bulletP1")
+          .setVelocityY(-150)
+          .setVelocityX(150)
+        }else  if (this.angleCannon === -50) {
+          this.laserP1
+          .create((this.cannon.x - 20), (this.cannon.y - 15), "bulletP1")
+          .setVelocityY(-150)
+          .setVelocityX(-150)
         }
       }
+    if (this.inimigosalienscount < 0) {
+      const spawninimigosx = Phaser.Math.Between(87, 1260);
+      const spawninimigosy = Phaser.Math.Between(1300, 1400);
+      const enemy = this.inimigosaliens.create(
+        spawninimigosx,
+        spawninimigosy,
+        "inimigo3",
+      );
+      enemy.body.setSize(30, 37);
+      enemy.lastDirection = "horizontal";
+      enemy.lastFlipX = false;
+      enemy.isAttacking = false;
+      this.inimigosalienscount += 1;
     }
+      
 
       const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
       const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
@@ -1377,6 +1425,21 @@ class scene1 extends Phaser.Scene {
         }
       },
     });
+  }
+
+  killEnemy(enemy, laser) {
+    // destroy only the overlapping enemy and the laser projectile
+    if (enemy && enemy.disableBody) {
+      enemy.disableBody(true, true);
+      this.inimigosalienscount -= 1;
+    } else if (enemy && enemy.destroy) {
+      enemy.destroy();
+    }
+    if (laser && laser.disableBody) {
+      laser.disableBody(true, true);
+    } else if (laser && laser.destroy) {
+      laser.destroy();
+    }
   }
 
   webrtcMakeCall() {
