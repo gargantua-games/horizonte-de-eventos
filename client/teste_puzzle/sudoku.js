@@ -13,7 +13,7 @@ export default class sudoku extends Phaser.Scene {
         this.cameras.main.setZoom(1);
         this.cameras.main.centerOn(width / 2, height / 2);
 
-        this.AmbientLight = this.add.rectangle(530, 360, 700, 720, 0x111111);
+        //this.AmbientLight = this.add.rectangle(530, 360, 700, 720, 0x111111);
         
         this.add.text(400, 50, "sudoku 4x4 (Usa o teclado 1-4)", { fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
 

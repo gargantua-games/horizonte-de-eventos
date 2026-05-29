@@ -792,7 +792,7 @@ class scene1 extends Phaser.Scene {
         //this.avisoconsole.setPosition(837, 226);
          if (!this.puzzleAberto) {
            this.puzzleAberto = true;
-           this.scene.launch("quebraCabeca", { portaId: 1, cenaOrigem: "scene1" });
+           this.scene.launch("sudoku", { portaId: 1, cenaOrigem: "scene1" });
          }
       }
     });
@@ -1007,6 +1007,17 @@ class scene1 extends Phaser.Scene {
       }
     }
 
+    if (this.puzzleAberto) {
+      if (this.playerroxo) {
+        this.playerroxo.setVelocity(0, 0);
+        this.playerroxo.anims.play("idlecostas", true);
+      }
+      if (this.passos && this.passos.isPlaying) {
+        this.passos.stop();
+      }
+      return;
+    }
+    
     const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
     const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
