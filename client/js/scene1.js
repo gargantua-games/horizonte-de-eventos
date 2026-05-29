@@ -413,8 +413,6 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.body.allowGravity = false;
     });
 
-    
-
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
       allowGravity: false,
@@ -773,7 +771,7 @@ class scene1 extends Phaser.Scene {
         this.avisoconsole.setPosition(937, 545);
         if (!this.puzzleAberto) {
           this.puzzleAberto = true;
-          this.scene.launch("sudoku", { portaId: 2, cenaOrigem: "scene1" });
+          this.scene.launch("tetravex", { portaId: 2, cenaOrigem: "scene1" });
         }
       }
     });
@@ -794,7 +792,7 @@ class scene1 extends Phaser.Scene {
         //this.avisoconsole.setPosition(837, 226);
          if (!this.puzzleAberto) {
            this.puzzleAberto = true;
-           this.scene.launch("termo", { portaId: 1, cenaOrigem: "scene1" });
+           this.scene.launch("tetravex", { portaId: 1, cenaOrigem: "scene1" });
          }
       }
     });
