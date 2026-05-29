@@ -14,8 +14,6 @@ class scene1 extends Phaser.Scene {
     this.porta2OverlapTime = 0;
     this.portalTeleported = false;
     this.portal2Teleported = false;
-    //this.puzzleindex = 0;
-    //this.termoativo = true;
   }
 
   init() {
@@ -411,7 +409,7 @@ class scene1 extends Phaser.Scene {
     this.porta2.setSize(32, 128);
 
     this.delayedCall = this.time.delayedCall(14000, () => {
-      this.avisoconsole = this.physics.add.sprite(907, 395, "avisoconsole");
+      this.avisoconsole = this.physics.add.sprite(837, 226, "avisoconsole");
       this.avisoconsole.body.allowGravity = false;
     });
 
@@ -793,7 +791,7 @@ class scene1 extends Phaser.Scene {
     });*/
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       if(this.doorOpen === 0) {
-        this.avisoconsole.setPosition(837, 226);
+        //this.avisoconsole.setPosition(837, 226);
          if (!this.puzzleAberto) {
            this.puzzleAberto = true;
            this.scene.launch("termo", { portaId: 1, cenaOrigem: "scene1" });
