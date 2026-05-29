@@ -14,6 +14,7 @@ class scene1 extends Phaser.Scene {
     this.porta2OverlapTime = 0;
     this.portalTeleported = false;
     this.portal2Teleported = false;
+    //this.puzzleindex = 0;
     //this.termoativo = true;
   }
 
@@ -414,6 +415,8 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.body.allowGravity = false;
     });
 
+    
+
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
       allowGravity: false,
@@ -745,9 +748,12 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.layerParede);
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.launch("tetravex", { portaId: 4, cenaOrigem: "scene1" });
+      if (this.doorOpen === 3) {
+        //this.avisoconsole.setPosition(640, 505);
+        if (!this.puzzleAberto) {
+          this.puzzleAberto = true;
+          this.scene.switch("termo", { portaId: 4, cenaOrigem: "scene1" });
+        }
       }
     });
     /*this.doorOpen = 4;
@@ -765,9 +771,12 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles2);
     this.physics.add.collider(this.playerroxo, this.consoles3);
     this.physics.add.collider(this.playerroxo, this.consoles4, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.launch("sudoku", { portaId: 2, cenaOrigem: "scene1" });
+      if (this.doorOpen === 1) {
+        this.avisoconsole.setPosition(937, 545);
+        if (!this.puzzleAberto) {
+          this.puzzleAberto = true;
+          this.scene.launch("sudoku", { portaId: 2, cenaOrigem: "scene1" });
+        }
       }
     });
 
@@ -783,15 +792,24 @@ class scene1 extends Phaser.Scene {
       }
     });*/
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.switch("termo", { portaId: 1, cenaOrigem: "scene1" });
+      if(this.doorOpen === 0) {
+        this.avisoconsole.setPosition(837, 226);
+         if (!this.puzzleAberto) {
+           this.puzzleAberto = true;
+           this.scene.launch("termo", { portaId: 1, cenaOrigem: "scene1" });
+         }
       }
     });
     this.physics.add.collider(this.playerroxo, this.consoles6, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.launch("quebraCabeca", { portaId: 3, cenaOrigem: "scene1" });
+      if (this.doorOpen === 2) {
+          this.avisoconsole.setPosition(640, 505);
+        if (!this.puzzleAberto) {
+          this.puzzleAberto = true;
+          this.scene.launch("helldivers", {
+            portaId: 3,
+            cenaOrigem: "scene1",
+          });
+        }
       }
     });
     /*this.doorOpen = 3;
@@ -973,8 +991,7 @@ class scene1 extends Phaser.Scene {
     });
   } //fim create
 
-  update(time,delta) {
-
+  update(time, delta) {
     if (this.fase4) {
       // update(time, delta) {
       if (this.positionP2) {
@@ -994,138 +1011,118 @@ class scene1 extends Phaser.Scene {
       }
     }
 
-      const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
-      const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
+    const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
+    const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
-      if (portaOverlap && !this.portalTeleported) {
-        this.portaOverlapTime += delta;
-        if (this.portaOverlapTime >= 2000) {
-          this.portalTeleported = true;
-          this.portaOverlapTime = 0;
-          this.teletransporte();
-        }
-      } else if (!portaOverlap) {
+    if (portaOverlap && !this.portalTeleported) {
+      this.portaOverlapTime += delta;
+      if (this.portaOverlapTime >= 2000) {
+        this.portalTeleported = true;
         this.portaOverlapTime = 0;
-        this.portalTeleported = false;
+        this.teletransporte();
       }
+    } else if (!portaOverlap) {
+      this.portaOverlapTime = 0;
+      this.portalTeleported = false;
+    }
 
-      if (porta2Overlap && !this.portal2Teleported) {
-        this.porta2OverlapTime += delta;
-        if (this.porta2OverlapTime >= 2000) {
-          this.portal2Teleported = true;
-          this.porta2OverlapTime = 0;
-          this.teletransporte2();
-        }
-      } else if (!porta2Overlap) {
+    if (porta2Overlap && !this.portal2Teleported) {
+      this.porta2OverlapTime += delta;
+      if (this.porta2OverlapTime >= 2000) {
+        this.portal2Teleported = true;
         this.porta2OverlapTime = 0;
-        this.portal2Teleported = false;
+        this.teletransporte2();
       }
+    } else if (!porta2Overlap) {
+      this.porta2OverlapTime = 0;
+      this.portal2Teleported = false;
+    }
 
-      if (this.puzzleAberto) {
-        if (this.playerroxo) {
-          this.playerroxo.setVelocity(0, 0);
-        }
-        if (this.passos && this.passos.isPlaying) {
-          this.passos.stop();
-        }
-        return;
+    if (this.puzzleAberto) {
+      if (this.playerroxo) {
+        this.playerroxo.setVelocity(0, 0);
       }
-
-      const cursores = this.input.keyboard.createCursorKeys();
-      const qe = this.input.keyboard.addKeys("E, Q");
-
-      //const cursores = this.input.keyboard.createCursorKeys();
-      const jkl = this.input.keyboard.addKeys("J,K,L");
-
-      if (this.doorOpen === 2) {
-        try {
-          this.game.socket.emit("scene1", this.game.room, {
-            jkl: {
-              J: jkl.J.isDown,
-              L: jkl.L.isDown,
-              K: jkl.K.isDown,
-            },
-          });
-        } catch (e) {
-          console.error("Error updating player:", e);
-        }
+      if (this.passos && this.passos.isPlaying) {
+        this.passos.stop();
       }
+      return;
+    }
 
-      this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y);
+    const cursores = this.input.keyboard.createCursorKeys();
+    const qe = this.input.keyboard.addKeys("E, Q");
 
-      // Captura entrada do teclado
-      //const cursors = this.input.keyboard.createCursorKeys();
-      const wasd = this.input.keyboard.addKeys("W,S,A,D");
+    //const cursores = this.input.keyboard.createCursorKeys();
+    const jkl = this.input.keyboard.addKeys("J,K,L");
 
-      // Captura entrada do gamepad
-      const pad =
-        this.input.gamepad && this.input.gamepad.total > 0
-          ? this.input.gamepad.getPad(0)
-          : null;
-
-      let horizontal = 0;
-      let vertical = 0;
-
-      // Teclado WASD
-      if (wasd.A.isDown) {
-        horizontal = -1;
-      } else if (wasd.D.isDown) {
-        horizontal = 1;
+    if (this.doorOpen === 2) {
+      try {
+        this.game.socket.emit("scene1", this.game.room, {
+          jkl: {
+            J: jkl.J.isDown,
+            L: jkl.L.isDown,
+            K: jkl.K.isDown,
+          },
+        });
+      } catch (e) {
+        console.error("Error updating player:", e);
       }
+    }
 
-      if (wasd.W.isDown) {
-        vertical = -1;
-      } else if (wasd.S.isDown) {
-        vertical = 1;
+    this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y);
+
+    // Captura entrada do teclado
+    //const cursors = this.input.keyboard.createCursorKeys();
+    const wasd = this.input.keyboard.addKeys("W,S,A,D");
+
+    // Captura entrada do gamepad
+    const pad =
+      this.input.gamepad && this.input.gamepad.total > 0
+        ? this.input.gamepad.getPad(0)
+        : null;
+
+    let horizontal = 0;
+    let vertical = 0;
+
+    // Teclado WASD
+    if (wasd.A.isDown) {
+      horizontal = -1;
+    } else if (wasd.D.isDown) {
+      horizontal = 1;
+    }
+
+    if (wasd.W.isDown) {
+      vertical = -1;
+    } else if (wasd.S.isDown) {
+      vertical = 1;
+    }
+
+    // Gamepad (usando eixos como em scene0, mas adaptado para ortogonal)
+    if (pad) {
+      if (pad.axes.length > 0) {
+        horizontal = pad.axes[0].getValue();
       }
-
-      // Gamepad (usando eixos como em scene0, mas adaptado para ortogonal)
-      if (pad) {
-        if (pad.axes.length > 0) {
-          horizontal = pad.axes[0].getValue();
-        }
-        if (pad.axes.length > 1) {
-          vertical = pad.axes[1].getValue();
-        }
+      if (pad.axes.length > 1) {
+        vertical = pad.axes[1].getValue();
       }
+    }
 
-      // Aplica velocidade
-      this.playerroxo.setVelocityX(horizontal * this.speed);
-      this.playerroxo.setVelocityY(vertical * this.speed);
+    // Aplica velocidade
+    this.playerroxo.setVelocityX(horizontal * this.speed);
+    this.playerroxo.setVelocityY(vertical * this.speed);
 
-      // Verifica overlap com limites e ajusta as bounds da câmera
-      const isOverlapLimites = this.physics.overlap(
-        this.playerroxo,
-        this.limites,
-      );
+    // Verifica overlap com limites e ajusta as bounds da câmera
+    const isOverlapLimites = this.physics.overlap(
+      this.playerroxo,
+      this.limites,
+    );
 
-      if (qe.E.isDown) {
-        this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
-        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+    if (qe.E.isDown) {
+      this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
+      this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
 
-        this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
-      } else if (qe.Q.isDown) {
-        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-
-        if (this.estoutrabalhando === false) {
-          if (isOverlapLimites) {
-            // Define as bounds da câmera baseado no sprite limites
-            const limitesLeft = 40;
-            const limitesTop = 950;
-            const limitesRight = 1302;
-            const limitesBottom = 1720;
-            this.cameras.main.setBounds(
-              limitesLeft,
-              limitesTop,
-              limitesRight - limitesLeft,
-              limitesBottom - limitesTop,
-            );
-          } else if (!isOverlapLimites) {
-            // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
-            this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
-          }
-        }
-      }
+      this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
+    } else if (qe.Q.isDown) {
+      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
 
       if (this.estoutrabalhando === false) {
         if (isOverlapLimites) {
@@ -1145,102 +1142,122 @@ class scene1 extends Phaser.Scene {
           this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
         }
       }
+    }
 
-      // Animações e som baseado no movimento
-      const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
-
-      if (moving) {
-        if (!this.passos.isPlaying) this.passos.play();
-      } else {
-        if (this.passos.isPlaying) this.passos.stop();
+    if (this.estoutrabalhando === false) {
+      if (isOverlapLimites) {
+        // Define as bounds da câmera baseado no sprite limites
+        const limitesLeft = 40;
+        const limitesTop = 950;
+        const limitesRight = 1302;
+        const limitesBottom = 1720;
+        this.cameras.main.setBounds(
+          limitesLeft,
+          limitesTop,
+          limitesRight - limitesLeft,
+          limitesBottom - limitesTop,
+        );
+      } else if (!isOverlapLimites) {
+        // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
+        this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
       }
+    }
 
-      if (horizontal > 0.1) {
-        this.playerroxo.anims.play("andardireita", true);
-      } else if (horizontal < -0.1) {
-        this.playerroxo.anims.play("andaresquerda", true);
-      } else if (vertical > 0.1) {
-        this.playerroxo.anims.play("andarfrente", true); // assumindo que "andarfrente" é para baixo
-      } else if (vertical < -0.1) {
-        this.playerroxo.anims.play("andarcostas", true);
-      } else {
-        // Idle baseado na última direção
-        if (this.playerroxo.anims.currentAnim) {
-          const currentKey = this.playerroxo.anims.currentAnim.key;
-          if (currentKey === "andardireita") {
-            this.playerroxo.anims.play("idledireita", true);
-          } else if (currentKey === "andaresquerda") {
-            this.playerroxo.anims.play("idleesquerda", true);
-          } else if (currentKey === "andarfrente") {
-            this.playerroxo.anims.play("idlefrente", true);
-          } else if (currentKey === "andarcostas") {
-            this.playerroxo.anims.play("idlecostas", true);
-          }
+    // Animações e som baseado no movimento
+    const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
+
+    if (moving) {
+      if (!this.passos.isPlaying) this.passos.play();
+    } else {
+      if (this.passos.isPlaying) this.passos.stop();
+    }
+
+    if (horizontal > 0.1) {
+      this.playerroxo.anims.play("andardireita", true);
+    } else if (horizontal < -0.1) {
+      this.playerroxo.anims.play("andaresquerda", true);
+    } else if (vertical > 0.1) {
+      this.playerroxo.anims.play("andarfrente", true); // assumindo que "andarfrente" é para baixo
+    } else if (vertical < -0.1) {
+      this.playerroxo.anims.play("andarcostas", true);
+    } else {
+      // Idle baseado na última direção
+      if (this.playerroxo.anims.currentAnim) {
+        const currentKey = this.playerroxo.anims.currentAnim.key;
+        if (currentKey === "andardireita") {
+          this.playerroxo.anims.play("idledireita", true);
+        } else if (currentKey === "andaresquerda") {
+          this.playerroxo.anims.play("idleesquerda", true);
+        } else if (currentKey === "andarfrente") {
+          this.playerroxo.anims.play("idlefrente", true);
+        } else if (currentKey === "andarcostas") {
+          this.playerroxo.anims.play("idlecostas", true);
         }
       }
+    }
 
-      // Movimento dos inimigos aliens
-      if (this.inimigosaliens) {
-        this.inimigosaliens.children.each((enemy) => {
-          const dx = this.playerroxo.x - enemy.x;
-          const dy = this.playerroxo.y - enemy.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const isTouchingCaixa = this.physics.overlap(enemy, this.caixa);
+    // Movimento dos inimigos aliens
+    if (this.inimigosaliens) {
+      this.inimigosaliens.children.each((enemy) => {
+        const dx = this.playerroxo.x - enemy.x;
+        const dy = this.playerroxo.y - enemy.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const isTouchingCaixa = this.physics.overlap(enemy, this.caixa);
 
-          if (distance > 0) {
-            enemy.setVelocityX((dx / distance) * 80);
-            enemy.setVelocityY((dy / distance) * 80);
+        if (distance > 0) {
+          enemy.setVelocityX((dx / distance) * 80);
+          enemy.setVelocityY((dy / distance) * 80);
+        } else {
+          enemy.setVelocity(0, 0);
+        }
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          enemy.lastDirection = "horizontal";
+          enemy.lastFlipX = dx > 0;
+        } else if (dy < 0) {
+          enemy.lastDirection = "up";
+        } else {
+          enemy.lastDirection = "down";
+        }
+
+        if (isTouchingCaixa) {
+          enemy.isAttacking = true;
+        } else {
+          enemy.isAttacking = false;
+        }
+
+        if (enemy.isAttacking) {
+          if (enemy.lastDirection === "horizontal") {
+            enemy.anims.play("enemyAtaque", true);
+            enemy.setFlipX(enemy.lastFlipX);
+            enemy.setVelocity(0, 0);
+          } else if (enemy.lastDirection === "up") {
+            enemy.anims.play("enemyAtaqueCima", true);
+            enemy.setFlipX(false);
+            enemy.setVelocity(0, 0);
           } else {
+            enemy.anims.play("enemyAtaqueBaixo", true);
+            enemy.setFlipX(false);
             enemy.setVelocity(0, 0);
           }
-
+        } else if (distance > 0) {
           if (Math.abs(dx) > Math.abs(dy)) {
-            enemy.lastDirection = "horizontal";
-            enemy.lastFlipX = dx > 0;
+            enemy.anims.play("enemyWalk", true);
+            enemy.setFlipX(dx > 0);
           } else if (dy < 0) {
-            enemy.lastDirection = "up";
+            enemy.anims.play("enemyWalkCima", true);
+            enemy.setFlipX(false);
           } else {
-            enemy.lastDirection = "down";
+            enemy.anims.play("enemyWalkBaixo", true);
+            enemy.setFlipX(false);
           }
+        } else {
+          enemy.anims.stop();
+        }
+      });
+    }
 
-          if (isTouchingCaixa) {
-            enemy.isAttacking = true;
-          } else {
-            enemy.isAttacking = false;
-          }
-
-          if (enemy.isAttacking) {
-            if (enemy.lastDirection === "horizontal") {
-              enemy.anims.play("enemyAtaque", true);
-              enemy.setFlipX(enemy.lastFlipX);
-              enemy.setVelocity(0, 0);
-            } else if (enemy.lastDirection === "up") {
-              enemy.anims.play("enemyAtaqueCima", true);
-              enemy.setFlipX(false);
-              enemy.setVelocity(0, 0);
-            } else {
-              enemy.anims.play("enemyAtaqueBaixo", true);
-              enemy.setFlipX(false);
-              enemy.setVelocity(0, 0);
-            }
-          } else if (distance > 0) {
-            if (Math.abs(dx) > Math.abs(dy)) {
-              enemy.anims.play("enemyWalk", true);
-              enemy.setFlipX(dx > 0);
-            } else if (dy < 0) {
-              enemy.anims.play("enemyWalkCima", true);
-              enemy.setFlipX(false);
-            } else {
-              enemy.anims.play("enemyWalkBaixo", true);
-              enemy.setFlipX(false);
-            }
-          } else {
-            enemy.anims.stop();
-          }
-        });
-      }
-    // fim update
-  }
+  } // fim update
 
   perdervida(caixa, alien) {
     // Verifica se já está em cooldown de invencibilidade
