@@ -16,118 +16,139 @@ export default class quebraCabeca extends Phaser.Scene {
     }
 
     create() {
-        // Variáveis de tamanho para facilitar (o tamanho exato das tuas peças)
-        const largPeca = 182;
-        const altPeca = 128;
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
 
-        this.add.text(640, 30, "Monta o quebra-Cabeças (4x4)", { fontSize: '24px', fill: '#fff' }).setOrigin(0.5);
+      this.cameras.main.setZoom(0.4);
+        this.cameras.main.centerOn(width / 1.5, height / 1.5);
+        this.AmbientLight = this.add.rectangle(590, 450, 1500, 900, 0x111111);
 
-        // 1. GERAR AS POSIÇÕES DA GRELHA 4x4
-        const posicoesGrelha = [];
-        
-        // Ponto inicial da grelha (ajusta o 150 e o 100 para mover a grelha toda pelo ecrã)
-        const inicioX = 150 + (largPeca / 2); 
-        const inicioY = 100 + (altPeca / 2);
+      // Variáveis de tamanho para facilitar (o tamanho exato das tuas peças)
+      const largPeca = 182;
+      const altPeca = 128;
 
-        for (let linha = 0; linha < 4; linha++) {
-            for (let coluna = 0; coluna < 4; coluna++) {
-                posicoesGrelha.push({ 
-                    x: inicioX + (coluna * largPeca), 
-                    y: inicioY + (linha * altPeca) 
-                });
-            }
+      this.add
+        .text(640, 30, "Monta o quebra-Cabeças (4x4)", {
+          fontSize: "24px",
+          fill: "#fff",
+        })
+        .setOrigin(0.5);
+
+      // 1. GERAR AS POSIÇÕES DA GRELHA 4x4
+      const posicoesGrelha = [];
+
+      // Ponto inicial da grelha (ajusta o 150 e o 100 para mover a grelha toda pelo ecrã)
+      const inicioX = 150 + largPeca / 2;
+      const inicioY = 100 + altPeca / 2;
+
+      for (let linha = 0; linha < 4; linha++) {
+        for (let coluna = 0; coluna < 4; coluna++) {
+          posicoesGrelha.push({
+            x: inicioX + coluna * largPeca,
+            y: inicioY + linha * altPeca,
+          });
         }
+      }
 
-        // Cria as zonas de drop (Drop Zones) com os tamanhos reais
-        for (let i = 0; i < 16; i++) {
-            let zone = this.add.zone(posicoesGrelha[i].x, posicoesGrelha[i].y, largPeca, altPeca).setRectangleDropZone(largPeca, altPeca);
-            zone.idCorreto = i;
-            
-            // Contorno amarelo para a zona
-            let graphics = this.add.graphics();
-            graphics.lineStyle(2, 0xffff00);
-            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+      // Cria as zonas de drop (Drop Zones) com os tamanhos reais
+      for (let i = 0; i < 16; i++) {
+        let zone = this.add
+          .zone(posicoesGrelha[i].x, posicoesGrelha[i].y, largPeca, altPeca)
+          .setRectangleDropZone(largPeca, altPeca);
+        zone.idCorreto = i;
+
+        // Contorno amarelo para a zona
+        let graphics = this.add.graphics();
+        graphics.lineStyle(2, 0xffff00);
+        graphics.strokeRect(
+          zone.x - zone.input.hitArea.width / 2,
+          zone.y - zone.input.hitArea.height / 2,
+          zone.input.hitArea.width,
+          zone.input.hitArea.height,
+        );
+      }
+
+      // 2. GERAR AS POSIÇÕES DAS PEÇAS BARALHADAS
+      let posicoesBarra = [];
+
+      // Vamos colocar as peças em duas colunas ao lado da grelha (ou podes pôr em baixo)
+      // Como as peças são grandes, agrupá-las à direita pode ser melhor
+      const barraX = inicioX + 4 * largPeca + 50; // Começa à direita da grelha
+      const barraY = inicioY;
+
+      for (let linha = 0; linha < 8; linha++) {
+        for (let coluna = 0; coluna < 2; coluna++) {
+          posicoesBarra.push({
+            x: barraX + coluna * largPeca,
+            // Sobrepomos um bocadinho (altPeca * 0.5) em Y para caberem todas na tela
+            y: barraY + linha * (altPeca * 0.5),
+          });
         }
+      }
 
-        // 2. GERAR AS POSIÇÕES DAS PEÇAS BARALHADAS
-        let posicoesBarra = [];
-        
-        // Vamos colocar as peças em duas colunas ao lado da grelha (ou podes pôr em baixo)
-        // Como as peças são grandes, agrupá-las à direita pode ser melhor
-        const barraX = inicioX + (4 * largPeca) + 50; // Começa à direita da grelha
-        const barraY = inicioY;
+      Phaser.Utils.Array.Shuffle(posicoesBarra);
 
-        for (let linha = 0; linha < 8; linha++) {
-            for (let coluna = 0; coluna < 2; coluna++) {
-                posicoesBarra.push({ 
-                    x: barraX + (coluna * largPeca), 
-                    // Sobrepomos um bocadinho (altPeca * 0.5) em Y para caberem todas na tela
-                    y: barraY + (linha * (altPeca * 0.5)) 
-                });
-            }
+      // Criar as imagens
+      for (let i = 0; i < 16; i++) {
+        let peca = this.add
+          .image(posicoesBarra[i].x, posicoesBarra[i].y, `peca${i}`)
+          .setInteractive();
+        this.input.setDraggable(peca);
+        peca.idPeca = i;
+        peca.posicaoInicial = { x: posicoesBarra[i].x, y: posicoesBarra[i].y };
+
+        // Para garantir que a peça do inventário não nasce atrás de outra e fique escondida
+        this.children.bringToTop(peca);
+      }
+
+      // 3. LÓGICA DE DRAG & DROP
+      this.input.on("dragstart", (pointer, gameObject) => {
+        this.children.bringToTop(gameObject);
+        gameObject.setTint(0xdddddd); // Dá um efeito visual ao pegar na peça
+      });
+
+      this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
+        gameObject.x = dragX;
+        gameObject.y = dragY;
+      });
+
+      this.input.on("drop", (pointer, gameObject, dropZone) => {
+        gameObject.clearTint();
+
+        if (gameObject.idPeca === dropZone.idCorreto) {
+          // Encaixou certo
+          gameObject.x = dropZone.x;
+          gameObject.y = dropZone.y;
+          gameObject.input.enabled = false;
+          this.pecasCorretas++;
+
+          if (this.pecasCorretas === 16) {
+            this.vencerPuzzle();
+          }
+        } else {
+          // Errado, volta ao início
+          this.tweens.add({
+            targets: gameObject,
+            x: gameObject.posicaoInicial.x,
+            y: gameObject.posicaoInicial.y,
+            duration: 300,
+            ease: "Power2",
+          });
         }
-        
-        Phaser.Utils.Array.Shuffle(posicoesBarra);
+      });
 
-        // Criar as imagens
-        for (let i = 0; i < 16; i++) {
-            let peca = this.add.image(posicoesBarra[i].x, posicoesBarra[i].y, `peca${i}`).setInteractive();
-            this.input.setDraggable(peca);
-            peca.idPeca = i;
-            peca.posicaoInicial = { x: posicoesBarra[i].x, y: posicoesBarra[i].y };
-            
-            // Para garantir que a peça do inventário não nasce atrás de outra e fique escondida
-            this.children.bringToTop(peca);
+      this.input.on("dragend", (pointer, gameObject, dropped) => {
+        gameObject.clearTint();
+        if (!dropped) {
+          this.tweens.add({
+            targets: gameObject,
+            x: gameObject.posicaoInicial.x,
+            y: gameObject.posicaoInicial.y,
+            duration: 300,
+            ease: "Power2",
+          });
         }
-
-        // 3. LÓGICA DE DRAG & DROP
-        this.input.on('dragstart', (pointer, gameObject) => {
-            this.children.bringToTop(gameObject);
-            gameObject.setTint(0xdddddd); // Dá um efeito visual ao pegar na peça
-        });
-
-        this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
-            gameObject.x = dragX;
-            gameObject.y = dragY;
-        });
-
-        this.input.on('drop', (pointer, gameObject, dropZone) => {
-            gameObject.clearTint();
-            
-            if (gameObject.idPeca === dropZone.idCorreto) {
-                // Encaixou certo
-                gameObject.x = dropZone.x;
-                gameObject.y = dropZone.y;
-                gameObject.input.enabled = false;
-                this.pecasCorretas++;
-
-                if (this.pecasCorretas === 16) {
-                    this.vencerPuzzle();
-                }
-            } else {
-                // Errado, volta ao início
-                this.tweens.add({
-                    targets: gameObject,
-                    x: gameObject.posicaoInicial.x,
-                    y: gameObject.posicaoInicial.y,
-                    duration: 300,
-                    ease: 'Power2'
-                });
-            }
-        });
-
-        this.input.on('dragend', (pointer, gameObject, dropped) => {
-            gameObject.clearTint();
-            if (!dropped) {
-                this.tweens.add({
-                    targets: gameObject,
-                    x: gameObject.posicaoInicial.x,
-                    y: gameObject.posicaoInicial.y,
-                    duration: 300,
-                    ease: 'Power2'
-                });
-            }
-        });
+      });
     }
 
     vencerPuzzle() {

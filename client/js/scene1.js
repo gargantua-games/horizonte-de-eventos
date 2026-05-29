@@ -3,7 +3,7 @@ class scene1 extends Phaser.Scene {
     super("scene1");
 
     this.speed = 200;
-    this.estoutrabalhando = true;
+    this.estoutrabalhando = false;
     this.doorOpen = 0;
     this.fase4 = true;
     this.vida = 3;
@@ -409,7 +409,7 @@ class scene1 extends Phaser.Scene {
     this.porta2.setSize(32, 128);
 
     this.delayedCall = this.time.delayedCall(14000, () => {
-      this.avisoconsole = this.physics.add.sprite(837, 226, "avisoconsole");
+      this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
       this.avisoconsole.body.allowGravity = false;
     });
 
@@ -792,7 +792,7 @@ class scene1 extends Phaser.Scene {
         //this.avisoconsole.setPosition(837, 226);
          if (!this.puzzleAberto) {
            this.puzzleAberto = true;
-           this.scene.launch("tetravex", { portaId: 1, cenaOrigem: "scene1" });
+           this.scene.launch("quebraCabeca", { portaId: 1, cenaOrigem: "scene1" });
          }
       }
     });

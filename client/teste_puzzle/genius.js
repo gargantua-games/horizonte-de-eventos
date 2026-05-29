@@ -14,7 +14,13 @@ export default class Genius extends Phaser.Scene {
     this.maxRodadas = 8;
   }
 
-  create() {
+    create() {
+      const width = this.cameras.main.width;
+      const height = this.cameras.main.height;
+
+      this.cameras.main.setZoom(0.5);
+        this.cameras.main.centerOn(width / 2, height / 2);
+        
     console.log("A cena Genius carregou com sucesso no ecrã!");
 
     // Fundo escuro do terminal

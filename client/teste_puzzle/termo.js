@@ -46,6 +46,12 @@ export default class termo extends Phaser.Scene {
     this.bloqueioCliquesMemoria = false;
   }
   create() {
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
+
+    this.cameras.main.setZoom(0.6);
+    this.cameras.main.centerOn(width / 2, height / 2);
+
     // Fundo principal do Terminal
     this.add.rectangle(400, 300, 800, 600, 0x121213);
     this.add
