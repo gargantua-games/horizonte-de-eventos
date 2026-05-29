@@ -418,9 +418,9 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.body.allowGravity = false;
     });
 
-   this.laserP1 = this.physics.add.group({
-     allowGravity: false,
-     immovable: true,
+    this.laserP1 = this.physics.add.group({
+      allowGravity: false,
+      immovable: true,
     });
 
     //faz um grupo para os bigbosses
@@ -825,9 +825,25 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.telescopios);
     this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
+
+    const destroyLaser = (laser, limit) => {
+      if (laser && laser.disableBody) {
+        laser.disableBody(true, true);
+      } else if (laser && laser.destroy) {
+        laser.destroy();
+      }
+    };
+
+    this.physics.add.collider(this.laserP1, this.limiteporta, destroyLaser, null, this);
+    this.physics.add.collider(this.laserP1, this.limitenorte, destroyLaser, null, this);
+    this.physics.add.collider(this.laserP1, this.limitesul, destroyLaser, null, this);
+    this.physics.add.collider(this.laserP1, this.limiteoeste, destroyLaser, null, this);
+    this.physics.add.collider(this.laserP1, this.limiteleste, destroyLaser, null, this);
+    this.physics.add.collider(this.laserP1, this.limites, destroyLaser, null, this);
+
     this.physics.add.overlap(this.playerroxo, this.porta, null, null, this);
     this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
-    
+
     /*this.physics.add.overlap(this.playerroxo, this.porta, () => {
       this.doorOpen += 1;
       });*/
@@ -838,16 +854,12 @@ class scene1 extends Phaser.Scene {
       this.physics.add.collider(this.playerroxo, this.limiteoeste);
       this.physics.add.collider(this.playerroxo, this.limiteleste);
     }
-    
+
     this.inimigosaliens = this.physics.add.group({
       allowGravity: false,
       immovable: false,
       pipeline: "Light2D",
     });
-    
-    
-
-    
 
     this.physics.add.collider(this.inimigosaliens, this.limitenorte);
     this.physics.add.collider(this.inimigosaliens, this.limitesul);
@@ -861,18 +873,24 @@ class scene1 extends Phaser.Scene {
       null,
       this,
     ); //this.enemyAttack, null, this);
-    
+
     this.layerParede.setCollisionByProperty({ collides: true });
 
-    this.physics.add.overlap(this.inimigosaliens, this.laserP1, this.killEnemy, null, this);
+    this.physics.add.overlap(
+      this.inimigosaliens,
+      this.laserP1,
+      this.killEnemy,
+      null,
+      this,
+    );
 
     //camera
-    this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-
+    
     if (this.estoutrabalhando === false) {
       this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
-    }
-
+    } else if (this.estoutrabalhando) { 
+    this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
+  }
     // Texto de posição do playerroxo atualizado a cada segundo
     this.positionText = this.add
       .text(200, 80, "X: 0 Y: 0", {
@@ -964,68 +982,64 @@ class scene1 extends Phaser.Scene {
       if (state.cannon) {
         this.angleCannon = state.cannon.angle;
         this.shoot = state.cannon.shooting;
-
       }
     });
-  } 
-  
+  }
+
   update(time, delta) {
-    
-    this.cannon.setAngle(this.angleCannon)
-    
-    
+    this.cannon.setAngle(this.angleCannon);
+
     //if (this.fase4) {
-      
+
     //if (this.positionP2) {
-      try {
-        this.game.socket.emit("scene1", this.game.room, {
-          playerroxo: {
-            x: this.playerroxo.x,
-            y: this.playerroxo.y,
-            animation: this.playerroxo.anims.currentAnim
+    try {
+      this.game.socket.emit("scene1", this.game.room, {
+        playerroxo: {
+          x: this.playerroxo.x,
+          y: this.playerroxo.y,
+          animation: this.playerroxo.anims.currentAnim
             ? this.playerroxo.anims.currentAnim.key
             : null,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
-      //}
+        },
+      });
+    } catch (e) {
+      console.error("Error updating player:", e);
+    }
     //}
-    
-      if (this.shoot && this.bulletP1) {
-    
-        this.bulletP1 = false;
-        setTimeout(() => {
-            this.bulletP1 = true;
-          }, 800);
-      
-        if (this.angleCannon === 0) {
+    //}
+
+    if (this.shoot && this.bulletP1) {
+      this.bulletP1 = false;
+      setTimeout(() => {
+        this.bulletP1 = true;
+      }, 800);
+
+      if (this.angleCannon === 0) {
         this.laserP1
-          .create(this.cannon.x, (this.cannon.y - 20), "bulletP1")
-          .setVelocityY(-200)
-        }else  if (this.angleCannon === 80) {
-          this.laserP1
-          .create((this.cannon.x + 30), (this.cannon.y - 5), "bulletP1")
+          .create(this.cannon.x, this.cannon.y - 20, "bulletP1")
+          .setVelocityY(-200);
+      } else if (this.angleCannon === 80) {
+        this.laserP1
+          .create(this.cannon.x + 30, this.cannon.y - 5, "bulletP1")
           .setVelocityY(-33)
-          .setVelocityX(165)
-        }else  if (this.angleCannon === -80) {
-          this.laserP1
-          .create((this.cannon.x - 30), (this.cannon.y - 5), "bulletP1")
+          .setVelocityX(165);
+      } else if (this.angleCannon === -80) {
+        this.laserP1
+          .create(this.cannon.x - 30, this.cannon.y - 5, "bulletP1")
           .setVelocityY(-33)
-          .setVelocityX(-165)
-        }else  if (this.angleCannon === 50) {
-          this.laserP1
-          .create((this.cannon.x + 20), (this.cannon.y - 15), "bulletP1")
+          .setVelocityX(-165);
+      } else if (this.angleCannon === 50) {
+        this.laserP1
+          .create(this.cannon.x + 20, this.cannon.y - 15, "bulletP1")
           .setVelocityY(-150)
-          .setVelocityX(150)
-        }else  if (this.angleCannon === -50) {
-          this.laserP1
-          .create((this.cannon.x - 20), (this.cannon.y - 15), "bulletP1")
+          .setVelocityX(150);
+      } else if (this.angleCannon === -50) {
+        this.laserP1
+          .create(this.cannon.x - 20, this.cannon.y - 15, "bulletP1")
           .setVelocityY(-150)
-          .setVelocityX(-150)
-        }
+          .setVelocityX(-150);
       }
+    }
     if (this.inimigosalienscount < 0) {
       const spawninimigosx = Phaser.Math.Between(87, 1260);
       const spawninimigosy = Phaser.Math.Between(1300, 1400);
@@ -1040,140 +1054,120 @@ class scene1 extends Phaser.Scene {
       enemy.isAttacking = false;
       this.inimigosalienscount += 1;
     }
-      
 
-      const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
-      const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
+    const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
+    const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
-      if (portaOverlap && !this.portalTeleported) {
-        this.portaOverlapTime += delta;
-        if (this.portaOverlapTime >= 2000) {
-          this.portalTeleported = true;
-          this.portaOverlapTime = 0;
-          this.teletransporte();
-        }
-      } else if (!portaOverlap) {
+    if (portaOverlap && !this.portalTeleported) {
+      this.portaOverlapTime += delta;
+      if (this.portaOverlapTime >= 2000) {
+        this.portalTeleported = true;
         this.portaOverlapTime = 0;
-        this.portalTeleported = false;
+        this.teletransporte();
       }
+    } else if (!portaOverlap) {
+      this.portaOverlapTime = 0;
+      this.portalTeleported = false;
+    }
 
-      if (porta2Overlap && !this.portal2Teleported) {
-        this.porta2OverlapTime += delta;
-        if (this.porta2OverlapTime >= 2000) {
-          this.portal2Teleported = true;
-          this.porta2OverlapTime = 0;
-          this.teletransporte2();
-        }
-      } else if (!porta2Overlap) {
+    if (porta2Overlap && !this.portal2Teleported) {
+      this.porta2OverlapTime += delta;
+      if (this.porta2OverlapTime >= 2000) {
+        this.portal2Teleported = true;
         this.porta2OverlapTime = 0;
-        this.portal2Teleported = false;
+        this.teletransporte2();
       }
+    } else if (!porta2Overlap) {
+      this.porta2OverlapTime = 0;
+      this.portal2Teleported = false;
+    }
 
-      if (this.puzzleAberto) {
-        if (this.playerroxo) {
-          this.playerroxo.setVelocity(0, 0);
-        }
-        if (this.passos && this.passos.isPlaying) {
-          this.passos.stop();
-        }
-        return;
+    if (this.puzzleAberto) {
+      if (this.playerroxo) {
+        this.playerroxo.setVelocity(0, 0);
       }
-
-      const cursores = this.input.keyboard.createCursorKeys();
-      const qe = this.input.keyboard.addKeys("E, Q");
-
-      //const cursores = this.input.keyboard.createCursorKeys();
-      const jkl = this.input.keyboard.addKeys("J,K,L");
-
-      if (this.doorOpen === 2) {
-        try {
-          this.game.socket.emit("scene1", this.game.room, {
-            jkl: {
-              J: jkl.J.isDown,
-              L: jkl.L.isDown,
-              K: jkl.K.isDown,
-            },
-          });
-        } catch (e) {
-          console.error("Error updating player:", e);
-        }
+      if (this.passos && this.passos.isPlaying) {
+        this.passos.stop();
       }
+      return;
+    }
 
-      this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y);
+    const cursores = this.input.keyboard.createCursorKeys();
+    const qe = this.input.keyboard.addKeys("E, Q");
 
-      // Captura entrada do teclado
-      //const cursors = this.input.keyboard.createCursorKeys();
-      const wasd = this.input.keyboard.addKeys("W,S,A,D");
+    //const cursores = this.input.keyboard.createCursorKeys();
+    const jkl = this.input.keyboard.addKeys("J,K,L");
 
-      // Captura entrada do gamepad
-      const pad =
-        this.input.gamepad && this.input.gamepad.total > 0
-          ? this.input.gamepad.getPad(0)
-          : null;
-
-      let horizontal = 0;
-      let vertical = 0;
-
-      // Teclado WASD
-      if (wasd.A.isDown) {
-        horizontal = -1;
-      } else if (wasd.D.isDown) {
-        horizontal = 1;
+    if (this.doorOpen === 2) {
+      try {
+        this.game.socket.emit("scene1", this.game.room, {
+          jkl: {
+            J: jkl.J.isDown,
+            L: jkl.L.isDown,
+            K: jkl.K.isDown,
+          },
+        });
+      } catch (e) {
+        console.error("Error updating player:", e);
       }
+    }
 
-      if (wasd.W.isDown) {
-        vertical = -1;
-      } else if (wasd.S.isDown) {
-        vertical = 1;
+    this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y);
+
+    // Captura entrada do teclado
+    //const cursors = this.input.keyboard.createCursorKeys();
+    const wasd = this.input.keyboard.addKeys("W,S,A,D");
+
+    // Captura entrada do gamepad
+    const pad =
+      this.input.gamepad && this.input.gamepad.total > 0
+        ? this.input.gamepad.getPad(0)
+        : null;
+
+    let horizontal = 0;
+    let vertical = 0;
+
+    // Teclado WASD
+    if (wasd.A.isDown) {
+      horizontal = -1;
+    } else if (wasd.D.isDown) {
+      horizontal = 1;
+    }
+
+    if (wasd.W.isDown) {
+      vertical = -1;
+    } else if (wasd.S.isDown) {
+      vertical = 1;
+    }
+
+    // Gamepad (usando eixos como em scene0, mas adaptado para ortogonal)
+    if (pad) {
+      if (pad.axes.length > 0) {
+        horizontal = pad.axes[0].getValue();
       }
-
-      // Gamepad (usando eixos como em scene0, mas adaptado para ortogonal)
-      if (pad) {
-        if (pad.axes.length > 0) {
-          horizontal = pad.axes[0].getValue();
-        }
-        if (pad.axes.length > 1) {
-          vertical = pad.axes[1].getValue();
-        }
+      if (pad.axes.length > 1) {
+        vertical = pad.axes[1].getValue();
       }
+    }
 
-      // Aplica velocidade
-      this.playerroxo.setVelocityX(horizontal * this.speed);
-      this.playerroxo.setVelocityY(vertical * this.speed);
+    // Aplica velocidade
+    this.playerroxo.setVelocityX(horizontal * this.speed);
+    this.playerroxo.setVelocityY(vertical * this.speed);
 
-      // Verifica overlap com limites e ajusta as bounds da câmera
-      const isOverlapLimites = this.physics.overlap(
-        this.playerroxo,
-        this.limites,
-      );
+    // Verifica overlap com limites e ajusta as bounds da câmera
+   const isOverlapLimites = this.physics.overlap(
+      this.playerroxo,
+      this.limites,
+   );
+    this.cameras.main.setBounds(20, 0, this.tilemap.widthInPixels, );
 
-      if (qe.E.isDown) {
-        this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
-        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+    if (qe.E.isDown) {
+      this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
+      this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
 
-        this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
-      } else if (qe.Q.isDown) {
-        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-
-        if (this.estoutrabalhando === false) {
-          if (isOverlapLimites) {
-            // Define as bounds da câmera baseado no sprite limites
-            const limitesLeft = 40;
-            const limitesTop = 950;
-            const limitesRight = 1302;
-            const limitesBottom = 1720;
-            this.cameras.main.setBounds(
-              limitesLeft,
-              limitesTop,
-              limitesRight - limitesLeft,
-              limitesBottom - limitesTop,
-            );
-          } else if (!isOverlapLimites) {
-            // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
-            this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
-          }
-        }
-      }
+      this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
+    } else if (qe.Q.isDown) {
+      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
 
       if (this.estoutrabalhando === false) {
         if (isOverlapLimites) {
@@ -1193,100 +1187,120 @@ class scene1 extends Phaser.Scene {
           this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
         }
       }
+    }
 
-      // Animações e som baseado no movimento
-      const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
-
-      if (moving) {
-        if (!this.passos.isPlaying) this.passos.play();
-      } else {
-        if (this.passos.isPlaying) this.passos.stop();
+   /* if (this.estoutrabalhando === false) {
+      if (isOverlapLimites) {
+        // Define as bounds da câmera baseado no sprite limites
+        const limitesLeft = 40;
+        const limitesTop = 950;
+        const limitesRight = 1302;
+        const limitesBottom = 1720;
+        this.cameras.main.setBounds(
+          limitesLeft,
+          limitesTop,
+          limitesRight - limitesLeft,
+          limitesBottom - limitesTop,
+        );
+      } else if (!isOverlapLimites) {
+        // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
+        this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
       }
+    }*/
 
-      if (horizontal > 0.1) {
-        this.playerroxo.anims.play("andardireita", true);
-      } else if (horizontal < -0.1) {
-        this.playerroxo.anims.play("andaresquerda", true);
-      } else if (vertical > 0.1) {
-        this.playerroxo.anims.play("andarfrente", true); // assumindo que "andarfrente" é para baixo
-      } else if (vertical < -0.1) {
-        this.playerroxo.anims.play("andarcostas", true);
-      } else {
-        // Idle baseado na última direção
-        if (this.playerroxo.anims.currentAnim) {
-          const currentKey = this.playerroxo.anims.currentAnim.key;
-          if (currentKey === "andardireita") {
-            this.playerroxo.anims.play("idledireita", true);
-          } else if (currentKey === "andaresquerda") {
-            this.playerroxo.anims.play("idleesquerda", true);
-          } else if (currentKey === "andarfrente") {
-            this.playerroxo.anims.play("idlefrente", true);
-          } else if (currentKey === "andarcostas") {
-            this.playerroxo.anims.play("idlecostas", true);
-          }
+    // Animações e som baseado no movimento
+    const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
+
+    if (moving) {
+      if (!this.passos.isPlaying) this.passos.play();
+    } else {
+      if (this.passos.isPlaying) this.passos.stop();
+    }
+
+    if (horizontal > 0.1) {
+      this.playerroxo.anims.play("andardireita", true);
+    } else if (horizontal < -0.1) {
+      this.playerroxo.anims.play("andaresquerda", true);
+    } else if (vertical > 0.1) {
+      this.playerroxo.anims.play("andarfrente", true); // assumindo que "andarfrente" é para baixo
+    } else if (vertical < -0.1) {
+      this.playerroxo.anims.play("andarcostas", true);
+    } else {
+      // Idle baseado na última direção
+      if (this.playerroxo.anims.currentAnim) {
+        const currentKey = this.playerroxo.anims.currentAnim.key;
+        if (currentKey === "andardireita") {
+          this.playerroxo.anims.play("idledireita", true);
+        } else if (currentKey === "andaresquerda") {
+          this.playerroxo.anims.play("idleesquerda", true);
+        } else if (currentKey === "andarfrente") {
+          this.playerroxo.anims.play("idlefrente", true);
+        } else if (currentKey === "andarcostas") {
+          this.playerroxo.anims.play("idlecostas", true);
         }
       }
+    }
 
-      // Movimento dos inimigos aliens
-      if (this.inimigosaliens) {
-        this.inimigosaliens.children.each((enemy) => {
-          const dx = this.playerroxo.x - enemy.x;
-          const dy = this.playerroxo.y - enemy.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const isTouchingCaixa = this.physics.overlap(enemy, this.caixa);
+    // Movimento dos inimigos aliens
+    if (this.inimigosaliens) {
+      this.inimigosaliens.children.each((enemy) => {
+        const dx = this.playerroxo.x - enemy.x;
+        const dy = this.playerroxo.y - enemy.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const isTouchingCaixa = this.physics.overlap(enemy, this.caixa);
 
-          if (distance > 0) {
-            enemy.setVelocityX((dx / distance) * 80);
-            enemy.setVelocityY((dy / distance) * 80);
+        if (distance > 0) {
+          enemy.setVelocityX((dx / distance) * 80);
+          enemy.setVelocityY((dy / distance) * 80);
+        } else {
+          enemy.setVelocity(0, 0);
+        }
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          enemy.lastDirection = "horizontal";
+          enemy.lastFlipX = dx > 0;
+        } else if (dy < 0) {
+          enemy.lastDirection = "up";
+        } else {
+          enemy.lastDirection = "down";
+        }
+
+        if (isTouchingCaixa) {
+          enemy.isAttacking = true;
+        } else {
+          enemy.isAttacking = false;
+        }
+
+        if (enemy.isAttacking) {
+          if (enemy.lastDirection === "horizontal") {
+            enemy.anims.play("enemyAtaque", true);
+            enemy.setFlipX(enemy.lastFlipX);
+            enemy.setVelocity(0, 0);
+          } else if (enemy.lastDirection === "up") {
+            enemy.anims.play("enemyAtaqueCima", true);
+            enemy.setFlipX(false);
+            enemy.setVelocity(0, 0);
           } else {
+            enemy.anims.play("enemyAtaqueBaixo", true);
+            enemy.setFlipX(false);
             enemy.setVelocity(0, 0);
           }
-
+        } else if (distance > 0) {
           if (Math.abs(dx) > Math.abs(dy)) {
-            enemy.lastDirection = "horizontal";
-            enemy.lastFlipX = dx > 0;
+            enemy.anims.play("enemyWalk", true);
+            enemy.setFlipX(dx > 0);
           } else if (dy < 0) {
-            enemy.lastDirection = "up";
+            enemy.anims.play("enemyWalkCima", true);
+            enemy.setFlipX(false);
           } else {
-            enemy.lastDirection = "down";
+            enemy.anims.play("enemyWalkBaixo", true);
+            enemy.setFlipX(false);
           }
-
-          if (isTouchingCaixa) {
-            enemy.isAttacking = true;
-          } else {
-            enemy.isAttacking = false;
-          }
-
-          if (enemy.isAttacking) {
-            if (enemy.lastDirection === "horizontal") {
-              enemy.anims.play("enemyAtaque", true);
-              enemy.setFlipX(enemy.lastFlipX);
-              enemy.setVelocity(0, 0);
-            } else if (enemy.lastDirection === "up") {
-              enemy.anims.play("enemyAtaqueCima", true);
-              enemy.setFlipX(false);
-              enemy.setVelocity(0, 0);
-            } else {
-              enemy.anims.play("enemyAtaqueBaixo", true);
-              enemy.setFlipX(false);
-              enemy.setVelocity(0, 0);
-            }
-          } else if (distance > 0) {
-            if (Math.abs(dx) > Math.abs(dy)) {
-              enemy.anims.play("enemyWalk", true);
-              enemy.setFlipX(dx > 0);
-            } else if (dy < 0) {
-              enemy.anims.play("enemyWalkCima", true);
-              enemy.setFlipX(false);
-            } else {
-              enemy.anims.play("enemyWalkBaixo", true);
-              enemy.setFlipX(false);
-            }
-          } else {
-            enemy.anims.stop();
-          }
-        });
-      }
+        } else {
+          enemy.anims.stop();
+        }
+      });
+    }
     // fim update
   }
 

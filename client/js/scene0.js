@@ -31,7 +31,6 @@ class scene0 extends Phaser.Scene {
     this.angleCannon = 0;
     this.bulletP1 = true;
     this.shooting = false;
-
   }
 
   init() {
@@ -175,7 +174,6 @@ class scene0 extends Phaser.Scene {
   }*/
 
   create() {
-
     //const keyboard = this.keys;
     const pad =
       this.input.gamepad && this.input.gamepad.total > 0
@@ -214,7 +212,7 @@ class scene0 extends Phaser.Scene {
       .play();
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
 
-    this.space = this.add.image(100, 800, "space");
+    this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
 
     this.anims.create({
@@ -1068,6 +1066,70 @@ class scene0 extends Phaser.Scene {
       this.player.y - this.cameras.main.height / 2 - 120; // Ajuste para começar mais para cima (100 pixels acima do centro do jogador)
     this.player.anims.play("idleRight", true).setPipeline("Light2D");
 
+    this.antenas = this.add.group({
+      allowGravity: false,
+      immovable: true,
+      pipeline: "Light2D",
+    });
+
+    this.antenas
+      .create(537, 3948, "NewPiskel")
+      .setScale(-1, 1)
+     
+
+    this.antenas
+      .create(880, 3979, "NewPiskel")
+      .setScale(-1, 1)
+      
+
+    this.antenas
+      .create(1170, 3951, "NewPiskel")
+      .setScale(-1, 1)
+
+    this.antenas
+      .create(820, 4044, "NewPiskel")
+      .setScale(-1, 1)
+
+
+    this.antenas
+      .create(433, 4107, "NewPiskel")
+      .setScale(-1, 1)
+  
+
+    this.antenas
+      .create(880, 4138, "NewPiskel")
+      .setScale(-1, 1)
+      
+
+    this.antenas
+      .create(175, 4170, "NewPiskel")
+      .setScale(-1, 1)
+
+
+    //telescopios exterior
+    this.telescopios = this.add.group({
+      allowGravity: false,
+      immovable: true,
+      pipeline: "Light2D",
+    });
+
+    this.telescopios.create(207, 3987, "telescopio")
+
+    this.telescopios.create(338, 4211, "telescopio")
+
+    this.telescopios.create(1107, 4114, "telescopio")
+
+    //osciloscopios exterior
+    this.osciloscopios = this.add.group({
+      allowGravity: false,
+      immovable: true,
+      pipeline: "Light2D",
+    });
+
+    this.osciloscopios.create(626, 4024, "osciloscopio")
+
+    this.osciloscopios.create(980, 4184, "osciloscopio")
+
     this.player2 = this.add.sprite(92, 3890, "playerroxo", 3);
     this.player2.setPipeline("Light2D");
 
@@ -1201,7 +1263,6 @@ class scene0 extends Phaser.Scene {
         }, 3237);
       }*/
     });
-
 
     /*this.physics.add.overlap(this.player, this.invisible3, () => {
       this.camP2 = true
@@ -1482,8 +1543,7 @@ class scene0 extends Phaser.Scene {
       if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
         this.doorOpen = state.doorOpen.key;
       }
-    }
-)
+    });
     this.game.socket.on("scene1", (state) => {
       if (state.playerroxo) {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
@@ -1526,8 +1586,7 @@ class scene0 extends Phaser.Scene {
   }
 
   update() {
-
-    this.cannon.setAngle(this.angleCannon)
+    this.cannon.setAngle(this.angleCannon);
 
     this.cargaJPpercentage = this.cargaJp / 10;
 
@@ -1564,17 +1623,17 @@ class scene0 extends Phaser.Scene {
     }
 
     //if (this.fase4) {
-       try {
-        this.game.socket.emit("scene0", this.game.room, {
-          cannon: {
-            angle: this.angleCannon,
-            shooting: this.shooting,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
-   // }
+    try {
+      this.game.socket.emit("scene0", this.game.room, {
+        cannon: {
+          angle: this.angleCannon,
+          shooting: this.shooting,
+        },
+      });
+    } catch (e) {
+      console.error("Error updating player:", e);
+    }
+    // }
 
     if (this.fase5 === false && this.energy === true) {
       this.lights.enable().setAmbientColor(0xe0f7ff);
@@ -1596,23 +1655,21 @@ class scene0 extends Phaser.Scene {
     } else if (this.cargaJp === 0) {
       this.cargaJpText.setText("Carga: Sem Carga");
     }
-    
-    
-    
+
     const movingHorizontally = Math.abs(this.player.body.velocity.x) > 1;
     const onGround =
-    this.player.body.blocked.down || this.player.body.touching.down;
+      this.player.body.blocked.down || this.player.body.touching.down;
     if (movingHorizontally && onGround) {
       if (!this.passos.isPlaying) this.passos.play();
     } else if (this.passos.isPlaying) {
       this.passos.stop();
     }
-    
+
     const keyboard = this.keys;
     const pad =
-    this.input.gamepad && this.input.gamepad.total > 0
-    ? this.input.gamepad.getPad(0)
-    : null;
+      this.input.gamepad && this.input.gamepad.total > 0
+        ? this.input.gamepad.getPad(0)
+        : null;
     let horizontal = 0;
     let vertical = 0;
     let jumpPressed = false;
@@ -1620,7 +1677,7 @@ class scene0 extends Phaser.Scene {
     let exitPressed = false;
     let comunicationPressed = false;
     let reloadPressed = false;
-    
+
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
       vertical = pad.axes[1].getValue();
@@ -1631,11 +1688,10 @@ class scene0 extends Phaser.Scene {
       reloadPressed = !!pad.R1;
     }
 
-
     if (reloadPressed) {
       window.location.reload();
     }
-    
+
     if (keyboard) {
       if (keyboard.left.isDown) {
         horizontal = -1;
@@ -1645,240 +1701,244 @@ class scene0 extends Phaser.Scene {
       if (keyboard.up.isDown || keyboard.space.isDown) {
         jumpPressed = true;
       }
-
-   
     }
 
-    const estaSobreInvisible3 = this.physics.overlap(this.player, this.invisible3);
-      
-      if (!estaSobreInvisible3) {
-        this.camP2 = true;
-          
-      } else if (estaSobreInvisible3) {
-        
-        if ((exitPressed || keyboard.exit.isDown) && !this.camP2) {
-          this.movingP1 = true;
-          this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
-          this.cameras.main.scrollY =
-            this.player.y - this.cameras.main.height / 2 - 120;
-          this.iaBox.setVisible(true);
-          this.invisible3.enableBody(true, 540, 300, true, true);
-         this.layerEnfeites.setScrollFactor(0.9, 1);
-        } else if (interectPressed || keyboard.action.isDown) {
-          this.iaBox.setVisible(false);
-         /*this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+    const estaSobreInvisible3 = this.physics.overlap(
+      this.player,
+      this.invisible3,
+    );
+
+    if (!estaSobreInvisible3) {
+      this.camP2 = true;
+    } else if (estaSobreInvisible3) {
+      if ((exitPressed || keyboard.exit.isDown) && !this.camP2) {
+        this.movingP1 = true;
+        this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
+        this.cameras.main.scrollY =
+          this.player.y - this.cameras.main.height / 2 - 120;
+        this.iaBox.setVisible(true);
+        this.invisible3.enableBody(true, 540, 300, true, true);
+        this.layerEnfeites.setScrollFactor(0.9, 1);
+      } else if (interectPressed || keyboard.action.isDown) {
+        this.iaBox.setVisible(false);
+        /*this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
           this.cameras.main.scrollY =
             this.player2.y - this.cameras.main.height / 2 - 120;*/
-          this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
-          this.cameras.main.scrollY =
-            this.cannon.y - this.cameras.main.height - 14;
-          this.camP2 = false;
-          this.movingP1 = false;
-          this.layerEnfeites.setScrollFactor(1);
+        this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
+        this.cameras.main.scrollY =
+          this.cannon.y - this.cameras.main.height - 14;
+        this.camP2 = false;
+        this.movingP1 = false;
+        this.layerEnfeites.setScrollFactor(1);
       }
-      }
-    
-    if(this.movingP1){
-      
-    if (horizontal < 0) {
-      this.player.setVelocityX(200);
-      this.direction = true;
-      if (this.player.body.velocity.y === 0 && this.jetPack === false) {
-        this.player.anims.play("walk-right", true);
-      } else if (this.player.body.velocity.y === 0 && this.jetPack === true) {
-        this.player.anims.play("walk-rightJp", true);
-      }
-    } else if (horizontal > 0) {
-      this.player.setVelocityX(-200);
-      this.direction = false;
-      if (this.player.body.velocity.y === 0 && this.jetPack === false) {
-        this.player.anims.play("walk-left", true);
-      } else if (this.player.body.velocity.y === 0 && this.jetPack === true) {
-        this.player.anims.play("walk-leftJp", true);
-      }
-    } else {
-      this.player.setVelocityX(0);
     }
 
-    if (this.fase3 === false) {
-      this.physics.world.gravity.y = 900;
-
-      if (this.player.body.blocked.down) {
-        this.doubleJump = false;
-        if (jumpPressed || vertical > 0) this.player.setVelocityY(-300);
+    if (this.movingP1) {
+      if (horizontal < 0) {
+        this.player.setVelocityX(200);
+        this.direction = true;
+        if (this.player.body.velocity.y === 0 && this.jetPack === false) {
+          this.player.anims.play("walk-right", true);
+        } else if (this.player.body.velocity.y === 0 && this.jetPack === true) {
+          this.player.anims.play("walk-rightJp", true);
+        }
+      } else if (horizontal > 0) {
+        this.player.setVelocityX(-200);
+        this.direction = false;
+        if (this.player.body.velocity.y === 0 && this.jetPack === false) {
+          this.player.anims.play("walk-left", true);
+        } else if (this.player.body.velocity.y === 0 && this.jetPack === true) {
+          this.player.anims.play("walk-leftJp", true);
+        }
+      } else {
+        this.player.setVelocityX(0);
       }
 
-      if (this.player.body.blocked.left || this.player.body.blocked.right) {
+      if (this.fase3 === false) {
+        this.physics.world.gravity.y = 900;
+
+        if (this.player.body.blocked.down) {
+          this.doubleJump = false;
+          if (jumpPressed || vertical > 0) this.player.setVelocityY(-300);
+        }
+
+        if (this.player.body.blocked.left || this.player.body.blocked.right) {
+          if (
+            this.player.body.velocity.x != 0 &&
+            (jumpPressed || vertical > 0) &&
+            !this.doubleJump
+          ) {
+            this.player.setVelocityY(-415);
+            this.doubleJump = true;
+          }
+        }
+      } else {
+        this.physics.world.gravity.y = 50;
+
         if (
-          this.player.body.velocity.x != 0 &&
           (jumpPressed || vertical > 0) &&
-          !this.doubleJump
+          (this.player.body.blocked.down ||
+            (this.doubleJump && this.cargaJp > 0))
         ) {
-          this.player.setVelocityY(-415);
+          this.player.setVelocityY(-70);
+          this.doubleJump = false;
+          if (!this.player.body.blocked.down) {
+            this.cargaJp -= 30;
+            this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+          }
+
+          if (this.direction === true) {
+            this.player.setFrame("63");
+          } else if (this.direction === false) {
+            this.player.setFrame("61");
+          }
+        } else if (
+          vertical === 0 &&
+          !jumpPressed &&
+          this.player.body.velocity.y != 0
+        ) {
           this.doubleJump = true;
-        }
-      }
-    } else {
-      this.physics.world.gravity.y = 50;
 
-      if (
-        (jumpPressed || vertical > 0) &&
-        (this.player.body.blocked.down || (this.doubleJump && this.cargaJp > 0))
-      ) {
-        this.player.setVelocityY(-70);
-        this.doubleJump = false;
-        if (!this.player.body.blocked.down) {
-          this.cargaJp -= 30;
-          this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+          if (this.direction === true) {
+            this.player.anims.play("idleRightJP", true);
+          } else if (this.direction === false) {
+            this.player.anims.play("idleLeftJP", true);
+          }
         }
 
-        if (this.direction === true) {
-          this.player.setFrame("63");
-        } else if (this.direction === false) {
-          this.player.setFrame("61");
-        }
-      } else if (
-        vertical === 0 &&
-        !jumpPressed &&
-        this.player.body.velocity.y != 0
-      ) {
-        this.doubleJump = true;
-
-        if (this.direction === true) {
-          this.player.anims.play("idleRightJP", true);
-        } else if (this.direction === false) {
-          this.player.anims.play("idleLeftJP", true);
-        }
-      }
-
-      if (
-        this.player.body.velocity.y != 0 &&
-        this.player.body.velocity.x != 0
-      ) {
-        if (this.direction === true) {
-          this.player.setFrame("58");
-          this.player.setAngle(10);
-          if (this.cargaJp > 0) {
+        if (
+          this.player.body.velocity.y != 0 &&
+          this.player.body.velocity.x != 0
+        ) {
+          if (this.direction === true) {
+            this.player.setFrame("58");
+            this.player.setAngle(10);
+            if (this.cargaJp > 0) {
+              this.cargaJp -= 1;
+              this.cargaJpText.setText(
+                "Cargas: " + this.cargaJPpercentage + "%",
+              );
+            }
+          } else if (this.direction === false) {
+            this.player.setFrame("56");
+            this.player.setAngle(-10);
             this.cargaJp -= 1;
             this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
           }
-        } else if (this.direction === false) {
-          this.player.setFrame("56");
-          this.player.setAngle(-10);
-          this.cargaJp -= 1;
-          this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+        } else if (
+          (this.player.body.velocity.y != 0 &&
+            this.player.body.velocity.x === 0) ||
+          this.player.body.blocked.down
+        ) {
+          this.player.setAngle(0);
         }
-      } else if (
-        (this.player.body.velocity.y != 0 &&
-          this.player.body.velocity.x === 0) ||
-        this.player.body.blocked.down
-      ) {
-        this.player.setAngle(0);
       }
-    }
 
-    if (this.jetPack === false && this.fase3 === false) {
-      if (this.player.body.velocity.y < 0 && this.direction === true) {
-        this.player.anims.play("jump", true);
-      } else if (this.player.body.velocity.y < 0 && this.direction === false) {
-        this.player.anims.play("jumpL", true);
+      if (this.jetPack === false && this.fase3 === false) {
+        if (this.player.body.velocity.y < 0 && this.direction === true) {
+          this.player.anims.play("jump", true);
+        } else if (
+          this.player.body.velocity.y < 0 &&
+          this.direction === false
+        ) {
+          this.player.anims.play("jumpL", true);
+        }
+      } else if (this.jetPack === true && this.fase3 === false) {
+        if (this.player.body.velocity.y < 0 && this.direction === true) {
+          this.player.anims.play("jumpJP", true);
+        } else if (
+          this.player.body.velocity.y < 0 &&
+          this.direction === false
+        ) {
+          this.player.anims.play("jumpLJP", true);
+        }
       }
-    } else if (this.jetPack === true && this.fase3 === false) {
-      if (this.player.body.velocity.y < 0 && this.direction === true) {
-        this.player.anims.play("jumpJP", true);
-      } else if (this.player.body.velocity.y < 0 && this.direction === false) {
-        this.player.anims.play("jumpLJP", true);
-      }
-    }
 
-    if (this.jetPack === false) {
-      if (
-        this.direction === true &&
-        this.player.body.velocity.x === 0 &&
-        this.player.body.velocity.y === 0 &&
-        (this.player.body.blocked.down || this.player.body.blocked.up)
-      ) {
-        this.player.anims.play("idleRight", true);
-      } else if (
-        this.direction === false &&
-        this.player.body.velocity.x === 0 &&
-        this.player.body.velocity.y === 0 &&
-        (this.player.body.blocked.down || this.player.body.blocked.up)
-      ) {
-        this.player.anims.play("idleLeft", true);
+      if (this.jetPack === false) {
+        if (
+          this.direction === true &&
+          this.player.body.velocity.x === 0 &&
+          this.player.body.velocity.y === 0 &&
+          (this.player.body.blocked.down || this.player.body.blocked.up)
+        ) {
+          this.player.anims.play("idleRight", true);
+        } else if (
+          this.direction === false &&
+          this.player.body.velocity.x === 0 &&
+          this.player.body.velocity.y === 0 &&
+          (this.player.body.blocked.down || this.player.body.blocked.up)
+        ) {
+          this.player.anims.play("idleLeft", true);
+        }
+      } else if (this.jetPack === true) {
+        if (
+          this.direction === true &&
+          this.player.body.velocity.x === 0 &&
+          this.player.body.velocity.y === 0 &&
+          (this.player.body.blocked.down || this.player.body.blocked.up)
+        ) {
+          this.player.anims.play("idleRightJP", true);
+        } else if (
+          this.direction === false &&
+          this.player.body.velocity.x === 0 &&
+          this.player.body.velocity.y === 0 &&
+          (this.player.body.blocked.down || this.player.body.blocked.up)
+        ) {
+          this.player.anims.play("idleLeftJP", true);
+        }
       }
-    } else if (this.jetPack === true) {
-      if (
-        this.direction === true &&
-        this.player.body.velocity.x === 0 &&
-        this.player.body.velocity.y === 0 &&
-        (this.player.body.blocked.down || this.player.body.blocked.up)
-      ) {
-        this.player.anims.play("idleRightJP", true);
-      } else if (
-        this.direction === false &&
-        this.player.body.velocity.x === 0 &&
-        this.player.body.velocity.y === 0 &&
-        (this.player.body.blocked.down || this.player.body.blocked.up)
-      ) {
-        this.player.anims.play("idleLeftJP", true);
-      }
-    }
     } else if (!this.movingP1) {
-      
       if (horizontal === 0 && vertical > 0) {
         this.angleCannon = 0;
       }
-       if (horizontal < 0 && vertical <= 0) {
-         this.angleCannon = 80;
-      }else if (horizontal > 0 && vertical <= 0) {
-         this.angleCannon = -80;
+      if (horizontal < 0 && vertical <= 0) {
+        this.angleCannon = 80;
+      } else if (horizontal > 0 && vertical <= 0) {
+        this.angleCannon = -80;
       } else if (horizontal < 0 && vertical > 0) {
-         this.angleCannon = 50;
+        this.angleCannon = 50;
       } else if (horizontal > 0 && vertical > 0) {
-         this.angleCannon = -50;
+        this.angleCannon = -50;
       }
 
       if (interectPressed) {
         this.shooting = true;
       } else if (!interectPressed) {
-        this.shooting = false
+        this.shooting = false;
       }
 
       if (interectPressed && this.bulletP1) {
-
         this.bulletP1 = false;
         setTimeout(() => {
-            this.bulletP1 = true;
-          }, 1000);
-      
+          this.bulletP1 = true;
+        }, 1000);
+
         if (this.angleCannon === 0) {
           this.laserP1
-          .create(this.cannon.x, (this.cannon.y - 20), "bulletP1")
-          .setVelocityY(-200)
-        }else  if (this.angleCannon === 80) {
+            .create(this.cannon.x, this.cannon.y - 20, "bulletP1")
+            .setVelocityY(-200);
+        } else if (this.angleCannon === 80) {
           this.laserP1
-          .create((this.cannon.x + 30), (this.cannon.y - 5), "bulletP1")
-          .setVelocityY(-33)
-          .setVelocityX(165)
-        }else  if (this.angleCannon === -80) {
+            .create(this.cannon.x + 30, this.cannon.y - 5, "bulletP1")
+            .setVelocityY(-33)
+            .setVelocityX(165);
+        } else if (this.angleCannon === -80) {
           this.laserP1
-          .create((this.cannon.x - 30), (this.cannon.y - 5), "bulletP1")
-          .setVelocityY(-33)
-          .setVelocityX(-165)
-        }else  if (this.angleCannon === 50) {
+            .create(this.cannon.x - 30, this.cannon.y - 5, "bulletP1")
+            .setVelocityY(-33)
+            .setVelocityX(-165);
+        } else if (this.angleCannon === 50) {
           this.laserP1
-          .create((this.cannon.x + 20), (this.cannon.y - 15), "bulletP1")
-          .setVelocityY(-150)
-          .setVelocityX(150)
-        }else  if (this.angleCannon === -50) {
+            .create(this.cannon.x + 20, this.cannon.y - 15, "bulletP1")
+            .setVelocityY(-150)
+            .setVelocityX(150);
+        } else if (this.angleCannon === -50) {
           this.laserP1
-          .create((this.cannon.x - 20), (this.cannon.y - 15), "bulletP1")
-          .setVelocityY(-150)
-          .setVelocityX(-150)
+            .create(this.cannon.x - 20, this.cannon.y - 15, "bulletP1")
+            .setVelocityY(-150)
+            .setVelocityX(-150);
         }
       }
-
     }
 
     // movimentação inimigo
@@ -1914,9 +1974,8 @@ class scene0 extends Phaser.Scene {
               .body.setSize(30, 37)
               .setOffset(55, 17);
             this.inimigo.flipX = false;
-          }else if (0 < (this.player.x - this.inimigo.x) < 0) {
-            this.inimigo
-              .setVelocityX(0)
+          } else if (0 < this.player.x - this.inimigo.x < 0) {
+            this.inimigo.setVelocityX(0);
           }
         } else if (this.inimigo.y != 1837) {
           this.inimigo.setVelocityX(0).setFrame("14");
@@ -1957,7 +2016,6 @@ class scene0 extends Phaser.Scene {
   }
 
   collectEng(player, engrenagens) {
-
     this.score += 1;
     this.scoreText.setText("Engrenagens: " + this.score + "/4");
   }
