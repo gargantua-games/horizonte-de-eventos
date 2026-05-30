@@ -10,12 +10,12 @@ export default class helldivers extends Phaser.Scene {
 
         // Banco de Estratagemas inspirados no Helldivers 2
         this.bancoEstratagemas = [
-            { nome: "REINFORCE", seq: ["UP", "DOWN", "RIGHT", "LEFT", "UP"] },
-            { nome: "500KG BOMB", seq: ["UP", "RIGHT", "DOWN", "DOWN", "DOWN"] },
-            { nome: "ORBITAL LASER", seq: ["RIGHT", "DOWN", "UP", "RIGHT", "DOWN"] },
-            { nome: "EAGLE AIRSTRIKE", seq: ["UP", "RIGHT", "DOWN", "RIGHT", "DOWN"] },
-            { nome: "SUPPLY PACK", seq: ["DOWN", "LEFT", "DOWN", "UP", "UP", "RIGHT"] },
-            { nome: "RAILGUN", seq: ["DOWN", "RIGHT", "DOWN", "UP", "LEFT", "RIGHT"] }
+            { nome: "SENHA DO LOGIN DO USUÁRIO", seq: ["UP", "DOWN", "RIGHT", "LEFT", "UP"] },
+            { nome: "SENHA DO LOGIN DA CONTA DOODLE", seq: ["UP", "RIGHT", "DOWN", "DOWN", "DOWN"] },
+            { nome: "SENHA DO EMAIL", seq: ["RIGHT", "DOWN", "UP", "RIGHT", "DOWN"] },
+            { nome: "NOVA SENHA", seq: ["UP", "RIGHT", "DOWN", "RIGHT", "DOWN"] },
+            { nome: "CAPTCHA, VOCÊ É UM ROBÔ?", seq: ["DOWN", "LEFT", "DOWN", "UP", "UP", "RIGHT"] },
+            { nome: "PERGUNTA DE SEGURANÇA", seq: ["DOWN", "RIGHT", "DOWN", "UP", "LEFT", "RIGHT"] }
         ];
 
         // Configurações da partida
@@ -39,12 +39,12 @@ export default class helldivers extends Phaser.Scene {
         
         // Moldura Amarela Neon
         let moldura = this.add.graphics();
-        moldura.lineStyle(4, 0xffcc00, 0.8);
+        moldura.lineStyle(4, 0x19ba04, 0.8);
         moldura.strokeRect(40, 40, 720, 520);
 
         // Textos principais da Interface
-        this.add.text(400, 75, "★ STRATAGEM HERO ★", { 
-            fontSize: '36px', fill: '#ffcc00', fontStyle: 'bold', fontFamily: 'monospace' 
+        this.add.text(400, 75, "★ MESTRE DAS SENHAS ★", { 
+            fontSize: '36px', fill: '#49f075', fontStyle: 'bold', fontFamily: 'monospace' 
         }).setOrigin(0.5);
 
         this.txtPlacar = this.add.text(400, 130, "", { 
@@ -144,7 +144,7 @@ export default class helldivers extends Phaser.Scene {
             let pecaFundo = this.containerSetas.list[this.teclaAtualIndex * 2];
             let pecaTexto = pecaFundo.getData('textoRef');
             
-            pecaTexto.setStyle({ fill: '#ffcc00' });
+            pecaTexto.setStyle({ fill: '#00c42a' });
             pecaFundo.setStrokeStyle(2, 0xffcc00);
             
             // Efeito visual rápido de clique correto
@@ -174,6 +174,9 @@ export default class helldivers extends Phaser.Scene {
         //this.cameras.main.flash(300, 255, 0, 0);
         this.txtNomeEstratagema.setText(mensagem);
         this.txtNomeEstratagema.setStyle({ fill: '#ff3333' });
+        this.time.delayedCall(2000, () => {
+          this.scene.restart();
+        });
         
         this.teclaAtualIndex = 0;
 
@@ -183,6 +186,7 @@ export default class helldivers extends Phaser.Scene {
             let txt = fundo.getData('textoRef');
             if (txt) txt.setStyle({ fill: '#777777' });
             fundo.setStrokeStyle(2, 0x444444);
+            
         }
     }
 
