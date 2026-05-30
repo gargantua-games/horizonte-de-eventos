@@ -28,6 +28,12 @@ export default class helldivers extends Phaser.Scene {
     }
 
     create() {
+        const width = this.cameras.main.width;
+        const height = this.cameras.main.height;
+
+        this.cameras.main.setZoom(0.7);
+        this.cameras.main.centerOn(width / 2, height / 2);
+
         // Fundo estilo Terminal Militar (Preto/Verde Escuro)
         this.add.rectangle(400, 300, 800, 600, 0x050b08);
         

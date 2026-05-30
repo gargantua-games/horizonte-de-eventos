@@ -414,7 +414,7 @@ class scene1 extends Phaser.Scene {
     this.porta2.setSize(32, 128);
 
     this.delayedCall = this.time.delayedCall(14000, () => {
-      this.avisoconsole = this.physics.add.sprite(907, 395, "avisoconsole");
+      this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
       this.avisoconsole.body.allowGravity = false;
     });
 
@@ -754,9 +754,12 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.layerParede);
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.launch("tetravex", { portaId: 4, cenaOrigem: "scene1" });
+      if (this.doorOpen === 3) {
+        //this.avisoconsole.setPosition(640, 505);
+        if (!this.puzzleAberto) {
+          this.puzzleAberto = true;
+          this.scene.switch("termo", { portaId: 4, cenaOrigem: "scene1" });
+        }
       }
     });
     /*this.doorOpen = 4;
@@ -774,9 +777,12 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles2);
     this.physics.add.collider(this.playerroxo, this.consoles3);
     this.physics.add.collider(this.playerroxo, this.consoles4, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.launch("sudoku", { portaId: 2, cenaOrigem: "scene1" });
+      if (this.doorOpen === 1) {
+        this.avisoconsole.setPosition(937, 545);
+        if (!this.puzzleAberto) {
+          this.puzzleAberto = true;
+          this.scene.launch("tetravex", { portaId: 2, cenaOrigem: "scene1" });
+        }
       }
     });
 
@@ -792,15 +798,24 @@ class scene1 extends Phaser.Scene {
       }
     });*/
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.switch("termo", { portaId: 1, cenaOrigem: "scene1" });
+      if(this.doorOpen === 0) {
+        //this.avisoconsole.setPosition(837, 226);
+         if (!this.puzzleAberto) {
+           this.puzzleAberto = true;
+           this.scene.launch("sudoku", { portaId: 1, cenaOrigem: "scene1" });
+         }
       }
     });
     this.physics.add.collider(this.playerroxo, this.consoles6, () => {
-      if (!this.puzzleAberto) {
-        this.puzzleAberto = true;
-        this.scene.launch("quebraCabeca", { portaId: 3, cenaOrigem: "scene1" });
+      if (this.doorOpen === 2) {
+          this.avisoconsole.setPosition(640, 505);
+        if (!this.puzzleAberto) {
+          this.puzzleAberto = true;
+          this.scene.launch("helldivers", {
+            portaId: 3,
+            cenaOrigem: "scene1",
+          });
+        }
       }
     });
     /*this.doorOpen = 3;
@@ -1055,6 +1070,17 @@ class scene1 extends Phaser.Scene {
       this.inimigosalienscount += 1;
     }
 
+    if (this.puzzleAberto) {
+      if (this.playerroxo) {
+        this.playerroxo.setVelocity(0, 0);
+        this.playerroxo.anims.play("idlecostas", true);
+      }
+      if (this.passos && this.passos.isPlaying) {
+        this.passos.stop();
+      }
+      return;
+    }
+    
     const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
     const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
@@ -1301,8 +1327,8 @@ class scene1 extends Phaser.Scene {
         }
       });
     }
-    // fim update
-  }
+
+  } // fim update
 
   perdervida(caixa, alien) {
     // Verifica se já está em cooldown de invencibilidade
