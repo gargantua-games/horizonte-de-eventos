@@ -263,7 +263,7 @@ class scene2 extends Phaser.Scene {
       this.playerIsDead = true;
       this.nave.setVelocity(0, 0);
       this.nave.setTint(0xff0000); 
-      this.time.delayedCall(1500, () => this.scene.start("gameover2"));
+      this.time.delayedCall(1500, () => this.scene.start("gameover1"));
     }
   }
 
