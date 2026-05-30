@@ -802,7 +802,7 @@ class scene1 extends Phaser.Scene {
         //this.avisoconsole.setPosition(837, 226);
          if (!this.puzzleAberto) {
            this.puzzleAberto = true;
-           this.scene.launch("sudoku", { portaId: 1, cenaOrigem: "scene1" });
+           this.scene.launch("helldivers", { portaId: 1, cenaOrigem: "scene1" });
          }
       }
     });
