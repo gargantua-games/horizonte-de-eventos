@@ -754,13 +754,16 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.layerParede);
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
-      if (this.doorOpen === 3 && this.playerroxo.y > 530) {
+      if (this.doorOpen === 3) {
         //this.avisoconsole.setPosition(640, 505);
-        if (!this.puzzleAberto) {
-          this.puzzleAberto = true;
-          this.scene.switch("termo", { portaId: 4, cenaOrigem: "scene1" });
+        if (this.playerroxo.y > 530) {
+          if (!this.puzzleAberto) {
+            this.puzzleAberto = true;
+            this.scene.switch("termo", { portaId: 4, cenaOrigem: "scene1" });
+          }
         }
       }
+      
     });
     /*this.doorOpen = 4;
       try {
@@ -777,13 +780,19 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles2);
     this.physics.add.collider(this.playerroxo, this.consoles3);
     this.physics.add.collider(this.playerroxo, this.consoles4, () => {
-      if (this.doorOpen === 1 && this.playerroxo.y > 246) {
-        this.avisoconsole.setPosition(937, 545);
-        if (!this.puzzleAberto) {
-          this.puzzleAberto = true;
-          this.scene.launch("tetravex", { portaId: 2, cenaOrigem: "scene1" });
-        }
-      }
+      if (this.doorOpen === 1) {
+        this.avisoconsole.setPosition(843, 222);
+              if (this.playerroxo.y > 246) {  
+                if (!this.puzzleAberto) {
+                  this.puzzleAberto = true;
+                  this.scene.launch("tetravex", {
+                    portaId: 2,
+                    cenaOrigem: "scene1",
+                  });
+                }
+              }
+       }
+
     });
 
     /*this.doorOpen = 2;
@@ -798,25 +807,34 @@ class scene1 extends Phaser.Scene {
       }
     });*/
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
-      if(this.doorOpen === 0 && this.playerroxo.y >415) {
+      if (this.doorOpen === 0) {
         //this.avisoconsole.setPosition(837, 226);
-         if (!this.puzzleAberto) {
-           this.puzzleAberto = true;
-           this.scene.launch("helldivers", { portaId: 1, cenaOrigem: "scene1" });
-         }
-      }
-    });
-    this.physics.add.collider(this.playerroxo, this.consoles6, () => {
-      if (this.doorOpen === 2 && this.playerroxo.y > 566) {
-        this.avisoconsole.setPosition(640, 505);
-        if (!this.puzzleAberto) {
-          this.puzzleAberto = true;
-          this.scene.launch("helldivers", {
-            portaId: 3,
-            cenaOrigem: "scene1",
-          });
+        if (this.playerroxo.y > 415) {
+          if (!this.puzzleAberto) {
+            this.puzzleAberto = true;
+            this.scene.launch("termo", {
+              portaId: 1,
+              cenaOrigem: "scene1",
+            });
+          }
         }
       }
+   
+    });
+    this.physics.add.collider(this.playerroxo, this.consoles6, () => {
+      if (this.doorOpen === 2) {
+        this.avisoconsole.setPosition(640, 505);
+           if (this.playerroxo.y > 566) {
+             if (!this.puzzleAberto) {
+               this.puzzleAberto = true;
+               this.scene.launch("helldivers", {
+                 portaId: 3,
+                 cenaOrigem: "scene1",
+               });
+             }
+           }
+      }
+   
     });
     /*this.doorOpen = 3;
       try {
