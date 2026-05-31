@@ -672,7 +672,7 @@ class scene1 extends Phaser.Scene {
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
 
-    this.limitesul = this.physics.add.sprite(670, 1735, "bigboss"); //662, 1347 667 1460
+    /*this.limitesul = this.physics.add.sprite(670, 1735, "bigboss"); //662, 1347 667 1460
     this.limitesul.body.allowGravity = false;
     this.limitesul.setImmovable(true);
     this.limitesul.setSize(1280, 17);
@@ -690,11 +690,11 @@ class scene1 extends Phaser.Scene {
     this.limites = this.physics.add.sprite(670, 1347, "bigboss"); //662, 1347 667 1460
     this.limites.body.allowGravity = false;
     this.limites.setImmovable(true);
-    this.limites.setSize(1280, 768);
+    this.limites.setSize(1280, 768);*/
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
-    this.playerroxo.body.setSize(25, 10).setOffset(19, 52);
+    this.playerroxo.body.setSize(25, 10).setOffset(19, 47);
     this.playerroxo.body.allowGravity = false;
 
     this.caixa = this.physics.add.sprite(
@@ -702,7 +702,7 @@ class scene1 extends Phaser.Scene {
       this.playerroxo.y,
       "bigboss",
     );
-    this.caixa.body.setSize(45, 55);
+    this.caixa.body.setSize(36, 55);
     this.caixa.body.allowGravity = false;
     //this.caixa.immovable = false;
 
@@ -1100,15 +1100,20 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
+    
+    
     if (!this.outShip) {
       this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);
+      this.playerroxo.setCollideWorldBounds(false);
     } else if (this.outShip) {
-      const bx = 40;
+      const bx = 43;
       const by = 0;
-      const bw = 900;
+      const bw = 1222;
       const bh = 1720;
       this.cameras.main.setBounds(bx, by, bw, bh);
       this.physics.world.setBounds(bx, by, bw, bh);
+      this.playerroxo.setCollideWorldBounds(true);
+
         //.startFollow(this.playerroxo, true, .1, .1);
     }
     
