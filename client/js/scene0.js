@@ -1901,13 +1901,13 @@ class scene0 extends Phaser.Scene {
         this.angleCannon = -50;
       }
 
-      if (interectPressed) {
+      if (jumpPressed) {
         this.shooting = true;
-      } else if (!interectPressed) {
+      } else if (!jumpPressed) {
         this.shooting = false;
       }
 
-      if (interectPressed && this.bulletP1) {
+      if (jumpPressed && this.bulletP1) {
         this.bulletP1 = false;
         setTimeout(() => {
           this.bulletP1 = true;

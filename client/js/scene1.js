@@ -1162,12 +1162,6 @@ class scene1 extends Phaser.Scene {
     //const cursors = this.input.keyboard.createCursorKeys();
     const wasd = this.input.keyboard.addKeys("W,S,A,D");
 
-    // Captura entrada do gamepad
-    const pad =
-      this.input.gamepad && this.input.gamepad.total > 0
-        ? this.input.gamepad.getPad(0)
-        : null;
-
     let horizontal = 0;
     let vertical = 0;
 
@@ -1184,15 +1178,7 @@ class scene1 extends Phaser.Scene {
       vertical = 1;
     }
 
-    // Gamepad (usando eixos como em scene0, mas adaptado para ortogonal)
-    if (pad) {
-      if (pad.axes.length > 0) {
-        horizontal = pad.axes[0].getValue();
-      }
-      if (pad.axes.length > 1) {
-        vertical = pad.axes[1].getValue();
-      }
-    }
+
 
     // Aplica velocidade
     this.playerroxo.setVelocityX(horizontal * this.speed);
@@ -1203,7 +1189,7 @@ class scene1 extends Phaser.Scene {
       this.playerroxo,
       this.limites,
    );
-    this.cameras.main.setBounds(20, 0, this.tilemap.widthInPixels, );
+    this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);
 
     if (qe.E.isDown) {
       this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
