@@ -19,6 +19,7 @@ class scene1 extends Phaser.Scene {
     this.shoot = false;
     this.angleCannon = 0;
     this.inimigosalienscount = 0;
+    this.outShip = false;
   }
 
   init() {
@@ -1098,6 +1099,18 @@ class scene1 extends Phaser.Scene {
       }
       return;
     }
+
+    if (!this.outShip) {
+      this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);
+    } else if (this.outShip) {
+      const bx = 40;
+      const by = 0;
+      const bw = 900;
+      const bh = 1720;
+      this.cameras.main.setBounds(bx, by, bw, bh);
+      this.physics.world.setBounds(bx, by, bw, bh);
+        //.startFollow(this.playerroxo, true, .1, .1);
+    }
     
     const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
     const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
@@ -1185,11 +1198,11 @@ class scene1 extends Phaser.Scene {
     this.playerroxo.setVelocityY(vertical * this.speed);
 
     // Verifica overlap com limites e ajusta as bounds da câmera
-   const isOverlapLimites = this.physics.overlap(
+  /* const isOverlapLimites = this.physics.overlap(
       this.playerroxo,
       this.limites,
    );
-    this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);
+    this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);*/
 
     if (qe.E.isDown) {
       this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
@@ -1198,8 +1211,9 @@ class scene1 extends Phaser.Scene {
       this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
     } else if (qe.Q.isDown) {
       this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
+      this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);
 
-      if (this.estoutrabalhando === false) {
+      /*if (this.estoutrabalhando === false) {
         if (isOverlapLimites) {
           // Define as bounds da câmera baseado no sprite limites
           const limitesLeft = 40;
@@ -1207,7 +1221,7 @@ class scene1 extends Phaser.Scene {
           const limitesRight = 1302;
           const limitesBottom = 1720;
           this.cameras.main.setBounds(
-            limitesLeft,
+          limitesLeft,
             limitesTop,
             limitesRight - limitesLeft,
             limitesBottom - limitesTop,
@@ -1216,27 +1230,10 @@ class scene1 extends Phaser.Scene {
           // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
           this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
         }
-      }
+      }*/
     }
 
-   /* if (this.estoutrabalhando === false) {
-      if (isOverlapLimites) {
-        // Define as bounds da câmera baseado no sprite limites
-        const limitesLeft = 40;
-        const limitesTop = 950;
-        const limitesRight = 1302;
-        const limitesBottom = 1720;
-        this.cameras.main.setBounds(
-          limitesLeft,
-          limitesTop,
-          limitesRight - limitesLeft,
-          limitesBottom - limitesTop,
-        );
-      } else if (!isOverlapLimites) {
-        // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
-        this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
-      }
-    }*/
+  
 
     // Animações e som baseado no movimento
     const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
@@ -1399,6 +1396,8 @@ class scene1 extends Phaser.Scene {
       this.porta.anims.play("portaabrindo", true);
       this.time.delayedCall(1000, () => {
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
+        this.outShip = true;
+       // this.cameras.main.setBounds(24, 1350, (this.tilemap.widthInPixels - 48), this.tilemap.heightInPixels).startFollow(this.playerroxo, true, 0.1, 0.1);
         this.porta.anims.play("portafechando", true);
       });
     }
@@ -1408,6 +1407,7 @@ class scene1 extends Phaser.Scene {
     this.porta2.anims.play("portaabrindo", true);
     this.time.delayedCall(1000, () => {
       this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
+      this.outShip = false;
       this.porta2.anims.play("portafechando", true);
     });
   }
