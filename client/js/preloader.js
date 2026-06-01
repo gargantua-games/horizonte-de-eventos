@@ -38,6 +38,7 @@ class preloader extends Phaser.Scene {
   }
 
   preload() {
+
     this.load.setPath("assets/");
 
     this.load.image("terminal", "terminal.png");
@@ -61,8 +62,12 @@ class preloader extends Phaser.Scene {
       frameWidth: 322,
       frameHeight: 51,
     });
-    
-    
+
+    this.load.spritesheet("bigIa", "iaBoxBig.png", {
+      frameWidth: 640,
+      frameHeight: 224,
+    });
+
     this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");
 
     this.load.image("remasterized", "assets-usados/remasterized.png");

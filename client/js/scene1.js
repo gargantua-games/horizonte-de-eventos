@@ -8,7 +8,7 @@ class scene1 extends Phaser.Scene {
     this.fase4 = true;
     this.vida = 3;
     this.invulnerable = false;
-    //this.positionP2 = false;
+    this.positionP2 = false;
     this.puzzleAberto = false;
     this.portaOverlapTime = 0;
     this.porta2OverlapTime = 0;
@@ -43,8 +43,6 @@ class scene1 extends Phaser.Scene {
     //adiciona o tilemap da sala ortogonal
     this.tilemap = this.make.tilemap({ key: "faseortogonal" });
 
-    //adiciona os tilesets utilizados
-    //this.tilesetRemasterized = this.tilemap.addTilesetImage("remasterized");
     this.tilesetRemasterized2 = this.tilemap.addTilesetImage("remasterized2");
     this.tilesetRemasterizedEnfeites = this.tilemap.addTilesetImage(
       "remasterizedEnfeites",
@@ -247,15 +245,6 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.anims.create({
-      key: "vidascheias",
-      frames: this.anims.generateFrameNumbers("vidasroxas", {
-        start: 0,
-        end: 0,
-      }),
-      frameRate: 1,
-      repeat: -1,
-    });
 
     this.anims.create({
       key: "duasvidas",
@@ -346,7 +335,6 @@ class scene1 extends Phaser.Scene {
 
     this.vidasroxas = this.physics.add.sprite(250, 130, "vidasroxas");
     this.vidasroxas.setScrollFactor(0);
-    this.vidasroxas.anims.play("vidascheias");
     this.vidasroxas.body.allowGravity = false;
     this.vidasroxas.setDepth(1);
 
@@ -972,7 +960,7 @@ class scene1 extends Phaser.Scene {
 
     //if (this.fase4) {
 
-    //if (this.positionP2) {
+    if (this.positionP2) {
     try {
       this.game.socket.emit("scene1", this.game.room, {
         playerroxo: {
@@ -986,7 +974,7 @@ class scene1 extends Phaser.Scene {
     } catch (e) {
       console.error("Error updating player:", e);
     }
-    //}
+    }
     //}
 
     if (this.game.audio && this.comunication) {
@@ -1025,9 +1013,10 @@ class scene1 extends Phaser.Scene {
           .setVelocityX(-150);
       }
     }
-    if (this.inimigosalienscount < 0) {
+    if(this.positionP2)
+    if (this.inimigosalienscount < 3) {
       const spawninimigosx = Phaser.Math.Between(87, 1260);
-      const spawninimigosy = Phaser.Math.Between(1300, 1400);
+      const spawninimigosy = Phaser.Math.Between(1360, 1400);
       const enemy = this.inimigosaliens.create(
         spawninimigosx,
         spawninimigosy,
@@ -1334,6 +1323,7 @@ class scene1 extends Phaser.Scene {
       //this.playerroxo.setPosition(111, 1573);
     } else if (this.vida === 0) {
       this.vidasroxas.anims.play("zerovidas");
+      this.puzzleAberto = true;
       this.inimigosaliens.setVelocity(0, 0);
       this.time.delayedCall(1000, () => {
         this.scene.start("gameover1");
@@ -1354,14 +1344,14 @@ class scene1 extends Phaser.Scene {
       this.time.delayedCall(1000, () => {
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
         this.outShip = true;
-       // this.cameras.main.setBounds(24, 1350, (this.tilemap.widthInPixels - 48), this.tilemap.heightInPixels).startFollow(this.playerroxo, true, 0.1, 0.1);
-        this.porta.anims.play("portafechando", true);
+        this.positionP2 = true;
       });
     }
   }
 
   teletransporte2() {
     this.porta2.anims.play("portaabrindo", true);
+    this.positionP2 = false;
     this.time.delayedCall(1000, () => {
       this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
       this.outShip = false;
