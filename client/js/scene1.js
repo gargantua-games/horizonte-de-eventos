@@ -20,67 +20,14 @@ class scene1 extends Phaser.Scene {
     this.angleCannon = 0;
     this.inimigosalienscount = 0;
     this.outShip = false;
+    this.comunicationP2 = true;
+    //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
   init() {
     this.webrtcMakeCall();
   }
 
-  /*preload() {
-    this.load.setPath("assets/");
-
-    this.load.audio("passos", "walkamongus.mp3");
-    this.load.audio("trilhasonora", "trilhasonora.mp3");
-
-    //preload do tilemap da faseortogonal
-    this.load.tilemapTiledJSON(
-      "faseortogonal",
-      "mapasv4/faseortogonalatualizada.json",
-    );
-
-    this.load.image("remasterized2", "assets-usados/remasterized.png");
-    this.load.image(
-      "remasterizedEnfeites",
-      "assets-usados/remasterizedEnfeites.png",
-    );
-    this.load.image("NewPiskel", "assets-usados/NewPiskel.png");
-    this.load.image("consoles", "assets-usados/console_s.png");
-    this.load.image("consolew", "assets-usados/console_w.png");
-    this.load.image("tilesetx1", "assets-usados/tilesetx1.png");
-    this.load.image("space1", "assets-usados/space1.png");
-    this.load.image("consolelongo", "assets-usados/consolelongo.png");
-    this.load.image("consolemedio", "assets-usados/consolemedio.png");
-    this.load.image("telescopio", "assets-usados/telescopio.png");
-    this.load.image("osciloscopio", "assets-usados/osciloscopio.png");
-
-    //preload do sprite do player roxo
-    this.load.spritesheet("playerroxo", "playerroxo.png", {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
-
-    this.load.spritesheet("plataform", "plataform.png", {
-      frameWidth: 64,
-      frameHeight: 8,
-    });
-
-    this.load.spritesheet("bigboss", "InvisibleSprite.png", {
-      frameWidth: 25,
-      frameHeight: 25,
-    });
-
-    this.load.spritesheet("porta", "porta64x64(2).png", {
-      frameWidth: 128,
-      frameHeight: 32,
-    });
-
-  
-
-    this.load.spritesheet("inimigo3", "inimigo3.png", {
-      frameWidth: 117,
-      frameHeight: 70,
-    });
-  }*/
 
   create() {
     //adiciona trilha sonora e efeitos sonoros
@@ -760,7 +707,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 530) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.switch("termo", { portaId: 4, cenaOrigem: "scene1" });
+            this.scene.launch("termo", { portaId: 4, cenaOrigem: "scene1" });
           }
         }
       }
@@ -1042,6 +989,10 @@ class scene1 extends Phaser.Scene {
     //}
     //}
 
+    if (this.game.audio && this.comunication) {
+      this.game.audio.volume = this.comunication.isDown ? 1 : 0;
+    }
+
     if (this.shoot && this.bulletP1) {
       this.bulletP1 = false;
       setTimeout(() => {
@@ -1157,7 +1108,8 @@ class scene1 extends Phaser.Scene {
     const cursores = this.input.keyboard.createCursorKeys();
     const qe = this.input.keyboard.addKeys("E, Q");
 
-    //const cursores = this.input.keyboard.createCursorKeys();
+    this.comunication = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
     if (this.doorOpen === 2) {
@@ -1500,6 +1452,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
+      this.game.audio.volume = 0;
     };
 
     if (this.game.media) {

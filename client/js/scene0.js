@@ -31,6 +31,10 @@ class scene0 extends Phaser.Scene {
     this.angleCannon = 0;
     this.bulletP1 = true;
     this.shooting = false;
+    this.interecting = false;
+    this.doubleInterecting = true;
+    this.comunicaction = true; 
+    
   }
 
   init() {
@@ -174,7 +178,7 @@ class scene0 extends Phaser.Scene {
   }*/
 
   create() {
-    //const keyboard = this.keys;
+    
     const pad =
       this.input.gamepad && this.input.gamepad.total > 0
         ? this.input.gamepad.getPad(0)
@@ -183,29 +187,8 @@ class scene0 extends Phaser.Scene {
     let vertical = 0;
     let jumpPressed = false;
     let interectPressed = false;
-    let exitPressed = false;
+    
     let comunicationPressed = false;
-
-    /*if (pad && pad.axes.length > 0) {
-      horizontal = pad.axes[0].getValue();
-      vertical = pad.axes[1].getValue();
-      jumpPressed = !!pad.X;
-      interectPressed = !!pad.A;
-      exitPressed = !!pad.Y;
-      comunicationPressed = !!pad.L1;
-    }*/
-
-    this.keys = this.input.keyboard.addKeys({
-      left: Phaser.Input.Keyboard.KeyCodes.A,
-      right: Phaser.Input.Keyboard.KeyCodes.D,
-      up: Phaser.Input.Keyboard.KeyCodes.W,
-      down: Phaser.Input.Keyboard.KeyCodes.S,
-      action: Phaser.Input.Keyboard.KeyCodes.X,
-      exit: Phaser.Input.Keyboard.KeyCodes.Z,
-      space: Phaser.Input.Keyboard.KeyCodes.SPACE,
-    });
-
-    const keyboard = this.keys;
 
     this.trilhasonora = this.sound
       .add("trilhasonora", { loop: true, volume: 0.2 })
@@ -1059,7 +1042,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(1256, 2356, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1264,14 +1247,7 @@ class scene0 extends Phaser.Scene {
       }*/
     });
 
-    /*this.physics.add.overlap(this.player, this.invisible3, () => {
-      this.camP2 = true
-     /* if (keyboard.action.isDown || interectPressed) {
-        this.invisible3.disableBody(true, true);
-        this.cameras.main.startFollow(this.player2, true);
-        //this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
-      }
-    });*/
+
 
     this.physics.add.overlap(
       this.player,
@@ -1677,7 +1653,6 @@ class scene0 extends Phaser.Scene {
     let vertical = 0;
     let jumpPressed = false;
     let interectPressed = false;
-    let exitPressed = false;
     let comunicationPressed = false;
     let reloadPressed = false;
 
@@ -1685,8 +1660,7 @@ class scene0 extends Phaser.Scene {
       horizontal = pad.axes[0].getValue();
       vertical = pad.axes[1].getValue();
       jumpPressed = !!pad.A;
-      interectPressed = !!pad.X;
-      exitPressed = !!pad.Y;
+      interectPressed = pad.X;
       comunicationPressed = !!pad.L1;
       reloadPressed = !!pad.R1;
     }
@@ -1695,15 +1669,17 @@ class scene0 extends Phaser.Scene {
       window.location.reload();
     }
 
-    if (keyboard) {
-      if (keyboard.left.isDown) {
-        horizontal = -1;
-      } else if (keyboard.right.isDown) {
-        horizontal = 1;
-      }
-      if (keyboard.up.isDown || keyboard.space.isDown) {
-        jumpPressed = true;
-      }
+    // Controla volume de áudio baseado em comunicationPressed
+    if (this.game.audio) {
+      if(this.comunication)
+      this.game.audio.volume = comunicationPressed ? 1 : 0;
+    }
+
+    if (interectPressed && this.doubleInterecting) {
+      this.interecting = !this.interecting;
+      this.doubleInterecting = false;
+    }else if (!interectPressed) {
+      this.doubleInterecting = true;
     }
 
     const estaSobreInvisible3 = this.physics.overlap(
@@ -1714,7 +1690,7 @@ class scene0 extends Phaser.Scene {
     if (!estaSobreInvisible3) {
       this.camP2 = true;
     } else if (estaSobreInvisible3) {
-      if ((exitPressed || keyboard.exit.isDown) && !this.camP2) {
+      if ((!this.interecting) && !this.camP2) {
         this.movingP1 = true;
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
@@ -1722,7 +1698,7 @@ class scene0 extends Phaser.Scene {
         this.iaBox.setVisible(true);
         this.invisible3.enableBody(true, 540, 300, true, true);
         this.layerEnfeites.setScrollFactor(0.9, 1);
-      } else if (interectPressed || keyboard.action.isDown) {
+      } else if (this.interecting) {
         this.iaBox.setVisible(false);
         /*this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
           this.cameras.main.scrollY =
@@ -2038,6 +2014,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
+      this.game.audio.volume = 0;
     };
 
     if (this.game.media) {
