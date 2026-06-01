@@ -94,7 +94,7 @@ export default class helldivers extends Phaser.Scene {
         this.tempoRestante = this.tempoMaximo; // Reseta o cronómetro
 
         // Atualiza textos
-        this.txtPlacar.setText(`PROGRESSO DO TERMINAL: ${this.indiceAtual} / ${this.estratagemasDaRonda.length}`);
+        //this.txtPlacar.setText(`PROGRESSO DO TERMINAL: ${this.indiceAtual} / ${this.estratagemasDaRonda.length}`);
         this.txtNomeEstratagema.setText(atual.nome);
         this.txtNomeEstratagema.setStyle({ fill: '#ffffff' });
 
@@ -177,7 +177,7 @@ export default class helldivers extends Phaser.Scene {
         this.time.delayedCall(2000, () => {
           this.scene.restart();
         });
-        
+        let pct = 0;
         this.teclaAtualIndex = 0;
 
         // Deixa todas as setas cinzentas novamente
@@ -220,7 +220,7 @@ export default class helldivers extends Phaser.Scene {
         this.jogoTerminou = true;
         this.barraGrafica.clear();
         
-        this.txtNomeEstratagema.setText("ESTRATAGEMAS SINCRONIZADOS!");
+        this.txtNomeEstratagema.setText("SENHAS CORRETAS!");
         this.txtNomeEstratagema.setStyle({ fill: '#00ff00' });
 
         this.add.text(400, 320, "ACESSO CONCEDIDO", { 

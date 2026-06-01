@@ -110,11 +110,9 @@ export default class Tetravex extends Phaser.Scene {
     );
     this.set_button_status(null, null);
 
-    // Carregar do Cookie ou Gerar Novo
-    if (!this.load_boards()) {
-      this.create_solution();
-      this.create_starting_board();
-    }
+    // Sempre gerar um novo jogo ao abrir (ignora o cookie salvo)
+    this.create_solution();
+    this.create_starting_board();
 
     this.resetConfig();
     this.draw_everything();
@@ -541,6 +539,15 @@ export default class Tetravex extends Phaser.Scene {
   vencerJogo() {
     this.jogoTerminou = true;
     this.draw_everything();
+    this.add
+      .text(500, 200, "ACESSO CONCEDIDO", {
+        fontSize: "48px",
+        fill: "#00ff00",
+        fontStyle: "bold",
+        fontFamily: "monospace",
+        backgroundColor: "#000",
+      })
+      .setOrigin(0.5);
 
     this.time.delayedCall(2000, () => {
       this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);

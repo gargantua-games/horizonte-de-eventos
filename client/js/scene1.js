@@ -344,11 +344,21 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: "avisopiscando",
+      frames: this.anims.generateFrameNumbers("avisoconsole", { start: 0, end: 1 }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    
     this.vidasroxas = this.physics.add.sprite(250, 130, "vidasroxas");
     this.vidasroxas.setScrollFactor(0);
     this.vidasroxas.anims.play("vidascheias");
     this.vidasroxas.body.allowGravity = false;
     this.vidasroxas.setDepth(1);
+    this.vidasroxas.setScale(2);
+    
 
     //adicionar porta
     this.porta = this.physics.add.sprite(638, 719, "porta", 0);
@@ -361,9 +371,13 @@ class scene1 extends Phaser.Scene {
     this.porta2.setAngle(90);
     this.porta2.setSize(32, 128);
 
+    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
+    this.avisoconsole.body.allowGravity = false;
+    this.avisoconsole.setVisible(false);
+
     this.delayedCall = this.time.delayedCall(14000, () => {
-      this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
-      this.avisoconsole.body.allowGravity = false;
+      this.avisoconsole.setVisible(true);
+      this.avisoconsole.anims.play("avisopiscando");
     });
 
     this.laserP1 = this.physics.add.group({
@@ -703,7 +717,6 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
       if (this.doorOpen === 3) {
-        //this.avisoconsole.setPosition(640, 505);
         if (this.playerroxo.y > 530) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
@@ -711,7 +724,6 @@ class scene1 extends Phaser.Scene {
           }
         }
       }
-      
     });
     /*this.doorOpen = 4;
       try {
@@ -729,18 +741,16 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles3);
     this.physics.add.collider(this.playerroxo, this.consoles4, () => {
       if (this.doorOpen === 1) {
-        this.avisoconsole.setPosition(843, 222);
-              if (this.playerroxo.y > 246) {  
-                if (!this.puzzleAberto) {
-                  this.puzzleAberto = true;
-                  this.scene.launch("tetravex", {
-                    portaId: 2,
-                    cenaOrigem: "scene1",
-                  });
-                }
-              }
-       }
-
+        if (this.playerroxo.y > 246) {
+          if (!this.puzzleAberto) {
+            this.puzzleAberto = true;
+            this.scene.launch("helldivers", {
+              portaId: 2,
+              cenaOrigem: "scene1",
+            });
+          }
+        }
+      }
     });
 
     /*this.doorOpen = 2;
@@ -756,34 +766,36 @@ class scene1 extends Phaser.Scene {
     });*/
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       if (this.doorOpen === 0) {
-        //this.avisoconsole.setPosition(837, 226);
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("termo", {
+            this.scene.launch("helldivers", {
               portaId: 1,
               cenaOrigem: "scene1",
             });
           }
         }
       }
-   
     });
     this.physics.add.collider(this.playerroxo, this.consoles6, () => {
       if (this.doorOpen === 2) {
-        this.avisoconsole.setPosition(640, 505);
-           if (this.playerroxo.y > 566) {
-             if (!this.puzzleAberto) {
-               this.puzzleAberto = true;
-               this.scene.launch("helldivers", {
-                 portaId: 3,
-                 cenaOrigem: "scene1",
-               });
-             }
-           }
+        if (this.playerroxo.y > 566) {
+          if (!this.puzzleAberto) {
+            this.puzzleAberto = true;
+            this.scene.launch("quebraCabeca", {
+              portaId: 3,
+              cenaOrigem: "scene1",
+            });
+          }
+        }
       }
-   
     });
+
+    // posiçoes this.avisoconsole.setPosition(933, 550); door 2
+    // //this.avisoconsole.setPosition(837, 226); door 0
+    //this.avisoconsole.setPosition(843, 222); door 1
+    //this.avisoconsole.setPosition(640, 505); door 3
+
     /*this.doorOpen = 3;
       try {
         this.game.socket.emit("scene1", this.game.room, {
@@ -815,12 +827,48 @@ class scene1 extends Phaser.Scene {
       }
     };
 
-    this.physics.add.collider(this.laserP1, this.limiteporta, destroyLaser, null, this);
-    this.physics.add.collider(this.laserP1, this.limitenorte, destroyLaser, null, this);
-    this.physics.add.collider(this.laserP1, this.limitesul, destroyLaser, null, this);
-    this.physics.add.collider(this.laserP1, this.limiteoeste, destroyLaser, null, this);
-    this.physics.add.collider(this.laserP1, this.limiteleste, destroyLaser, null, this);
-    this.physics.add.collider(this.laserP1, this.limites, destroyLaser, null, this);
+    this.physics.add.collider(
+      this.laserP1,
+      this.limiteporta,
+      destroyLaser,
+      null,
+      this,
+    );
+    this.physics.add.collider(
+      this.laserP1,
+      this.limitenorte,
+      destroyLaser,
+      null,
+      this,
+    );
+    this.physics.add.collider(
+      this.laserP1,
+      this.limitesul,
+      destroyLaser,
+      null,
+      this,
+    );
+    this.physics.add.collider(
+      this.laserP1,
+      this.limiteoeste,
+      destroyLaser,
+      null,
+      this,
+    );
+    this.physics.add.collider(
+      this.laserP1,
+      this.limiteleste,
+      destroyLaser,
+      null,
+      this,
+    );
+    this.physics.add.collider(
+      this.laserP1,
+      this.limites,
+      destroyLaser,
+      null,
+      this,
+    );
 
     this.physics.add.overlap(this.playerroxo, this.porta, null, null, this);
     this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
@@ -866,12 +914,12 @@ class scene1 extends Phaser.Scene {
     );
 
     //camera
-    
+
     if (this.estoutrabalhando === false) {
       this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
-    } else if (this.estoutrabalhando) { 
-    this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-  }
+    } else if (this.estoutrabalhando) {
+      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
+    }
     // Texto de posição do playerroxo atualizado a cada segundo
     this.positionText = this.add
       .text(200, 80, "X: 0 Y: 0", {
@@ -968,6 +1016,17 @@ class scene1 extends Phaser.Scene {
   }
 
   update(time, delta) {
+
+    //if (this.doorOpen === 0) {
+    //  this.avisoconsole.setPosition(843, 222);
+    //} else 
+      if (this.doorOpen === 1) {
+      this.avisoconsole.setPosition(843, 222);
+    } else if (this.doorOpen === 2) {
+      this.avisoconsole.setPosition(933, 550);
+    } else if (this.doorOpen === 3) {
+      this.avisoconsole.setPosition(640, 505);
+    }
     this.cannon.setAngle(this.angleCannon);
 
     //if (this.fase4) {
