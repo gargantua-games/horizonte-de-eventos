@@ -244,6 +244,11 @@ class preloader extends Phaser.Scene {
     this.load.image("nave-4", "naves/nave-4.png");
     this.load.image("nave-5", "naves/nave-5.png");
     this.load.image("naveet", "naves/naveet.png");
+
+    this.load.spritesheet("faisca", "spark.png", {
+      frameWidth: 28,
+      frameHeight: 28,
+    });
   }
 
   create() {

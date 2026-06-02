@@ -334,6 +334,16 @@ class scene1 extends Phaser.Scene {
     });
 
     this.anims.create({
+      key: "faiscando",
+      frames: this.anims.generateFrameNumbers("faisca", {
+        start: 0,
+        end: 8,
+      }),
+      frameRate: 8,
+      repeat: -1,
+    });
+
+    this.anims.create({
       key: "avisopiscando",
       frames: this.anims.generateFrameNumbers("avisoconsole", { start: 0, end: 1 }),
       frameRate: 2,
@@ -640,6 +650,18 @@ class scene1 extends Phaser.Scene {
     this.limites.body.allowGravity = false;
     this.limites.setImmovable(true);
     this.limites.setSize(1280, 768);*/
+
+    //faisca na antena
+    this.faisca = this.physics.add.sprite(175, 1546, "faisca");
+    this.faisca.anims.play("faiscando");
+    this.faisca.body.allowGravity = false;
+    this.faisca.setScale(2);
+
+    //faisca no telescopio
+    this.faisca = this.physics.add.sprite(1107, 1490, "faisca");
+    this.faisca.anims.play("faiscando");
+    this.faisca.body.allowGravity = false;
+    this.faisca.setScale(2);
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
@@ -1099,8 +1121,7 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
-    
-    
+  
     if (!this.outShip) {
       this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);
       this.playerroxo.setCollideWorldBounds(false);
@@ -1334,6 +1355,13 @@ class scene1 extends Phaser.Scene {
       });
     }
 
+     /*this.events.on("animationcomplete", (anim) => {
+       if (anim.key === "portaabrindo") {
+         this.porta.anims.play("portafechando", true);
+       }
+     });*/
+
+
   } // fim update
 
   perdervida(caixa, alien) {
@@ -1404,6 +1432,7 @@ class scene1 extends Phaser.Scene {
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
         this.outShip = true;
         this.positionP2 = true;
+        this.porta.anims.play("portafechando", true);
       });
     }
   }

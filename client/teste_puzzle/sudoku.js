@@ -12,6 +12,7 @@ export default class sudoku extends Phaser.Scene {
 
         this.cameras.main.setZoom(1);
         this.cameras.main.centerOn(width / 2, height / 2);
+        this.AmbientLight = this.add.rectangle(400, 450, 600, 900, 0x111111);
 
         //this.AmbientLight = this.add.rectangle(530, 360, 700, 720, 0x111111);
         
