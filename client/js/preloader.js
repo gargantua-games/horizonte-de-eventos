@@ -216,7 +216,7 @@ class preloader extends Phaser.Scene {
     });
 
     this.load.spritesheet("redLife", "redLife.png", {
-      frameHeight: 16,
+      frameHeight: 18,
       frameWidth: 46,
     });
 
