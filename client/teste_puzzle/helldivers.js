@@ -163,19 +163,19 @@ export default class helldivers extends Phaser.Scene {
     let teclaPremida = null;
     switch (event.key.toUpperCase()) {
       case "ARROWUP":
-      case "W":
+      //case "W":
         teclaPremida = "UP";
         break;
       case "ARROWDOWN":
-      case "S":
+      //case "S":
         teclaPremida = "DOWN";
         break;
       case "ARROWLEFT":
-      case "A":
+      //case "A":
         teclaPremida = "LEFT";
         break;
       case "ARROWRIGHT":
-      case "D":
+      //case "D":
         teclaPremida = "RIGHT";
         break;
     }

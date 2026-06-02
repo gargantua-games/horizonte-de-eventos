@@ -592,11 +592,6 @@ class scene1 extends Phaser.Scene {
       .body.setSize(20, 30)
       .setOffset(27, 0);
 
-    this.antenas
-      .create(175, 1546, "NewPiskel")
-      .body.setSize(20, 30)
-      .setOffset(10, 0);
-
     //telescopios exterior
     this.telescopios = this.physics.add.group({
       allowGravity: false,
@@ -607,8 +602,6 @@ class scene1 extends Phaser.Scene {
     this.telescopios.create(207, 1363, "telescopio").body.setSize(20, 20);
 
     this.telescopios.create(338, 1587, "telescopio").body.setSize(20, 20);
-
-    this.telescopios.create(1107, 1490, "telescopio").body.setSize(20, 20);
 
     //osciloscopios exterior
     this.osciloscopios = this.physics.add.group({
@@ -652,16 +645,38 @@ class scene1 extends Phaser.Scene {
     this.limites.setSize(1280, 768);*/
 
     //faisca na antena
-    this.faisca = this.physics.add.sprite(175, 1546, "faisca");
-    this.faisca.anims.play("faiscando");
-    this.faisca.body.allowGravity = false;
-    this.faisca.setScale(2);
+    this.faisca1 = this.physics.add.sprite(175, 1546, "faisca");
+    this.faisca1.anims.play("faiscando");
+    this.faisca1.body.allowGravity = false;
+    this.faisca1.setScale(2);
+
+    this.antena1 = this.physics.add.sprite(175, 1546, "NewPiskel",)
+    this.antena1.body.allowGravity = false
+    this.antena1.body.setSize(20, 30)
+    this.antena1.setOffset(10, 0);
+    this.antena1.setScale(-1, 1);
+
+    //faísca na segunda antena
+    this.faisca2 = this.physics.add.sprite(820, 1420, "faisca");
+    this.faisca2.anims.play("faiscando");
+    this.faisca2.body.allowGravity = false;
+    this.faisca2.setScale(2);
+
+    this.antena2 = this.physics.add.sprite(820, 1420, "NewPiskel");
+    this.antena2.body.allowGravity = false;
+    this.antena2.body.setSize(20, 30);
+    this.antena2.setOffset(10, 0);
+    this.antena2.setScale(-1, 1);
 
     //faisca no telescopio
-    this.faisca = this.physics.add.sprite(1107, 1490, "faisca");
-    this.faisca.anims.play("faiscando");
-    this.faisca.body.allowGravity = false;
-    this.faisca.setScale(2);
+    this.faisca3 = this.physics.add.sprite(1107, 1490, "faisca");
+    this.faisca3.anims.play("faiscando");
+    this.faisca3.body.allowGravity = false;
+    this.faisca3.setScale(2);
+
+    this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
+    this.telescopio3.body.allowGravity = false;
+    this.telescopio3.body.setSize(20, 20);
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
@@ -828,7 +843,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.telescopios);
     this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
-
+    
     const destroyLaser = (laser, limit) => {
       if (laser && laser.disableBody) {
         laser.disableBody(true, true);
