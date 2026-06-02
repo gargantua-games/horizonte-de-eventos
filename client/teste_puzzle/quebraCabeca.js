@@ -20,7 +20,7 @@ export default class quebraCabeca extends Phaser.Scene {
       const height = this.cameras.main.height;
 
       this.cameras.main.setZoom(0.4);
-        this.cameras.main.centerOn(width / 1.5, height / 1.5);
+        this.cameras.main.centerOn(width / 1.5, height / 1);
         this.AmbientLight = this.add.rectangle(590, 450, 1500, 900, 0x111111);
 
       // Variáveis de tamanho para facilitar (o tamanho exato das tuas peças)
@@ -28,8 +28,8 @@ export default class quebraCabeca extends Phaser.Scene {
       const altPeca = 128;
 
       this.add
-        .text(640, 30, "Monta o quebra-Cabeças (4x4)", {
-          fontSize: "24px",
+        .text(640, 30, "Monte o quebra-Cabeças", {
+          fontSize: "38px",
           fill: "#fff",
         })
         .setOrigin(0.5);

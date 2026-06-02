@@ -8,20 +8,21 @@ class scene0 extends Phaser.Scene {
     this.fase3 = false;
     this.fase4 = false;
     this.fase5 = false;
-    this.jetPack = false;
+    this.jetPack = true;
     this.energy = true;
     this.keys = null;
     this.cargaJp = 1000;
     this.cargaJPpercentage = this.cargaJp / 10;
     this.o2 = 100;
-    this.o2Ship = true; //1231 335 1
+    this.o2Ship = true;
     this.collectEng1 = false;
     this.collectEng2 = false;
     this.collectEng3 = false;
     this.collectEng5 = false;
     this.life = 6;
+    this.canTakeDamage = true;
     this.enemyGravity = false;
-    this.doorOpen = 3;
+    this.doorOpen = 2;
     this.bullet = true;
     this.platform12Interval = null;
     this.platform15Interval = null;
@@ -31,6 +32,10 @@ class scene0 extends Phaser.Scene {
     this.angleCannon = 0;
     this.bulletP1 = true;
     this.shooting = false;
+    this.interecting = false;
+    this.doubleInterecting = true;
+    this.comunicaction = true;
+
   }
 
   init() {
@@ -79,102 +84,7 @@ class scene0 extends Phaser.Scene {
     }
   }
 
-  /*preload() {
-    this.load.setPath("assets/");
-
-    this.load.audio("passos", "walkamongus.mp3");
-    this.load.audio("trilhasonora", "trilhasonora.mp3");
-
-    this.load.image("space", "assets-usados/space1.png", {
-      frameWidth: 1536,
-      frameHeight: 3000,
-    });
-
-    this.load.spritesheet("gargantua", "assets-usados/gargantua.png", {
-      frameWidth: 320,
-      frameHeight: 320,
-    });
-
-    this.load.spritesheet("iaBox", "iaBox.png", {
-      frameWidth: 322,
-      frameHeight: 51,
-    });
-
-    this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");
-
-    this.load.image("remasterized", "assets-usados/remasterized.png");
-    this.load.image(
-      "remasterizedEnfeites",
-      "assets-usados/remasterizedEnfeites.png",
-    );
-
-    this.load.spritesheet("player", "player.png", {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
-
-    this.load.spritesheet("invisible", "InvisibleSprite.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
-
-    this.load.spritesheet("invisibleH", "invisibleH.png", {
-      frameWidth: 16,
-      frameHeight: 300,
-    });
-
-    this.load.spritesheet("plataform", "plataform.png", {
-      frameWidth: 64,
-      frameHeight: 8,
-    });
-
-    this.load.spritesheet("plataformG", "plataformG.png", {
-      frameWidth: 96,
-      frameHeight: 8,
-    });
-
-    this.load.spritesheet("door", "porta.png", {
-      frameHeight: 64,
-      frameWidth: 64,
-    });
-
-    this.load.image("cai", "buttons.png", {
-      frameWidth: 416,
-      frameHeight: 8,
-    });
-
-    this.load.spritesheet("engrenagem", "cartoes.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-
-    this.load.spritesheet("box", "box.png", {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
-    this.load.spritesheet("boxD", "boxD.png", {
-      frameWidth: 64,
-      frameHeight: 64,
-    });
-
-    this.load.spritesheet("jetBag", "jetpack.png", {
-      frameWidth: 20,
-      frameHeight: 23,
-    });
-
-    this.load.spritesheet("inimigo", "inimigo3.png", {
-      frameWidth: 117,
-      frameHeight: 70,
-    });
-
-    this.load.spritesheet("torreta", "torretaetiro.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-  }*/
-
   create() {
-    //const keyboard = this.keys;
     const pad =
       this.input.gamepad && this.input.gamepad.total > 0
         ? this.input.gamepad.getPad(0)
@@ -183,29 +93,8 @@ class scene0 extends Phaser.Scene {
     let vertical = 0;
     let jumpPressed = false;
     let interectPressed = false;
-    let exitPressed = false;
+
     let comunicationPressed = false;
-
-    /*if (pad && pad.axes.length > 0) {
-      horizontal = pad.axes[0].getValue();
-      vertical = pad.axes[1].getValue();
-      jumpPressed = !!pad.X;
-      interectPressed = !!pad.A;
-      exitPressed = !!pad.Y;
-      comunicationPressed = !!pad.L1;
-    }*/
-
-    this.keys = this.input.keyboard.addKeys({
-      left: Phaser.Input.Keyboard.KeyCodes.A,
-      right: Phaser.Input.Keyboard.KeyCodes.D,
-      up: Phaser.Input.Keyboard.KeyCodes.W,
-      down: Phaser.Input.Keyboard.KeyCodes.S,
-      action: Phaser.Input.Keyboard.KeyCodes.X,
-      exit: Phaser.Input.Keyboard.KeyCodes.Z,
-      space: Phaser.Input.Keyboard.KeyCodes.SPACE,
-    });
-
-    const keyboard = this.keys;
 
     this.trilhasonora = this.sound
       .add("trilhasonora", { loop: true, volume: 0.2 })
@@ -214,6 +103,23 @@ class scene0 extends Phaser.Scene {
 
     this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
+
+    this.anims.create({
+      key: "bigIaIdle",
+      frames: this.anims.generateFrameNumbers("bigIa", {
+        start: 0,
+        end: 1,
+      }),
+      frameRate: 4,
+      repeat: -1,
+    });
+
+    this.bigIa = this.add
+      .sprite(225, 60, "bigIa")
+      .setPipeline("Light2D")
+      .setOrigin(0, 0)
+      .setScrollFactor(0.9, 1);
+    this.bigIa.anims.play("bigIaIdle", true);
 
     this.anims.create({
       key: "gargantua-idle",
@@ -476,6 +382,66 @@ class scene0 extends Phaser.Scene {
     });
 
     this.anims.create({
+      key: "life5",
+      frames: this.anims.generateFrameNumbers("redLife", {
+        start: 0,
+        end: 2,
+      }),
+      frameRate: 11,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "life4",
+      frames: this.anims.generateFrameNumbers("redLife", {
+        start: 2,
+        end: 4,
+      }),
+      frameRate: 11,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "life3",
+      frames: this.anims.generateFrameNumbers("redLife", {
+        start: 4,
+        end: 6,
+      }),
+      frameRate: 11,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "life2",
+      frames: this.anims.generateFrameNumbers("redLife", {
+        start: 6,
+        end: 8,
+      }),
+      frameRate: 11,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "life1",
+      frames: this.anims.generateFrameNumbers("redLife", {
+        start: 8,
+        end: 10,
+      }),
+      frameRate: 11,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "life0",
+      frames: this.anims.generateFrameNumbers("redLife", {
+        start: 10,
+        end: 12,
+      }),
+      frameRate: 11,
+      repeat: 0,
+    });
+
+    this.anims.create({
       key: "engrenagem-idlelaranja",
       frames: this.anims.generateFrameNumbers("engrenagem", {
         start: 0,
@@ -513,6 +479,16 @@ class scene0 extends Phaser.Scene {
       }),
       frameRate: 2,
       repeat: -1,
+    });
+
+    this.anims.create({
+      key: "engrenagem-icon",
+      frames: this.anims.generateFrameNumbers("engrenagem", {
+        start: 8,
+        end: 9,
+      }),
+      frameRate: 2,
+      repeat: 0,
     });
 
     this.anims.create({
@@ -565,23 +541,7 @@ class scene0 extends Phaser.Scene {
       repeat: 0,
     });
 
-    this.o2Text = this.add
-      .text(100, 100, "O2: " + this.o2 + "%", {
-        fontSize: "14px",
-        fontFamily: "sarpanchextrabold",
-        fill: "#ffffff",
-        backgroundColor: "rgba(0,0,0,0.5)",
-      })
-      .setScrollFactor(0);
-
-    this.scoreText = this.add
-      .text(100, 80, "Engrenagens: " + this.score + "/4", {
-        fontSize: "16px",
-        fontFamily: "sarpanch",
-        fill: "#ffffff",
-        backgroundColor: "rgba(0,0,0,0.5)",
-      })
-      .setScrollFactor(0);
+    this.lastLife = this.life;
 
     this.laser = this.physics.add.group({
       allowGravity: false,
@@ -950,21 +910,26 @@ class scene0 extends Phaser.Scene {
     setInterval(() => {
       if (this.o2 < 100 && this.o2Ship === true) {
         this.o2 += 1;
-        this.o2Text.setText("O2: " + this.o2 + "%");
+        this.o2Text.setText("Oxigênio: " + this.o2 + "%");
+        this.updateO2Bar();
       } else if (this.o2 > 0 && this.o2Ship === false) {
         this.o2 -= 1;
-        this.o2Text.setText("O2: " + this.o2 + "%");
+        this.o2Text.setText("Oxigênio: " + this.o2 + "%");
+        this.updateO2Bar();
       } else if (this.o2 === 0) {
         this.player
           .setPosition(92, 3532)
           .setVelocity(0, 0)
           .anims.play("idleRightJP");
+
+        this.o2 = 100;
+        this.o2Text.setText("Oxigênio: " + this.o2 + "%");
+        this.updateO2Bar();
         this.direction = true;
         if (this.collectEng5) {
           this.engrenagem5.enableBody(true, 531, 3340, true, true);
 
           this.score -= 1;
-          this.scoreText.setText("Engrenagens: " + this.score + "/4");
           this.collectEng5 = false;
         }
 
@@ -972,6 +937,7 @@ class scene0 extends Phaser.Scene {
         this.fase5 = true;
         this.stopPlatformMovement();
         this.life -= 1;
+        this.playLifeAnimation();
       }
     }, 500);
 
@@ -1059,12 +1025,14 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(1256, 2356, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(1138, 1836, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
       this.player.y - this.cameras.main.height / 2 - 120; // Ajuste para começar mais para cima (100 pixels acima do centro do jogador)
     this.player.anims.play("idleRight", true).setPipeline("Light2D");
+
+
 
     this.antenas = this.add.group({
       allowGravity: false,
@@ -1072,39 +1040,19 @@ class scene0 extends Phaser.Scene {
       pipeline: "Light2D",
     });
 
-    this.antenas
-      .create(537, 3948, "NewPiskel")
-      .setScale(-1, 1)
-     
+    this.antenas.create(537, 3948, "NewPiskel").setScale(-1, 1);
 
-    this.antenas
-      .create(880, 3979, "NewPiskel")
-      .setScale(-1, 1)
-      
+    this.antenas.create(880, 3979, "NewPiskel").setScale(-1, 1);
 
-    this.antenas
-      .create(1170, 3951, "NewPiskel")
-      .setScale(-1, 1)
+    this.antenas.create(1170, 3951, "NewPiskel").setScale(-1, 1);
 
-    this.antenas
-      .create(820, 4044, "NewPiskel")
-      .setScale(-1, 1)
+    this.antenas.create(820, 4044, "NewPiskel").setScale(-1, 1);
 
+    this.antenas.create(433, 4107, "NewPiskel").setScale(-1, 1);
 
-    this.antenas
-      .create(433, 4107, "NewPiskel")
-      .setScale(-1, 1)
-  
+    this.antenas.create(880, 4138, "NewPiskel").setScale(-1, 1);
 
-    this.antenas
-      .create(880, 4138, "NewPiskel")
-      .setScale(-1, 1)
-      
-
-    this.antenas
-      .create(175, 4170, "NewPiskel")
-      .setScale(-1, 1)
-
+    this.antenas.create(175, 4170, "NewPiskel").setScale(-1, 1);
 
     //telescopios exterior
     this.telescopios = this.add.group({
@@ -1113,11 +1061,11 @@ class scene0 extends Phaser.Scene {
       pipeline: "Light2D",
     });
 
-    this.telescopios.create(207, 3987, "telescopio")
+    this.telescopios.create(207, 3987, "telescopio");
 
-    this.telescopios.create(338, 4211, "telescopio")
+    this.telescopios.create(338, 4211, "telescopio");
 
-    this.telescopios.create(1107, 4114, "telescopio")
+    this.telescopios.create(1107, 4114, "telescopio");
 
     //osciloscopios exterior
     this.osciloscopios = this.add.group({
@@ -1126,9 +1074,9 @@ class scene0 extends Phaser.Scene {
       pipeline: "Light2D",
     });
 
-    this.osciloscopios.create(626, 4024, "osciloscopio")
+    this.osciloscopios.create(626, 4024, "osciloscopio");
 
-    this.osciloscopios.create(980, 4184, "osciloscopio")
+    this.osciloscopios.create(980, 4184, "osciloscopio");
 
     this.player2 = this.add.sprite(92, 3890, "playerroxo", 3);
     this.player2.setPipeline("Light2D");
@@ -1150,6 +1098,12 @@ class scene0 extends Phaser.Scene {
       .addLight(this.player.x, this.player.y, 40)
       .setIntensity(0)
       .setColor(0xf5f5f5);
+
+    this.coracao = this.add
+      .sprite(165, 60, "redLife")
+      .setScrollFactor(0)
+      .setScale(3);
+    
 
     this.physics.add.overlap(
       this.player,
@@ -1264,15 +1218,6 @@ class scene0 extends Phaser.Scene {
       }*/
     });
 
-    /*this.physics.add.overlap(this.player, this.invisible3, () => {
-      this.camP2 = true
-     /* if (keyboard.action.isDown || interectPressed) {
-        this.invisible3.disableBody(true, true);
-        this.cameras.main.startFollow(this.player2, true);
-        //this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
-      }
-    });*/
-
     this.physics.add.overlap(
       this.player,
       this.jetBag,
@@ -1281,17 +1226,6 @@ class scene0 extends Phaser.Scene {
       this,
     );
 
-    /*this.physics.add.overlap(this.player, this.invisible3, () => {
-      this.invisible3.disableBody(true, true);
-
-        this.typeIaText(texto3, 50, () => {
-          this.time.delayedCall(500, () => {
-            this.typeIaText(texto2, 50);
-          });
-        });
-
-    });*/
-
     this.physics.add.overlap(this.player, this.boxes, () => {
       this.player
         .setPosition(82, 2508)
@@ -1299,27 +1233,28 @@ class scene0 extends Phaser.Scene {
         .anims.play("idleRight");
       this.direction = true;
       this.life -= 1;
+      this.playLifeAnimation();
       this.cargaJp = 1000;
       this.cargaJPpercentage = 100;
       this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+      this.updateCargaBar();
       if (this.collectEng3 === true) {
         this.score -= 1;
-        this.scoreText.setText("Engrenagens: " + this.score + "/4");
-
         this.engrenagem3.enableBody(true, 1209, 2604, true, true);
-
         this.collectEng3 = false;
       }
     });
 
     this.physics.add.overlap(this.player, this.cai, () => {
-      this.life -= 1;
-      //this.scoreText.setText("Engrenagens: " + this.life + "/4");
-      this.player
-        .setPosition(92, 1066)
-        .setVelocity(0, 0)
-        .anims.play("idleRight");
 
+      this.player
+      .setPosition(92, 1066)
+      .setVelocity(0, 0)
+      .anims.play("idleRight");
+      
+      this.life -= 1;
+      this.playLifeAnimation();
+      
       this.iaBox.setPosition(1009, 33).setVelocityX(0).anims.stop();
       this.typeIaText(texto, 50);
 
@@ -1329,7 +1264,6 @@ class scene0 extends Phaser.Scene {
       this.direction = true;
       if (this.collectEng1 === true) {
         this.score -= 1;
-        this.scoreText.setText("Engrenagens: " + this.score + "/4");
         this.engrenagem1.enableBody(true, 1138, 968, true, true);
         this.collectEng1 = false;
       }
@@ -1389,7 +1323,7 @@ class scene0 extends Phaser.Scene {
               .anims.play("idleRightJP");
             this.direction = true;
             this.cameras.main.scrollY =
-              this.player.y - this.cameras.main.height / 3.5 - 120;
+              this.player.y - this.cameras.main.height / 3.8 - 120;
             this.fase3 = true;
             this.door13.anims.play("close-door", true);
             this.door13.once("animationcomplete", (anim, frame) => {
@@ -1417,6 +1351,7 @@ class scene0 extends Phaser.Scene {
               this.player.y - this.cameras.main.height / 2 - 120;
             this.fase3 = false;
             this.cargaJp = 0;
+            this.updateCargaBar();
             this.door14.anims.play("close-door", true);
             this.door14.once("animationcomplete", (anim, frame) => {
               if (anim.key === "close-door") {
@@ -1478,14 +1413,7 @@ class scene0 extends Phaser.Scene {
 
     this.layerPiso.setCollisionByProperty({ collides: true });
 
-    this.cargaJpText = this.add
-      .text(270, 50, "Cargas: " + this.cargaJPpercentage + "%", {
-        fontSize: "16px",
-        fill: "#ffffff00",
-      })
-      .setScrollFactor(0);
-
-    // Texto de posição do player atualizado a cada segundo
+    /*// Texto de posição do player atualizado a cada segundo
     this.positionText = this.add
       .text(100, 50, "X: 0 Y: 0", {
         fontSize: "18px",
@@ -1500,10 +1428,58 @@ class scene0 extends Phaser.Scene {
       loop: true,
       callback: () => {
         this.positionText.setText(
-          `X: ${Math.round(this.player2.x)} Y: ${Math.round(this.player2.y)}`,
+          this.life
+          /*`X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`
         );
       },
-    });
+    });*/
+
+
+
+    this.o2BarBackground = this.add
+      .rectangle(100, 348, 250, 16, 0x888888, 0.5)
+      .setOrigin(0, 0)
+      .setScrollFactor(0);
+
+    this.o2Bar = this.add
+      .rectangle(104, 350, 242, 12, 0x61dafb)
+      .setOrigin(0, 0)
+      .setScrollFactor(0);
+
+    this.o2BarBorder = this.add
+      .rectangle(100, 348, 250, 16)
+      .setStrokeStyle(2, 0xffffff)
+      .setOrigin(0, 0)
+      .setScrollFactor(0);
+
+    this.o2Text = this.add
+      .text(225, 355, "Oxigênio: " + this.o2 + "%", {
+        fontSize: "10px",
+        fontFamily: "sarpanch",
+        fill: "#000000",
+      })
+      .setScrollFactor(0)
+      .setOrigin(0.5, 0.5);
+
+
+    this.scoreText = this.add
+      .text(135, 95,"crachás: " + this.score + "/4", {
+        fontSize: "18px",
+        fontFamily: "sarpanch",
+        fill: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 2,
+      })
+      .setScrollFactor(0)
+      .setOrigin(0, 0.5);
+
+    this.engrenagemIcon = this.add
+      .sprite(105, 77, "engrenagem", 8)
+      .setOrigin(0, 0)
+      .setScale(1)
+      .setScrollFactor(0); //.anims.play("engrenagem-idlelaranja", true);
+    
+
 
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
@@ -1532,12 +1508,6 @@ class scene0 extends Phaser.Scene {
           }, 800);
         }
       }
-
-      /* this.torreta.once("animationcomplete", (anim, frame) => {
-        if (anim.key === "torretaidle") {
-          this.movingTorreta = true;   
-        };
-      });*/
     });
     this.game.socket.on("scene1", (state) => {
       if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
@@ -1547,6 +1517,8 @@ class scene0 extends Phaser.Scene {
     this.game.socket.on("scene1", (state) => {
       if (state.playerroxo) {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
+      }
+      if (state.playerroxo.animation) {
         this.player2.anims.play(state.playerroxo.animation, true);
       }
     });
@@ -1585,10 +1557,64 @@ class scene0 extends Phaser.Scene {
     });
   }
 
+  updateO2Bar() {
+    if (!this.o2Bar) {
+      return;
+    }
+
+    const width = Phaser.Math.Clamp((this.o2 / 100) * 242, 0, 242);
+    this.o2Bar.width = width;
+  }
+
+  updateCargaBar() {
+    if (!this.cargaBar) {
+      return;
+    }
+
+    const width = Phaser.Math.Clamp((this.cargaJp / 1000) * 192, 0, 192);
+    this.cargaBar.width = width;
+  }
+
+  collectBag(player, jetBag) {
+    jetBag.disableBody(true, true);
+
+    this.jetPack = true;
+
+      this.cargaBarBackground = this.add
+        .rectangle(800, 348, 200, 16, 0x888888, 0.5)
+        .setOrigin(0, 0)
+        .setScrollFactor(0);
+
+      this.cargaBar = this.add
+        .rectangle(804, 350, 192, 12, 0x00dd0f)
+        .setOrigin(0, 0)
+        .setScrollFactor(0);
+
+      this.cargaBarBorder = this.add
+        .rectangle(800, 348, 200, 16)
+        .setStrokeStyle(2, 0xffffff)
+        .setOrigin(0, 0)
+        .setScrollFactor(0);
+
+      this.cargaJpText = this.add
+        .text(902, 355, "Cargas: " + this.cargaJPpercentage + "%", {
+          fontSize: "10px",
+          fontFamily: "sarpanch",
+          fill: "#000000",
+        })
+        .setScrollFactor(0)
+        .setOrigin(0.5, 0.5);
+    
+  }
+
   update() {
     this.cannon.setAngle(this.angleCannon);
 
     this.cargaJPpercentage = this.cargaJp / 10;
+
+    //this.o2Text.setText("Oxigênio: " + this.o2 + "%");
+
+    //this.updateCargaBar();
 
     if (this.doorOpen >= 4) {
       try {
@@ -1650,11 +1676,11 @@ class scene0 extends Phaser.Scene {
     this.lamp.x = this.player.x;
     this.lamp.y = this.player.y;
 
-    if (this.fase3) {
-      this.cargaJpText.setFill("#000000");
-    } else if (this.cargaJp === 0) {
-      this.cargaJpText.setText("Carga: Sem Carga");
-    }
+  
+      
+    if (this.cargaJp <= 0 && this.jetPack) {
+        this.cargaJpText.setText("Cargas: Sem Carga");
+      }
 
     const movingHorizontally = Math.abs(this.player.body.velocity.x) > 1;
     const onGround =
@@ -1674,7 +1700,6 @@ class scene0 extends Phaser.Scene {
     let vertical = 0;
     let jumpPressed = false;
     let interectPressed = false;
-    let exitPressed = false;
     let comunicationPressed = false;
     let reloadPressed = false;
 
@@ -1682,8 +1707,7 @@ class scene0 extends Phaser.Scene {
       horizontal = pad.axes[0].getValue();
       vertical = pad.axes[1].getValue();
       jumpPressed = !!pad.A;
-      interectPressed = !!pad.X;
-      exitPressed = !!pad.Y;
+      interectPressed = pad.X;
       comunicationPressed = !!pad.L1;
       reloadPressed = !!pad.R1;
     }
@@ -1692,15 +1716,17 @@ class scene0 extends Phaser.Scene {
       window.location.reload();
     }
 
-    if (keyboard) {
-      if (keyboard.left.isDown) {
-        horizontal = -1;
-      } else if (keyboard.right.isDown) {
-        horizontal = 1;
-      }
-      if (keyboard.up.isDown || keyboard.space.isDown) {
-        jumpPressed = true;
-      }
+    // Controla volume de áudio baseado em comunicationPressed
+    if (this.game.audio) {
+      if (this.comunication)
+        this.game.audio.volume = comunicationPressed ? 1 : 0;
+    }
+
+    if (interectPressed && this.doubleInterecting) {
+      this.interecting = !this.interecting;
+      this.doubleInterecting = false;
+    } else if (!interectPressed) {
+      this.doubleInterecting = true;
     }
 
     const estaSobreInvisible3 = this.physics.overlap(
@@ -1711,7 +1737,7 @@ class scene0 extends Phaser.Scene {
     if (!estaSobreInvisible3) {
       this.camP2 = true;
     } else if (estaSobreInvisible3) {
-      if ((exitPressed || keyboard.exit.isDown) && !this.camP2) {
+      if (!this.interecting && !this.camP2) {
         this.movingP1 = true;
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
@@ -1719,7 +1745,7 @@ class scene0 extends Phaser.Scene {
         this.iaBox.setVisible(true);
         this.invisible3.enableBody(true, 540, 300, true, true);
         this.layerEnfeites.setScrollFactor(0.9, 1);
-      } else if (interectPressed || keyboard.action.isDown) {
+      } else if (this.interecting) {
         this.iaBox.setVisible(false);
         /*this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
           this.cameras.main.scrollY =
@@ -1785,6 +1811,7 @@ class scene0 extends Phaser.Scene {
           if (!this.player.body.blocked.down) {
             this.cargaJp -= 30;
             this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+            this.updateCargaBar();
           }
 
           if (this.direction === true) {
@@ -1818,12 +1845,14 @@ class scene0 extends Phaser.Scene {
               this.cargaJpText.setText(
                 "Cargas: " + this.cargaJPpercentage + "%",
               );
+              this.updateCargaBar();
             }
           } else if (this.direction === false) {
             this.player.setFrame("56");
             this.player.setAngle(-10);
             this.cargaJp -= 1;
             this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+            this.updateCargaBar();
           }
         } else if (
           (this.player.body.velocity.y != 0 &&
@@ -1901,13 +1930,13 @@ class scene0 extends Phaser.Scene {
         this.angleCannon = -50;
       }
 
-      if (interectPressed) {
+      if (jumpPressed) {
         this.shooting = true;
-      } else if (!interectPressed) {
+      } else if (!jumpPressed) {
         this.shooting = false;
       }
 
-      if (interectPressed && this.bulletP1) {
+      if (jumpPressed && this.bulletP1) {
         this.bulletP1 = false;
         setTimeout(() => {
           this.bulletP1 = true;
@@ -1985,7 +2014,13 @@ class scene0 extends Phaser.Scene {
   }
 
   enemyAt(player, inimigo) {
+    if (!this.canTakeDamage) {
+      return;
+    }
+
+    this.canTakeDamage = false;
     this.inimigo.setVelocityX(0).anims.play("enemyAtack", true);
+
     this.inimigo.once("animationcomplete", (anim, frame) => {
       if (anim.key === "enemyAtack") {
         this.player
@@ -1999,19 +2034,38 @@ class scene0 extends Phaser.Scene {
           .setOffset(36, 17)
           .setFrame("14");
         this.inimigo.flipX = false;
-
         this.enemyGravity = true;
-        this.life -= 1;
+
+        if (this.life > 0) {
+          this.life -= 1;
+          this.playLifeAnimation();
+        }
+
+        this.canTakeDamage = true;
 
         if (this.collectEng2 === true) {
           this.score -= 1;
-          this.scoreText.setText("Engrenagens: " + this.score + "/4");
-
           this.engrenagem2.enableBody(true, 1059, 1652, true, true);
-
           this.collectEng2 = false;
         }
       }
+    });
+  }
+
+  playLifeAnimation() {
+    if (!this.coracao) {
+      return;
+    }
+
+    const lifeKey = `life${this.life}`;
+    if (!this.anims.exists(lifeKey)) {
+      return;
+    }
+
+    this.coracao.anims.play(lifeKey, true);
+    this.coracao.once(`animationcomplete-${lifeKey}`, () => {
+      const endFrame = 2 * (6 - this.life);
+      this.coracao.setFrame(endFrame);
     });
   }
 
@@ -2020,11 +2074,6 @@ class scene0 extends Phaser.Scene {
     this.scoreText.setText("Engrenagens: " + this.score + "/4");
   }
 
-  collectBag(player, jetBag) {
-    jetBag.disableBody(true, true);
-
-    this.jetPack = true;
-  }
 
   webrtcAnswerCall() {
     this.game.remoteConnection = new RTCPeerConnection(this.game.iceServers);
@@ -2035,6 +2084,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
+      this.game.audio.volume = 0;
     };
 
     if (this.game.media) {

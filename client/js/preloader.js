@@ -38,11 +38,15 @@ class preloader extends Phaser.Scene {
   }
 
   preload() {
+
     this.load.setPath("assets/");
 
     this.load.image("terminal", "terminal.png");
 
-    this.load.image("avisoconsole", "avisoconsole.png");
+    this.load.spritesheet("avisoconsole", "avisoconsole.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
 
     this.load.audio("passos", "walkamongus.mp3");
     this.load.audio("trilhasonora", "trilhasonora.mp3");
@@ -61,8 +65,12 @@ class preloader extends Phaser.Scene {
       frameWidth: 322,
       frameHeight: 51,
     });
-    
-    
+
+    this.load.spritesheet("bigIa", "iaBoxBig.png", {
+      frameWidth: 640,
+      frameHeight: 224,
+    });
+
     this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");
 
     this.load.image("remasterized", "assets-usados/remasterized.png");
@@ -207,6 +215,11 @@ class preloader extends Phaser.Scene {
       frameHeight: 16,
     });
 
+    this.load.spritesheet("redLife", "redLife.png", {
+      frameHeight: 18,
+      frameWidth: 46,
+    });
+
     this.load.font("sarpanchregular", "sarpanchregular.otf");
 
     this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
@@ -231,6 +244,11 @@ class preloader extends Phaser.Scene {
     this.load.image("nave-4", "naves/nave-4.png");
     this.load.image("nave-5", "naves/nave-5.png");
     this.load.image("naveet", "naves/naveet.png");
+
+    this.load.spritesheet("faisca", "spark.png", {
+      frameWidth: 28,
+      frameHeight: 28,
+    });
   }
 
   create() {

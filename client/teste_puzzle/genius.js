@@ -19,7 +19,7 @@ export default class Genius extends Phaser.Scene {
       const height = this.cameras.main.height;
 
       this.cameras.main.setZoom(0.5);
-        this.cameras.main.centerOn(width / 2, height / 2);
+        this.cameras.main.centerOn(width / 2, height / 1.2);
         
     console.log("A cena Genius carregou com sucesso no ecrã!");
 
@@ -28,7 +28,7 @@ export default class Genius extends Phaser.Scene {
 
     this.textoStatus = this.add
       .text(640, 100, "MEMORIZE A SEQUÊNCIA", {
-        fontSize: "36px",
+        fontSize: "44px",
         fill: "#ffffff",
         fontStyle: "bold",
       })
@@ -160,6 +160,9 @@ export default class Genius extends Phaser.Scene {
     this.textoStatus.setColor("#00ff00");
     this.botoes.forEach((btn) => (btn.fillColor = 0x00ff00));
     this.time.delayedCall(2000, () => {
+       ///if (!this.fase4) {
+        /// this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+      //}
       this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
       this.scene.stop();
     });
