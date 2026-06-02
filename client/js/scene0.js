@@ -8,7 +8,7 @@ class scene0 extends Phaser.Scene {
     this.fase3 = false;
     this.fase4 = false;
     this.fase5 = false;
-    this.jetPack = true;
+    this.jetPack = false;
     this.energy = true;
     this.keys = null;
     this.cargaJp = 1000;
@@ -35,7 +35,6 @@ class scene0 extends Phaser.Scene {
     this.interecting = false;
     this.doubleInterecting = true;
     this.comunicaction = true;
-
   }
 
   init() {
@@ -1025,14 +1024,12 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(1138, 1836, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
       this.player.y - this.cameras.main.height / 2 - 120; // Ajuste para começar mais para cima (100 pixels acima do centro do jogador)
     this.player.anims.play("idleRight", true).setPipeline("Light2D");
-
-
 
     this.antenas = this.add.group({
       allowGravity: false,
@@ -1099,11 +1096,12 @@ class scene0 extends Phaser.Scene {
       .setIntensity(0)
       .setColor(0xf5f5f5);
 
-    this.coracao = this.add
+    /*this.coracao = this.add
       .sprite(165, 60, "redLife")
       .setScrollFactor(0)
-      .setScale(3);
-    
+      .setScale(3);*/
+
+    this.createSemicircleLifeBar();
 
     this.physics.add.overlap(
       this.player,
@@ -1246,15 +1244,14 @@ class scene0 extends Phaser.Scene {
     });
 
     this.physics.add.overlap(this.player, this.cai, () => {
-
       this.player
-      .setPosition(92, 1066)
-      .setVelocity(0, 0)
-      .anims.play("idleRight");
-      
+        .setPosition(92, 1066)
+        .setVelocity(0, 0)
+        .anims.play("idleRight");
+
       this.life -= 1;
       this.playLifeAnimation();
-      
+
       this.iaBox.setPosition(1009, 33).setVelocityX(0).anims.stop();
       this.typeIaText(texto, 50);
 
@@ -1434,8 +1431,6 @@ class scene0 extends Phaser.Scene {
       },
     });*/
 
-
-
     this.o2BarBackground = this.add
       .rectangle(100, 348, 250, 16, 0x888888, 0.5)
       .setOrigin(0, 0)
@@ -1461,9 +1456,8 @@ class scene0 extends Phaser.Scene {
       .setScrollFactor(0)
       .setOrigin(0.5, 0.5);
 
-
     this.scoreText = this.add
-      .text(135, 95,"crachás: " + this.score + "/4", {
+      .text(135, 95, "crachás: " + this.score + "/4", {
         fontSize: "18px",
         fontFamily: "sarpanch",
         fill: "#ffffff",
@@ -1478,8 +1472,6 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScale(1)
       .setScrollFactor(0); //.anims.play("engrenagem-idlelaranja", true);
-    
-
 
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
@@ -1564,15 +1556,203 @@ class scene0 extends Phaser.Scene {
 
     const width = Phaser.Math.Clamp((this.o2 / 100) * 242, 0, 242);
     this.o2Bar.width = width;
+
+    // Atualizar arco de oxigênio na borda do semicírculo
+    this.updateO2BarArc();
   }
 
-  updateCargaBar() {
-    if (!this.cargaBar) {
+  updateO2BarArc() {
+    if (!this.o2BarArcGraphics) {
       return;
     }
 
-    const width = Phaser.Math.Clamp((this.cargaJp / 1000) * 192, 0, 192);
-    this.cargaBar.width = width;
+    const radius = 35;
+    const outerRadius = 42; // Raio externo da barra de O2
+
+    // Limpar o graphics
+    this.o2BarArcGraphics.clear();
+
+    if (this.o2 > 0) {
+      // Calcular o ângulo baseado no oxigênio (360 graus = O2 máximo)
+      const o2Percentage = this.o2 / 100;
+      const o2Angle = 360 * o2Percentage;
+
+      // Desenhar arco de oxigênio (ciano) como moldura
+      this.o2BarArcGraphics.lineStyle(3, 0x00bfff, 1);
+      this.o2BarArcGraphics.beginPath();
+      this.o2BarArcGraphics.arc(
+        0,
+        0,
+        (radius + outerRadius) / 2,
+        Phaser.Math.DegToRad(270),
+        Phaser.Math.DegToRad(270 + o2Angle),
+        false,
+      );
+      this.o2BarArcGraphics.strokePath();
+    }
+  }
+
+  updateCargaBar() {
+    if (!this.cargaBarGraphics) {
+      return;
+    }
+
+    const maxCarga = 1000;
+    const radius = 20;
+
+    // Limpar o graphics
+    this.cargaBarGraphics.clear();
+
+    // Desenhar círculo de fundo (cinza claro)
+    this.cargaBarGraphics.lineStyle(2, 0x666666, 0.3);
+    this.cargaBarGraphics.beginPath();
+    this.cargaBarGraphics.arc(0, 0, radius, 0, Phaser.Math.PI2);
+    this.cargaBarGraphics.strokePath();
+
+    // Desenhar círculo preenchido baseado na carga
+    if (this.cargaJp > 0) {
+      // Calcular o ângulo baseado na carga (360 graus = carga máxima)
+      const cargaPercentage = this.cargaJp / maxCarga;
+      const cargaAngle = 360 * cargaPercentage;
+
+      // Verde para carga
+      const color = 0x00dd0f;
+
+      // Desenhar o arco preenchido
+      this.cargaBarGraphics.fillStyle(color, 0.8);
+      this.cargaBarGraphics.beginPath();
+      this.cargaBarGraphics.moveTo(0, 0);
+      this.cargaBarGraphics.arc(
+        0,
+        0,
+        radius,
+        Phaser.Math.DegToRad(270),
+        Phaser.Math.DegToRad(270 + cargaAngle),
+        false,
+      );
+      this.cargaBarGraphics.lineTo(0, 0);
+      this.cargaBarGraphics.fillPath();
+
+      // Desenhar contorno do círculo preenchido
+      this.cargaBarGraphics.lineStyle(2, color, 1);
+      this.cargaBarGraphics.beginPath();
+      this.cargaBarGraphics.arc(
+        0,
+        0,
+        radius,
+        Phaser.Math.DegToRad(270),
+        Phaser.Math.DegToRad(270 + cargaAngle),
+        false,
+      );
+      this.cargaBarGraphics.strokePath();
+    }
+  }
+
+  createSemicircleLifeBar() {
+    // Posição da barra semicircular (perto do coração)
+    const x = 145;
+    const y = 93;
+    const radius = 35;
+
+    // Criar graphics object para a barra de vida
+    this.lifeBarGraphics = this.make
+      .graphics({
+        x: x,
+        y: y,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(10);
+
+    // Criar graphics object para a barra de oxigênio (na borda)
+    this.o2BarArcGraphics = this.make
+      .graphics({
+        x: x,
+        y: y,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(11);
+
+      this.lifeBarGraphics.lineStyle(2, 0x00ff00, 0.3);
+      this.lifeBarGraphics.beginPath();
+      this.lifeBarGraphics.arc(0, 0, radius, 0, Phaser.Math.PI2);
+      this.lifeBarGraphics.strokePath();
+
+      this.lifeBarGraphics.fillStyle(0x00ff00, 0.8);
+      this.lifeBarGraphics.beginPath();
+      this.lifeBarGraphics.moveTo(0, 0);
+      this.lifeBarGraphics.arc(
+        0,
+        0,
+        radius,
+        Phaser.Math.DegToRad(270),
+        Phaser.Math.DegToRad(270 + 360),
+        false,
+      );
+      this.lifeBarGraphics.lineTo(0, 0);
+      this.lifeBarGraphics.fillPath();
+      // Desenhar círculo de fundo (cinza claro)
+      
+    this.updateO2BarArc();
+  }
+
+  updateSemicircleLifeBar() {
+    if (!this.lifeBarGraphics) {
+      return;
+    }
+
+    const maxLife = 6;
+    const radius = 35;
+
+    // Limpar o graphics
+    this.lifeBarGraphics.clear();
+
+
+    // Desenhar círculo preenchido baseado na vida
+    if (this.life > 0) {
+      // Calcular o ângulo baseado na vida (360 graus = vida máxima)
+      const lifePercentage = this.life / maxLife;
+      const lifeAngle = 360 * lifePercentage;
+
+      // Cores diferentes baseadas na vida
+      let color = 0x00ff00; // Verde
+      if (this.life >= 4) {
+        color = 0x00ff00;
+       } else if (this.life <= 2) {
+        color = 0xff0000; // Vermelho
+      } else if (this.life <= 3) {
+        color = 0xffff00; // Amarelo
+      }
+
+      // Desenhar o arco preenchido (começando do topo, girando no sentido horário)
+      this.lifeBarGraphics.fillStyle(color, 0.8);
+      this.lifeBarGraphics.beginPath();
+      this.lifeBarGraphics.moveTo(0, 0);
+      this.lifeBarGraphics.arc(
+        0,
+        0,
+        radius,
+        Phaser.Math.DegToRad(270),
+        Phaser.Math.DegToRad(270 + lifeAngle),
+        false,
+      );
+      this.lifeBarGraphics.lineTo(0, 0);
+      this.lifeBarGraphics.fillPath();
+
+      // Desenhar contorno do círculo preenchido
+      this.lifeBarGraphics.lineStyle(2, color, 1);
+      this.lifeBarGraphics.beginPath();
+      this.lifeBarGraphics.arc(
+        0,
+        0,
+        radius,
+        Phaser.Math.DegToRad(270),
+        Phaser.Math.DegToRad(270 + 360),
+        false,
+      );
+      this.lifeBarGraphics.strokePath();
+    }
   }
 
   collectBag(player, jetBag) {
@@ -1580,31 +1760,65 @@ class scene0 extends Phaser.Scene {
 
     this.jetPack = true;
 
-      this.cargaBarBackground = this.add
-        .rectangle(800, 348, 200, 16, 0x888888, 0.5)
-        .setOrigin(0, 0)
-        .setScrollFactor(0);
+    // Criar graphics object para a barra de carga (círculo)
+    const cargaX = 800;
+    const cargaY = 348;
+    this.cargaBarGraphics = this.make
+      .graphics({
+        x: cargaX,
+        y: cargaY,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(10);
 
-      this.cargaBar = this.add
-        .rectangle(804, 350, 192, 12, 0x00dd0f)
-        .setOrigin(0, 0)
-        .setScrollFactor(0);
+    // Criar graphics object para a moldura de carga (O2-like)
+    this.cargaBarBorderGraphics = this.make
+      .graphics({
+        x: cargaX,
+        y: cargaY,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(11);
 
-      this.cargaBarBorder = this.add
-        .rectangle(800, 348, 200, 16)
-        .setStrokeStyle(2, 0xffffff)
-        .setOrigin(0, 0)
-        .setScrollFactor(0);
+    // Desenhar moldura de carga (arco externo)
+    this.updateCargaBarBorder();
 
-      this.cargaJpText = this.add
-        .text(902, 355, "Cargas: " + this.cargaJPpercentage + "%", {
-          fontSize: "10px",
-          fontFamily: "sarpanch",
-          fill: "#000000",
-        })
-        .setScrollFactor(0)
-        .setOrigin(0.5, 0.5);
-    
+    this.cargaJpText = this.add
+      .text(cargaX, cargaY - 30, "Cargas: " + this.cargaJPpercentage + "%", {
+        fontSize: "10px",
+        fontFamily: "sarpanch",
+        fill: "#ffffff",
+      })
+      .setScrollFactor(0)
+      .setOrigin(0.5, 0.5);
+
+    this.updateCargaBar();
+  }
+
+  updateCargaBarBorder() {
+    if (!this.cargaBarBorderGraphics) {
+      return;
+    }
+
+    // Limpar o graphics
+    this.cargaBarBorderGraphics.clear();
+
+    const outerRadius = 27;
+
+    // Desenhar moldura de carga (similar ao O2 bar)
+    this.cargaBarBorderGraphics.lineStyle(3, 0xcccccc, 1);
+    this.cargaBarBorderGraphics.beginPath();
+    this.cargaBarBorderGraphics.arc(
+      0,
+      0,
+      outerRadius,
+      Phaser.Math.DegToRad(270),
+      Phaser.Math.DegToRad(630),
+      false,
+    );
+    this.cargaBarBorderGraphics.strokePath();
   }
 
   update() {
@@ -1676,11 +1890,9 @@ class scene0 extends Phaser.Scene {
     this.lamp.x = this.player.x;
     this.lamp.y = this.player.y;
 
-  
-      
     if (this.cargaJp <= 0 && this.jetPack) {
-        this.cargaJpText.setText("Cargas: Sem Carga");
-      }
+      this.cargaJpText.setText("Cargas: Sem Carga");
+    }
 
     const movingHorizontally = Math.abs(this.player.body.velocity.x) > 1;
     const onGround =
@@ -2052,7 +2264,7 @@ class scene0 extends Phaser.Scene {
     });
   }
 
-  playLifeAnimation() {
+  /*playLifeAnimation() {
     if (!this.coracao) {
       return;
     }
@@ -2067,13 +2279,15 @@ class scene0 extends Phaser.Scene {
       const endFrame = 2 * (6 - this.life);
       this.coracao.setFrame(endFrame);
     });
-  }
+
+    // Atualizar barra semicircular de vida
+    this.updateSemicircleLifeBar();
+  }*/
 
   collectEng(player, engrenagens) {
     this.score += 1;
     this.scoreText.setText("Engrenagens: " + this.score + "/4");
   }
-
 
   webrtcAnswerCall() {
     this.game.remoteConnection = new RTCPeerConnection(this.game.iceServers);
