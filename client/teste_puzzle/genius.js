@@ -160,6 +160,9 @@ export default class Genius extends Phaser.Scene {
     this.textoStatus.setColor("#00ff00");
     this.botoes.forEach((btn) => (btn.fillColor = 0x00ff00));
     this.time.delayedCall(2000, () => {
+       ///if (!this.fase4) {
+        /// this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+      //}
       this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
       this.scene.stop();
     });

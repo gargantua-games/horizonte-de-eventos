@@ -655,6 +655,7 @@ class scene1 extends Phaser.Scene {
     this.antena1.body.setSize(20, 30)
     this.antena1.setOffset(10, 0);
     this.antena1.setScale(-1, 1);
+    this.antena1.setImmovable(true);
 
     //faísca na segunda antena
     this.faisca2 = this.physics.add.sprite(820, 1420, "faisca");
@@ -667,6 +668,8 @@ class scene1 extends Phaser.Scene {
     this.antena2.body.setSize(20, 30);
     this.antena2.setOffset(10, 0);
     this.antena2.setScale(-1, 1);
+    this.antena2.setImmovable(true);
+
 
     //faisca no telescopio
     this.faisca3 = this.physics.add.sprite(1107, 1490, "faisca");
@@ -677,6 +680,8 @@ class scene1 extends Phaser.Scene {
     this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
     this.telescopio3.body.allowGravity = false;
     this.telescopio3.body.setSize(20, 20);
+    this.telescopio3.setImmovable(true);
+
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
@@ -794,7 +799,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("helldivers", {
+            this.scene.launch("sudoku", {
               portaId: 1,
               cenaOrigem: "scene1",
             });
@@ -843,7 +848,14 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.telescopios);
     this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
-    
+    this.physics.add.collider(this.playerroxo, this.antena1, () => {
+          if (!this.puzzleAberto) {
+            this.puzzleAberto = true;
+            this.scene.launch("helldivers", {
+            });
+          }
+    });
+
     const destroyLaser = (laser, limit) => {
       if (laser && laser.disableBody) {
         laser.disableBody(true, true);

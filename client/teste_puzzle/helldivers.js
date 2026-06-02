@@ -285,9 +285,12 @@ export default class helldivers extends Phaser.Scene {
       .setOrigin(0.5);
 
     // Retorna com sucesso para a tua Scene principal após 2 segundos
-    this.time.delayedCall(2000, () => {
-      this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
-      this.scene.stop();
+      this.time.delayedCall(2000, () => {
+          //if (this.fase4 = false) {
+           //   this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+          //}
+          this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+          this.scene.stop();
     });
   }
 }
