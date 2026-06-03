@@ -5,7 +5,7 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = false;
+    this.fase4 = true;
     this.fase5 = false;
     this.vida = 3;
     this.invulnerable = false;
@@ -1168,6 +1168,9 @@ class scene1 extends Phaser.Scene {
     //if (this.doorOpen === 0) {
     //  this.avisoconsole.setPosition(843, 222);
     //} else
+    console.log("Angulo atual do canhão:", this.angleCannon)
+    this.cannon.setAngle(this.angleCannon);
+    
     if (this.doorOpen === 1) {
       this.avisoconsole.setPosition(843, 222);
     } else if (this.doorOpen === 2) {
@@ -1206,7 +1209,7 @@ class scene1 extends Phaser.Scene {
       this.bulletP1 = false;
       setTimeout(() => {
         this.bulletP1 = true;
-      }, 800);
+      }, 1000);
 
       if (this.angleCannon === 0) {
         this.laserP1

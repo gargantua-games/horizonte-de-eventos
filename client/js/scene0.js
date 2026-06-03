@@ -488,7 +488,7 @@ class scene0 extends Phaser.Scene {
         end: 9,
       }),
       frameRate: 2,
-      repeat: 0,
+      repeat: 1,
     });
 
     this.anims.create({
@@ -935,10 +935,9 @@ class scene0 extends Phaser.Scene {
 
         this.o2 = 100;
         this.platMoviment = false
-        //this.fase5 = true;
         this.stopPlatformMovement();
         this.life -= 1;
-        // this.playLifeAnimation();
+        
       }
     }, 500);
 
@@ -1026,7 +1025,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1235,7 +1234,6 @@ class scene0 extends Phaser.Scene {
       this.direction = true;
       this.life -= 1;
       this.updateSemicircleLifeBar();
-      // this.playLifeAnimation();
       this.cargaJp = 1000;
       this.cargaJPpercentage = 100;
       this.cargaJpText.setText(
@@ -1257,8 +1255,6 @@ class scene0 extends Phaser.Scene {
 
       this.life -= 1;
       this.updateSemicircleLifeBar();
-      //this.playLifeAnimation();
-
       this.iaBox.setPosition(1009, 33).setVelocityX(0).anims.stop();
       this.typeIaText(texto, 50);
 
@@ -1593,7 +1589,7 @@ class scene0 extends Phaser.Scene {
       .sprite(105, 122, "engrenagem", 8)
       .setOrigin(0, 0)
       .setScale(1)
-      .setScrollFactor(0); //.anims.play("engrenagem-idlelaranja", true);
+      .setScrollFactor(0);
 
     const pIconX = 107;
     const pIconY = 63;
@@ -1689,8 +1685,6 @@ class scene0 extends Phaser.Scene {
 
       if (state.playerroxo) {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
-      }
-      if (state.playerroxo.animation) {
         this.player2.anims.play(state.playerroxo.animation, true);
       }
     });
@@ -1886,7 +1880,7 @@ class scene0 extends Phaser.Scene {
 
     //this.updateCargaBar();
 
-    if (this.doorOpen === 4) {
+    if (this.fase5) {
       try {
         this.game.socket.emit("scene0", this.game.room, {
           player: {
@@ -2374,8 +2368,9 @@ class scene0 extends Phaser.Scene {
 
 
   collectEng(player, engrenagens) {
+    this.engrenagemIcon.anims.play("engrenagem-icon", true);
     this.score += 1;
-    this.scoreText.setText("Crachás: " + this.score + "/4");
+    this.scoreText.setText(this.score + "/4");
   }
 
   webrtcAnswerCall() {
