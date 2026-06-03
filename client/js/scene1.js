@@ -5,7 +5,7 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = true;
+    this.fase4 = false;
     this.vida = 3;
     this.invulnerable = false;
     this.positionP2 = false;
@@ -791,17 +791,6 @@ class scene1 extends Phaser.Scene {
       }
     });
 
-    /*this.doorOpen = 2;
-    try {
-      this.game.socket.emit("scene1", this.game.room, {
-        doorOpen: {
-            key: this.doorOpen,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
-    });*/
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
       if (this.doorOpen === 0) {
         if (this.playerroxo.y > 415) {
@@ -829,22 +818,7 @@ class scene1 extends Phaser.Scene {
       }
     });
 
-    // posiçoes this.avisoconsole.setPosition(933, 550); door 2
-    // //this.avisoconsole.setPosition(837, 226); door 0
-    //this.avisoconsole.setPosition(843, 222); door 1
-    //this.avisoconsole.setPosition(640, 505); door 3
 
-    /*this.doorOpen = 3;
-      try {
-        this.game.socket.emit("scene1", this.game.room, {
-          doorOpen: {
-            key: this.doorOpen,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
-    });*/
     this.physics.add.collider(this.playerroxo, this.consolew);
     this.physics.add.collider(this.playerroxo, this.consolew2);
     this.physics.add.collider(this.playerroxo, this.consolew3);
@@ -984,31 +958,7 @@ class scene1 extends Phaser.Scene {
       },
     });
 
-    this.game.socket.on("fase4", (state) => {
-      if (state.fase4) {
-        this.fase4 = state.fase4.key;
-      }
-    });
 
-    this.game.socket.on("fase5", (state) => {
-      if (state.player) {
-        this.player2.setPosition(state.player.x, state.player.y - 1184);
-        //   this.player2.sprite.anims.play(state.player.animation, true);
-      }
-
-      if (state.player.animation) {
-        this.player2.anims.play(state.player.animation, true);
-      }
-
-      this.platform12.setPosition(
-        state.platform12.x,
-        state.platform12.y - 1184,
-      );
-      this.platform15.setPosition(
-        state.platform15.x,
-        state.platform15.y - 1184,
-      );
-    });
 
     this.iaBox = this.physics.add.sprite(400, 80, "iaBox");
     this.iaBox
@@ -1052,11 +1002,39 @@ class scene1 extends Phaser.Scene {
     });
 
     this.game.socket.on("scene0", (state) => {
-      if (state.cannon) {
+
+      if (state.fase4) {
+        this.fase4 = state.fase4.key;
+      }
+
+      if (state.player) {
+        this.player2.setPosition(state.player.x, state.player.y - 1184);
+        //   this.player2.sprite.anims.play(state.player.animation, true);
+      }
+  
+      if (state.player.animation) {
+        this.player2.anims.play(state.player.animation, true);
+      }
+
+      if (state.platform12) {
+      this.platform12.setPosition(
+        state.platform12.x,
+        state.platform12.y - 1184,
+      );
+      }
+      if(state.platform15) {
+      this.platform15.setPosition(
+        state.platform15.x,
+        state.platform15.y - 1184,
+      );
+      }
+
+       if (state.cannon) {
         this.angleCannon = state.cannon.angle;
         this.shoot = state.cannon.shooting;
       }
     });
+
   }
 
   update(time, delta) {
@@ -1075,20 +1053,20 @@ class scene1 extends Phaser.Scene {
 
     //if (this.fase4) {
 
-    if (this.positionP2) {
-      try {
-        this.game.socket.emit("scene1", this.game.room, {
-          playerroxo: {
-            x: this.playerroxo.x,
-            y: this.playerroxo.y,
-            animation: this.playerroxo.anims.currentAnim
-              ? this.playerroxo.anims.currentAnim.key
-              : null,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
+    if (this.positionP2 && this.fase4) {
+    try {
+      this.game.socket.emit("scene1", this.game.room, {
+        playerroxo: {
+          x: this.playerroxo.x,
+          y: this.playerroxo.y,
+          animation: this.playerroxo.anims.currentAnim
+            ? this.playerroxo.anims.currentAnim.key
+            : null,
+        },
+      });
+    } catch (e) {
+      console.error("Error updating player:", e);
+    }
     }
     //}
 
