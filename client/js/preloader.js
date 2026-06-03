@@ -38,6 +38,7 @@ class preloader extends Phaser.Scene {
   }
 
   preload() {
+
     this.load.setPath("assets/");
 
     this.load.image("terminal", "terminal.png");
@@ -73,7 +74,10 @@ class preloader extends Phaser.Scene {
     this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");
 
     this.load.image("remasterized", "assets-usados/remasterized.png");
-    this.load.image("remasterizedEnfeites", "assets-usados/remasterizedEnfeites.png");
+    this.load.image(
+      "remasterizedEnfeites",
+      "assets-usados/remasterizedEnfeites.png",
+    );
 
     this.load.spritesheet("player", "player.png", {
       frameWidth: 64,
@@ -144,18 +148,27 @@ class preloader extends Phaser.Scene {
       frameHeight: 32,
     });
 
-    this.load.spritesheet("cannon", "cannon.png", {
+   this.load.spritesheet("cannon", "cannon.png", {
       frameWidth: 64,
       frameHeight: 64,
-    });
+   });
     
-    this.load.spritesheet("bulletP1", "laserBullet.png", {
+   this.load.spritesheet("bulletP1", "laserBullet.png", {
       frameWidth: 12,
       frameHeight: 12,
     });
 
-    this.load.tilemapTiledJSON("faseortogonal", "mapasv4/faseortogonalatualizada.json");
+    //preload do tilemap da faseortogonal
+    this.load.tilemapTiledJSON(
+      "faseortogonal",
+      "mapasv4/faseortogonalatualizada.json",
+    );
 
+    this.load.image("remasterized2", "assets-usados/remasterized.png");
+    this.load.image(
+      "remasterizedEnfeites",
+      "assets-usados/remasterizedEnfeites.png",
+    );
     this.load.image("NewPiskel", "assets-usados/NewPiskel.png");
     this.load.image("consoles", "assets-usados/console_s.png");
     this.load.image("consolew", "assets-usados/console_w.png");
@@ -166,9 +179,20 @@ class preloader extends Phaser.Scene {
     this.load.image("telescopio", "assets-usados/telescopio.png");
     this.load.image("osciloscopio", "assets-usados/osciloscopio.png");
 
+    //preload do sprite do player roxo
     this.load.spritesheet("playerroxo", "playerroxo.png", {
       frameWidth: 64,
       frameHeight: 64,
+    });
+
+    this.load.spritesheet("plataform", "plataform.png", {
+      frameWidth: 64,
+      frameHeight: 8,
+    });
+
+    this.load.spritesheet("bigboss", "InvisibleSprite.png", {
+      frameWidth: 25,
+      frameHeight: 25,
     });
 
     this.load.spritesheet("porta", "porta64x64(2).png", {
@@ -197,20 +221,23 @@ class preloader extends Phaser.Scene {
     });
 
     this.load.font("sarpanchregular", "sarpanchregular.otf");
+
     this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
 
-    // Tiros das naves
-    this.load.image("tiroaliado", "tiros/tiroaliado.png");
-    this.load.image("tiroaliadoforte", "tiros/tiroaliadoforte.png");
-    this.load.image("tiroaliadomegapotente", "tiros/tiroaliadomegapotente.png");
-    this.load.image("tiroinimigo", "tiros/tiroinimigo.png");
-    this.load.image("tiroinimigoforte", "tiros/tiroinimigoforte.png");
-    this.load.image("tiroinimigomegapotente", "tiros/tiroinimigomegapotente.png");
+    //tiro das naves aliadas (gamers)
 
-    // Feixe laser correto do boss
-    this.load.image("feixelaser", "tiros/feixelaser.png");
+    this.load.image("tiroaliado", "tiros/tiroaliado.png")
+    this.load.image("tiroaliadoforte", "tiros/tiroaliadoforte.png")
+    this.load.image("tiroaliadomegapotente", "tiros/tiroaliadomegapotente.png")
 
-    // Naves
+    //tiro das naves aliens
+
+    this.load.image("tiroinimigo", "tiros/tiroinimigo.png")
+    this.load.image("tiroinimigoforte", "tiros/tiroinimigoforte.png")
+    this.load.image("tiroinimigomegapotente", "tiros/tiroinimigomegapotente.png")
+
+    //naves aliadas (dos jogadores)
+
     this.load.image("nave-1", "naves/nave-1.png");
     this.load.image("nave-2", "naves/nave-2.png");
     this.load.image("nave-3", "naves/nave-3.png");
@@ -222,17 +249,12 @@ class preloader extends Phaser.Scene {
       frameWidth: 28,
       frameHeight: 28,
     });
-
-    // ATUALIZADO: Agora aponta corretamente para "naves/boss.png"
-    this.load.spritesheet("boss", "naves/boss.png", { frameWidth: 160, frameHeight: 160 });
-
-    // Carrega o meteoro
-    this.load.image("meteoro", "assets-usados/meteoro.png");
   }
 
   create() {
     this.scene.stop("preloader");
-    this.scene.start(this.nextScene || "scene1");
+    this.scene.start(this.nextScene //|| "scene1"
+    );
   }
 }
 
