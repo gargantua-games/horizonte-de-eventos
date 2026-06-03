@@ -1,6 +1,7 @@
 export default class termo extends Phaser.Scene {
   constructor() {
     super("termo");
+    this.lendotutorial = false;
   }
 
   init(data) {
@@ -51,6 +52,50 @@ export default class termo extends Phaser.Scene {
 
     this.cameras.main.setZoom(0.6);
     this.cameras.main.centerOn(width / 2, height / 2);
+
+    this.comojogar = this.physics.add.sprite(1100, 55, "comojogar");
+    this.comojogar.setScrollFactor(0);
+    this.comojogar.body.allowGravity = false;
+    this.comojogar.setDepth(2);
+    this.comojogar.setScale(5);
+    this.comojogar.setInteractive({ cursor: "pointer" });
+
+    this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
+    this.fundocomojogar.setVisible(false);
+    this.fundocomojogar.setScrollFactor(0);
+    this.fundocomojogar.body.allowGravity = false;
+    this.fundocomojogar.setDepth(1);
+    this.fundocomojogar.setScale(3);
+
+    this.comojogarText = this.add
+      .text(
+        600,
+        215,
+        "Você deve adivinhar qual a palavra certa. Ela terá cinco (5) letras.\nA cada tentativa, o jogo revelará: letras presentes na palavra, mas em posições erradas (ficarão em amarelo);\nletras presentes e na posição certa (ficarão em verde); e letras não existentes na palavra (ficarão cinza).\nClique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
+        {
+          fill: "#00ff0d",
+          fontFamily: "sarpanchregular",
+          fontSize: "30px",
+        },
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(101)
+      .setVisible(false);
+
+    this.comojogar.on("pointerdown", () => {
+      if (this.lendotutorial === false) {
+        this.comojogarText.setVisible(true);
+        this.lendotutorial = true;
+        this.fundocomojogar.setVisible(true);
+        //this.scene.pause();
+      } else if (this.lendotutorial === true) {
+        this.lendotutorial = false;
+        this.comojogarText.setVisible(false);
+        this.fundocomojogar.setVisible(false);
+        this.scene.restart();
+      }
+    });
 
     // Fundo principal do Terminal
     this.add.rectangle(400, 300, 800, 600, 0x121213);
