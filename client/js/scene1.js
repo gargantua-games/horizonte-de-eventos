@@ -184,6 +184,66 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
+     this.anims.create({
+       key: "idleesquerdaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 60,
+         end: 61,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+      this.anims.create({
+        key: "idlefrenteverde",
+        frames: this.anims.generateFrameNumbers("playerroxo", {
+          start: 62,
+          end: 63,
+        }),
+        frameRate: 2,
+        repeat: -1,
+      });
+    
+     this.anims.create({
+       key: "idledireitaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 64,
+         end: 65,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "andaresquerdaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 66,
+         end: 73,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+    this.anims.create({
+      key: "andarfrenteverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 74,
+        end: 81,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+     this.anims.create({
+       key: "andardireitaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 82,
+         end: 89,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+    
     //animação inimigo
     this.anims.create({
       key: "enemyWalk",
@@ -1367,7 +1427,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-   /* if (this.inimigosaliens) {
+     if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1425,7 +1485,7 @@ class scene1 extends Phaser.Scene {
           enemy.anims.stop();
         }
       });
-    }*/
+    }
 
     /*this.events.on("animationcomplete", (anim) => {
        if (anim.key === "portaabrindo") {
