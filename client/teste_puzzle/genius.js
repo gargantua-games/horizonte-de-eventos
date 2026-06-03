@@ -42,7 +42,7 @@ export default class Genius extends Phaser.Scene {
         .text(
           600,
           215,
-          "Primeiro, um quadrado brilhará/aumentará de tamanho.\nDepois, você deve apertar o quadrado correspondente\n(ou seja, o mesmo quadrado que acabou de se destacar).\nA cada rodada, adiciona-se um elemento\n(quadrado brilhando/aumentado de tamanho) à sequência.\nVocê deve lembrar corretamente qual a sequência para completar esse desafio.\nClique em como jogar de novo para fechar o tutoria e recomeçar o desafio",
+          "Primeiro, um quadrado brilhará/aumentará de tamanho.\nDepois, você deve apertar o quadrado correspondente\n(ou seja, o mesmo quadrado que acabou de se destacar).\nA cada rodada, adiciona-se um elemento\n(quadrado brilhando/aumentado de tamanho) à sequência.\nVocê deve lembrar corretamente qual a sequência para completar esse desafio.\nClique em como jogar de novo para fechar o tutorial e recomeçar o desafio",
           {
             fill: "#00ff0d",
             fontFamily: "sarpanchregular",
