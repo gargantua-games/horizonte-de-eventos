@@ -8,6 +8,7 @@ class scene0 extends Phaser.Scene {
     this.fase3 = false;
     this.fase4 = false;
     this.fase5 = false;
+    this.platMoviment = false;
     this.jetPack = false;
     this.energy = true;
     this.keys = null;
@@ -34,22 +35,22 @@ class scene0 extends Phaser.Scene {
     this.shooting = false;
     this.interecting = false;
     this.doubleInterecting = true;
-    this.comunicaction = true;
+    this.comunication = true;
   }
 
   init() {
     this.webrtcAnswerCall();
   }
 
-  startPlatformMovement() {
-    if (this.fase5) {
+ startPlatformMovement() {
+    if (!this.platMoviment) {
       return;
     }
 
     if (!this.platform12Interval) {
       this.platform12.setVelocityX(150);
       this.platform12Interval = setInterval(() => {
-        if (this.platform12 && !this.fase5) {
+        if (this.platform12 && this.platMoviment) {
           this.platform12.setVelocityX(this.platform12.body.velocity.x * -1);
         }
       }, 2300);
@@ -58,7 +59,7 @@ class scene0 extends Phaser.Scene {
     if (!this.platform15Interval) {
       this.platform15.setVelocityX(150);
       this.platform15Interval = setInterval(() => {
-        if (this.platform15 && !this.fase5) {
+        if (this.platform15 && this.platMoviment) {
           this.platform15.setVelocityX(this.platform15.body.velocity.x * -1);
         }
       }, 1300);
@@ -933,7 +934,8 @@ class scene0 extends Phaser.Scene {
         }
 
         this.o2 = 100;
-        this.fase5 = true;
+        this.platMoviment = false
+        //this.fase5 = true;
         this.stopPlatformMovement();
         this.life -= 1;
         // this.playLifeAnimation();
@@ -1024,7 +1026,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1168,8 +1170,9 @@ class scene0 extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.invisible, () => {
       this.invisible.disableBody(true, true);
-      this.fase5 = false;
+      this.platMoviment = true;
       this.startPlatformMovement();
+      //this.fase5 = false;
     });
 
     this.physics.add.overlap(this.player, this.invisible2, () => {
@@ -1231,10 +1234,13 @@ class scene0 extends Phaser.Scene {
         .anims.play("idleRight");
       this.direction = true;
       this.life -= 1;
+      this.updateSemicircleLifeBar();
       // this.playLifeAnimation();
       this.cargaJp = 1000;
       this.cargaJPpercentage = 100;
-      this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+      this.cargaJpText.setText(
+        [...this.cargaJPpercentage.toString(), "%"].join("\n"),
+      );
       this.updateCargaBar();
       if (this.collectEng3 === true) {
         this.score -= 1;
@@ -1339,6 +1345,11 @@ class scene0 extends Phaser.Scene {
           this.movingP1 = false;
         }, 200);
         this.player.setVelocity(0, 100);
+         if (this.direction) {
+          this.player.anims.play("idleRightJP", true);
+        } else if (!this.direction) {
+          this.player.anims.play("idleLeftJP", true);
+        }
         this.door22.anims.play("open-door", true);
         this.light22.setColor(0x90ee90);
 
@@ -1369,6 +1380,11 @@ class scene0 extends Phaser.Scene {
           this.movingP1 = false;
         }, 200);
         this.player.setVelocity(0, 100);
+        if (this.direction) {
+          this.player.anims.play("idleRightJP", true);
+        } else if (!this.direction) {
+          this.player.anims.play("idleLeftJP", true);
+        }
         this.door23.anims.play("open-door", true);
         this.door23.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
@@ -1410,6 +1426,11 @@ class scene0 extends Phaser.Scene {
           this.movingP1 = false;
         }, 200);
         this.player.setVelocity(0, 100);
+        if (this.direction) {
+          this.player.anims.play("idleRightJP", true);
+        } else if (!this.direction) {
+          this.player.anims.play("idleLeftJP", true);
+        }
         this.door24.anims.play("open-door", true);
         this.door24.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
@@ -1429,7 +1450,7 @@ class scene0 extends Phaser.Scene {
             this.player
               .setPosition(92, 3532)
               .setVelocity(0, 0)
-              .anims.play("idleRghtJP");
+              .anims.play("idleRightJP");
             this.direction = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
@@ -1528,7 +1549,7 @@ class scene0 extends Phaser.Scene {
         cargaY + 2,
         hudBarInnerWidth,
         hudBarInnerHeight,
-        0xdfff00,
+        0x039600,
       )
       .setOrigin(0, 0)
       .setScrollFactor(0)
@@ -1558,7 +1579,7 @@ class scene0 extends Phaser.Scene {
       .setVisible(false);
 
     this.scoreText = this.add
-      .text(135, 95, "crachás: " + this.score + "/4", {
+      .text(133, 130,  this.score + "/4", {
         fontSize: "18px",
         fontFamily: "sarpanch",
         fill: "#ffffff",
@@ -1569,15 +1590,71 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
 
     this.engrenagemIcon = this.add
-      .sprite(105, 77, "engrenagem", 8)
+      .sprite(105, 122, "engrenagem", 8)
       .setOrigin(0, 0)
       .setScale(1)
       .setScrollFactor(0); //.anims.play("engrenagem-idlelaranja", true);
 
-    const jkl = this.input.keyboard.addKeys("J,K,L");
+    const pIconX = 107;
+    const pIconY = 63;
+    const pIconSize = 64;
 
-    this.game.socket.on("scene1", (state) => {
-      if (state.doorOpen) {
+    this.anims.create({
+      key: "playersIconIdle",
+      frames: this.anims.generateFrameNumbers("playersIcon", {
+        start: 0,
+        end: 1,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+    
+      
+      // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
+    let imagem = this.add.sprite(pIconX, pIconY, "playersIcon")
+      .setOrigin(0, 0)
+      .setScrollFactor(0)
+      .setDepth(9)
+      .anims.play("playersIconIdle", true)
+      .setScale(1.5);
+    
+      
+      // 2. Cria um objeto gráfico que servirá de molde (o círculo)
+    let molde = this.make.graphics();
+        
+   // molde.setOrigin(0, 0);
+      molde.setScrollFactor(0)
+      molde.setDepth(9);
+      
+      // Define a cor de preenchimento (a cor não importa, pois ficará invisível)
+       molde.fillStyle(0xffffff); 
+      
+      // Desenha o círculo na mesma posição da imagem (x: 400, y: 300) e define o raio (ex: 100 pixels)
+      // Dica: O raio idealmente deve ser a metade da largura/altura da sua imagem
+        molde.fillCircle(pIconX + 21, pIconY + 14, 32)//.setOrigin(0, 0).setScrollFactor(0); 
+
+        // 3. Cria a máscara geométrica a partir do círculo
+        let mascara = molde.createGeometryMask();
+
+        // 4. Aplica a máscara na imagem
+        imagem.setMask(mascara);
+        
+        this.lifeBarBgGraphics = this.make
+        .graphics({
+          x: 130,
+          y: 80,
+          add: true,
+        })
+        .setScrollFactor(0)
+        .setDepth(8);
+    
+        this.lifeBarBgGraphics.fillStyle(0x000000, 1);
+        this.lifeBarBgGraphics.fillCircle(0, 0, 36);
+        
+        const jkl = this.input.keyboard.addKeys("J,K,L");
+
+        this.game.socket.on("scene1", (state) => {
+          if (state.doorOpen) {
         if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
           this.doorOpen = state.doorOpen.key;
         }
@@ -1717,7 +1794,9 @@ class scene0 extends Phaser.Scene {
 
     this.cargaBar.height = height;
     this.cargaBar.y = this.cargaBarBackground.y + 2 + (innerHeight - height);
-    this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+    this.cargaJpText.setText(
+      [...this.cargaJPpercentage.toString(), "%"].join("\n"),
+    );
   }
 
   createSemicircleLifeBar() {
@@ -1727,17 +1806,7 @@ class scene0 extends Phaser.Scene {
     const radius = 30;
     const bgRadius = radius + 6;
 
-    this.lifeBarBgGraphics = this.make
-      .graphics({
-        x: x,
-        y: y,
-        add: true,
-      })
-      .setScrollFactor(0)
-      .setDepth(9);
 
-    this.lifeBarBgGraphics.fillStyle(0x000000, 1);
-    this.lifeBarBgGraphics.fillCircle(0, 0, bgRadius);
 
     this.lifeBarGraphics = this.make
       .graphics({
@@ -1760,13 +1829,13 @@ class scene0 extends Phaser.Scene {
     const maxLife = 6;
     const radius = this.lifeRadius;
     const segmentCount = 6;
-    const gapDegrees = 6;
+    const gapDegrees = 5;
     const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
     this.lifeBarGraphics.clear();
 
-    const activeColor =
-      this.life <= 2 ? 0xff0000 : this.life <= 3 ? 0xffff00 : 0x00ff00;
+    const activeColor = 0xb40000;
+      
 
     for (let i = 0; i < segmentCount; i++) {
       const startAngle = Phaser.Math.DegToRad(
@@ -1777,10 +1846,11 @@ class scene0 extends Phaser.Scene {
       );
       const color = i < this.life ? activeColor : 0x555555;
 
-      this.lifeBarGraphics.lineStyle(4, color, 1)
-      .beginPath()
-      .arc(0, 0, radius, startAngle, endAngle, false)
-      .strokePath();
+      this.lifeBarGraphics
+        .lineStyle(4, color, 1)
+        .beginPath()
+        .arc(0, 0, radius, startAngle, endAngle, false)
+        .strokePath();
     }
   }
 
@@ -1812,13 +1882,11 @@ class scene0 extends Phaser.Scene {
   update() {
     this.cannon.setAngle(this.angleCannon);
 
-    
-
     //this.o2Text.setText("Oxigênio: " + this.o2 + "%");
 
     //this.updateCargaBar();
 
-    if (this.doorOpen >= 4) {
+    if (this.doorOpen === 4) {
       try {
         this.game.socket.emit("scene0", this.game.room, {
           player: {
@@ -1863,15 +1931,16 @@ class scene0 extends Phaser.Scene {
     }
     //}
 
-    if (this.fase5 === false && this.energy === true) {
+    if (this.energy) {
       this.lights.enable().setAmbientColor(0xe0f7ff);
-    } else if (this.fase5 === true && this.energy === false) {
+    } else if (this.fase5 === true && this.energy === false && !this.platMoviment) {
       this.lights.setAmbientColor(0x000000);
-
+      
       this.invisible.enableBody(true, 340, 3396, true, true);
       this.platform12.setVelocityX(0).setPosition(340, 3425);
       this.platform15.setVelocityX(0).setPosition(955, 3375);
-    } else if (this.fase5 === false && this.energy === false) {
+
+    } else if (this.fase5 === true && this.energy === false && this.platMoviment) {
       this.lights.setAmbientColor(0x202020);
     }
 
@@ -1880,7 +1949,9 @@ class scene0 extends Phaser.Scene {
 
     if (this.cargaJp <= 0 && this.jetPack) {
       this.cargaJPpercentage = 0;
-      this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+      this.cargaJpText.setText(
+        [...this.cargaJPpercentage.toString(), "%"].join("\n"),
+      );
     } else {
       this.cargaJPpercentage = this.cargaJp / 10;
     }
@@ -2052,7 +2123,9 @@ class scene0 extends Phaser.Scene {
           this.doubleJump = false;
           if (!this.player.body.blocked.down) {
             this.cargaJp -= 30;
-            this.cargaJpText.setText(["Cargas: ", this.cargaJPpercentage, "%"].join("\n"));
+            this.cargaJpText.setText(
+              ["Cargas: ", this.cargaJPpercentage, "%"].join("\n"),
+            );
             this.updateCargaBar();
           }
 
@@ -2084,7 +2157,9 @@ class scene0 extends Phaser.Scene {
               this.player.setFrame("58");
               this.player.setAngle(10);
               this.cargaJp -= 1;
-              this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+              this.cargaJpText.setText(
+                [...this.cargaJPpercentage.toString(), "%"].join("\n"),
+              );
               this.updateCargaBar();
             }
           } else if (this.direction === false) {
@@ -2092,7 +2167,9 @@ class scene0 extends Phaser.Scene {
               this.player.setFrame("56");
               this.player.setAngle(-10);
               this.cargaJp -= 1;
-              this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+              this.cargaJpText.setText(
+                [...this.cargaJPpercentage.toString(), "%"].join("\n"),
+              );
               this.updateCargaBar();
             }
           }
@@ -2280,6 +2357,7 @@ class scene0 extends Phaser.Scene {
 
         if (this.life > 0) {
           this.life -= 1;
+          this.updateSemicircleLifeBar();
           // this.playLifeAnimation();
         }
 
@@ -2294,29 +2372,10 @@ class scene0 extends Phaser.Scene {
     });
   }
 
-  /*playLifeAnimation() {
-    if (!this.coracao) {
-      return;
-    }
-
-    const lifeKey = `life${this.life}`;
-    if (!this.anims.exists(lifeKey)) {
-      return;
-    }
-
-    this.coracao.anims.play(lifeKey, true);
-    this.coracao.once(`animationcomplete-${lifeKey}`, () => {
-      const endFrame = 2 * (6 - this.life);
-      this.coracao.setFrame(endFrame);
-    });
-
-    // Atualizar barra semicircular de vida
-    this.updateSemicircleLifeBar();
-  }*/
 
   collectEng(player, engrenagens) {
     this.score += 1;
-    this.scoreText.setText("Engrenagens: " + this.score + "/4");
+    this.scoreText.setText("Crachás: " + this.score + "/4");
   }
 
   webrtcAnswerCall() {
