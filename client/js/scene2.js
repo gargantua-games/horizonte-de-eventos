@@ -61,6 +61,7 @@ class scene2 extends Phaser.Scene {
     this.nave = this.physics.add.sprite(100, 400, "nave-" + (this.engrenagem + 1)).setScale(0.5);
     this.nave.setCollideWorldBounds(true);
     this.nave.body.setSize(this.nave.width * 0.8, this.nave.height * 0.5); 
+    this.nave.setDepth(10); // Nave por cima de tudo
     this.cameras.main.startFollow(this.nave, true, 0.1, 0.1);
 
     this.playerBullets = this.physics.add.group();
@@ -135,6 +136,7 @@ class scene2 extends Phaser.Scene {
       tiro.setVelocityX(this.statusNave.velTiro);
       tiro.dano = this.statusNave.dano; 
       tiro.body.setSize(35, 10); 
+      tiro.setDepth(5); // Projétil por baixo da nave
       this.nextFire = time + this.statusNave.cadencia;
     }
 
@@ -179,6 +181,7 @@ class scene2 extends Phaser.Scene {
     asteroide.setAngle(Phaser.Math.Between(0, 360));
     asteroide.body.setCircle(35); 
     asteroide.hp = Math.round(4 * this.modAmbiente); 
+    asteroide.setDepth(6);
     
     let velBase = this.enemyIndex === 4 ? -450 : -280;
     velBase = velBase * this.velModAsteroides;
@@ -191,13 +194,16 @@ class scene2 extends Phaser.Scene {
     if (!tiro.active || !asteroide.active) return;
     asteroide.hp -= tiro.dano;
     tiro.destroy(); 
-    this.tweens.add({ targets: asteroide, alpha: 0.5, duration: 50, yoyo: true, repeat: 1 });
+
+    asteroide.setTint(0xff8888);
+    this.time.delayedCall(50, () => { if (asteroide.active) asteroide.clearTint(); });
+
     if (asteroide.hp <= 0) {
       for(let i = 0; i < 5; i++) {
         let pedacinho = this.add.rectangle(asteroide.x, asteroide.y, 8, 8, 0x888888);
         this.physics.add.existing(pedacinho);
         pedacinho.body.setVelocity(Phaser.Math.Between(-150, 150), Phaser.Math.Between(-150, 150));
-        this.tweens.add({ targets: pedacinho, alpha: 0, duration: 600, onComplete: () => pedacinho.destroy() });
+        this.tweens.add({ targets: pedacinho, duration: 600, alpha: 0, onComplete: () => pedacinho.destroy() });
       }
       asteroide.destroy(); 
     }
@@ -211,6 +217,7 @@ class scene2 extends Phaser.Scene {
     if (this.enemyIndex < 3) {
       e = this.enemies.create(spawnX, spawnY, "naveet").setScale(0.5).setFlipX(true);
       e.body.setSize(e.width * 0.8, e.height * 0.7); 
+      e.setDepth(10);
       
       const hpBaseInimigosComuns = [20, 25, 30, 32, 35]; 
       e.hp = hpBaseInimigosComuns[this.engrenagem] + (this.enemyIndex * 5);
@@ -221,6 +228,7 @@ class scene2 extends Phaser.Scene {
       e.setAngle(-90); 
       e.play("boss_voando");
       e.body.setSize(100, 100); 
+      e.setDepth(10);
 
       const hpBaseBoss = [150, 250, 350, 500, 650]; 
       e.hp = hpBaseBoss[this.engrenagem]; 
@@ -293,6 +301,7 @@ class scene2 extends Phaser.Scene {
             raio.setDisplaySize(2000, 60).setOrigin(0, 0.5); 
             raio.body.setSize(2000, 40); 
             raio.dano = 3; 
+            raio.setDepth(5);
 
             this.time.delayedCall(2000, () => { 
               if (raio.active) raio.destroy();
@@ -318,7 +327,8 @@ class scene2 extends Phaser.Scene {
                 angulos.forEach(ang => {
                   let b = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
                   this.physics.velocityFromAngle(ang, 360, b.body.velocity);
-                  b.setAngle(ang); // <-- Corrige o ângulo visual do projétil
+                  b.setAngle(ang); 
+                  b.setDepth(5);
                   b.dano = 1;
                 });
               }
@@ -346,7 +356,8 @@ class scene2 extends Phaser.Scene {
             angulosDiferentes.forEach(angulo => {
               let bala = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
               this.physics.velocityFromAngle(angulo, 400, bala.body.velocity);
-              bala.setAngle(angulo); // <-- Rotação para os tiros em leque
+              bala.setAngle(angulo); 
+              bala.setDepth(5);
               bala.body.setSize(20, 20);
               bala.dano = 1;
             });
@@ -356,7 +367,8 @@ class scene2 extends Phaser.Scene {
               this.time.delayedCall(i * 180, () => {
                 if (!inimigo.active || inimigo.isDead) return;
                 let bala = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigo").setVelocityX(-480);
-                bala.setAngle(180); // <-- Tiro reto apontando para a esquerda
+                bala.setAngle(180); 
+                bala.setDepth(5);
                 bala.body.setSize(35, 10);
                 bala.dano = 1;
               });
@@ -371,7 +383,8 @@ class scene2 extends Phaser.Scene {
             for (let angulo = 0; angulo < 360; angulo += 30) {
               let bala = this.enemyBullets.create(inimigo.x, inimigo.y, "tiroinimigoforte");
               this.physics.velocityFromAngle(angulo, 300, bala.body.velocity);
-              bala.setAngle(angulo); // <-- Anel de tiros rodado corretamente
+              bala.setAngle(angulo); 
+              bala.setDepth(5);
               bala.body.setCircle(10);
               bala.dano = 1;
             }
@@ -392,18 +405,22 @@ class scene2 extends Phaser.Scene {
       if (inimigo.indexInimigo === 2) {
         let b1 = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte").setVelocity(velTiroComum, 0);
         b1.setAngle(180);
+        b1.setDepth(5);
         
         let b2 = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte").setVelocity(velTiroComum, -110);
-        b2.setRotation(Math.atan2(-110, velTiroComum)); // Calcula a rotação certa com base no Y e X
+        b2.setRotation(Math.atan2(-110, velTiroComum)); 
+        b2.setDepth(5);
         
         let b3 = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte").setVelocity(velTiroComum, 110);
         b3.setRotation(Math.atan2(110, velTiroComum)); 
+        b3.setDepth(5);
         
         b1.body.setSize(35, 10); b2.body.setSize(35, 10); b3.body.setSize(35, 10);
         b1.dano = 1; b2.dano = 1; b3.dano = 1;
       } else {
         let bala = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigo").setVelocityX(velTiroComum);
         bala.setAngle(180);
+        bala.setDepth(5);
         bala.dano = 1;
         bala.body.setSize(35, 10); 
       }
@@ -420,7 +437,10 @@ class scene2 extends Phaser.Scene {
 
     inimigo.hp -= tiro.dano;
     tiro.destroy(); 
-    this.tweens.add({ targets: inimigo, alpha: 0.3, duration: 50, yoyo: true, repeat: 1 });
+
+    // Piscar em Vermelho sem transparência
+    inimigo.setTint(0xff3333);
+    this.time.delayedCall(100, () => { if (inimigo && inimigo.active) inimigo.clearTint(); });
 
     if (inimigo.hp <= 0) {
       inimigo.isDead = true;
@@ -428,7 +448,6 @@ class scene2 extends Phaser.Scene {
       if (inimigo.moveTimer) inimigo.moveTimer.remove(); 
       
       inimigo.setVelocity(0, 0); 
-      
       if (inimigo.barraVida) inimigo.barraVida.destroy(); 
 
       if (inimigo.isBoss) {
@@ -467,13 +486,16 @@ class scene2 extends Phaser.Scene {
     this.vidaAtual -= quantidadeDano;
     this.vidaAtual = Phaser.Math.Clamp(this.vidaAtual, 0, this.statusNave.vidaMax);
     this.desenharBarraVida();
-    this.tweens.add({ targets: this.nave, alpha: 0.2, duration: 60, yoyo: true, repeat: 2 });
+
+    // Piscar em vermelho sem transparência
+    this.nave.setTint(0xff3333);
+    this.time.delayedCall(150, () => { if (!this.playerIsDead && this.nave.active) this.nave.clearTint(); });
 
     if (this.vidaAtual <= 0) {
       this.playerIsDead = true;
       this.nave.setVelocity(0, 0);
       this.nave.setTint(0xff0000); 
-      this.time.delayedCall(1500, () => this.scene.start("gameover1")); // <-- Corrigido para gameover1
+      this.time.delayedCall(1500, () => this.scene.start("gameover1")); 
     }
   }
 
@@ -493,4 +515,3 @@ class scene2 extends Phaser.Scene {
 }
 
 export default scene2;
-
