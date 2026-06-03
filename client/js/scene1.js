@@ -355,8 +355,34 @@ class scene1 extends Phaser.Scene {
     this.vidasroxas = this.physics.add.sprite(250, 130, "vidasroxas");
     this.vidasroxas.setScrollFactor(0);
     this.vidasroxas.body.allowGravity = false;
-    this.vidasroxas.setDepth(1);
+    this.vidasroxas.setDepth(2);
     this.vidasroxas.setScale(2);
+
+    /*this.comojogar = this.physics.add.sprite(250, 170, "comojogar");
+    this.comojogar.setScrollFactor(0);
+    this.comojogar.body.allowGravity = false;
+    this.comojogar.setDepth(2);
+    this.comojogar.setScale(2);
+    this.comojogar.setInteractive({ cursor: "pointer" });
+
+    this.comojogarText = this.add
+      .text(300, 210, "sem puzzles abertos", {
+        font: "20px Arial",
+        fill: "#00ff0d",
+        backgroundColor: "#000000aa",
+        fontFamily: "sarpanchregular",
+      })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(101)
+      .setVisible(false);
+
+    this.comojogar.on("pointerdown", () => {
+      this.comojogarText.setVisible(true);
+      this.time.delayedCall(3000, () => {
+        this.comojogarText.setVisible(false);
+      });
+    });*/
 
     //adicionar porta
     this.porta = this.physics.add.sprite(638, 719, "porta", 0);
@@ -796,7 +822,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("sudoku", {
+            this.scene.launch("genius", {
               portaId: 1,
               cenaOrigem: "scene1",
             });
@@ -817,7 +843,6 @@ class scene1 extends Phaser.Scene {
         }
       }
     });
-
 
     this.physics.add.collider(this.playerroxo, this.consolew);
     this.physics.add.collider(this.playerroxo, this.consolew2);
@@ -958,8 +983,6 @@ class scene1 extends Phaser.Scene {
       },
     });
 
-
-
     this.iaBox = this.physics.add.sprite(400, 80, "iaBox");
     this.iaBox
       .setOrigin(0, 0)
@@ -1002,7 +1025,6 @@ class scene1 extends Phaser.Scene {
     });
 
     this.game.socket.on("scene0", (state) => {
-
       if (state.fase4) {
         this.fase4 = state.fase4.key;
       }
@@ -1011,30 +1033,29 @@ class scene1 extends Phaser.Scene {
         this.player2.setPosition(state.player.x, state.player.y - 1184);
         //   this.player2.sprite.anims.play(state.player.animation, true);
       }
-  
+
       if (state.player.animation) {
         this.player2.anims.play(state.player.animation, true);
       }
 
       if (state.platform12) {
-      this.platform12.setPosition(
-        state.platform12.x,
-        state.platform12.y - 1184,
-      );
+        this.platform12.setPosition(
+          state.platform12.x,
+          state.platform12.y - 1184,
+        );
       }
-      if(state.platform15) {
-      this.platform15.setPosition(
-        state.platform15.x,
-        state.platform15.y - 1184,
-      );
+      if (state.platform15) {
+        this.platform15.setPosition(
+          state.platform15.x,
+          state.platform15.y - 1184,
+        );
       }
 
-       if (state.cannon) {
+      if (state.cannon) {
         this.angleCannon = state.cannon.angle;
         this.shoot = state.cannon.shooting;
       }
     });
-
   }
 
   update(time, delta) {
@@ -1054,19 +1075,19 @@ class scene1 extends Phaser.Scene {
     //if (this.fase4) {
 
     if (this.positionP2 && this.fase4) {
-    try {
-      this.game.socket.emit("scene1", this.game.room, {
-        playerroxo: {
-          x: this.playerroxo.x,
-          y: this.playerroxo.y,
-          animation: this.playerroxo.anims.currentAnim
-            ? this.playerroxo.anims.currentAnim.key
-            : null,
-        },
-      });
-    } catch (e) {
-      console.error("Error updating player:", e);
-    }
+      try {
+        this.game.socket.emit("scene1", this.game.room, {
+          playerroxo: {
+            x: this.playerroxo.x,
+            y: this.playerroxo.y,
+            animation: this.playerroxo.anims.currentAnim
+              ? this.playerroxo.anims.currentAnim.key
+              : null,
+          },
+        });
+      } catch (e) {
+        console.error("Error updating player:", e);
+      }
     }
     //}
 

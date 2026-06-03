@@ -111,6 +111,7 @@ class preloader extends Phaser.Scene {
     this.load.spritesheet("redLife", "redLife.png", { frameHeight: 18, frameWidth: 46 });
     this.load.font("sarpanchregular", "sarpanchregular.otf");
     this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
+    this.load.spritesheet("comojogar", "comojogarsprite.png" ,{ frameWidth: 32, frameHeight: 32});
   }
 
   create() {
