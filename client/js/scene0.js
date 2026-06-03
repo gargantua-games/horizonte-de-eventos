@@ -22,7 +22,7 @@ class scene0 extends Phaser.Scene {
     this.life = 6;
     this.canTakeDamage = true;
     this.enemyGravity = false;
-    this.doorOpen = 1;
+    this.doorOpen = 4;
     this.bullet = true;
     this.platform12Interval = null;
     this.platform15Interval = null;
@@ -95,10 +95,10 @@ class scene0 extends Phaser.Scene {
 
     let comunicationPressed = false;
 
+    this.passos = this.sound.add("passos", { loop: true, volume: 2 });
     this.trilhasonora = this.sound
-      .add("trilhasonora", { loop: true, volume: 0.2 })
+      .add("trilhasonora", { loop: true, volume: 0.08 })
       .play();
-    this.passos = this.sound.add("passos", { loop: true, volume: 1 });
 
     this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
@@ -1234,7 +1234,7 @@ class scene0 extends Phaser.Scene {
       // this.playLifeAnimation();
       this.cargaJp = 1000;
       this.cargaJPpercentage = 100;
-      this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+      this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
       this.updateCargaBar();
       if (this.collectEng3 === true) {
         this.score -= 1;
@@ -1267,10 +1267,10 @@ class scene0 extends Phaser.Scene {
       }
     });
 
-   this.physics.add.overlap(this.player, this.door12, () => {
+    this.physics.add.overlap(this.player, this.door12, () => {
       this.movingP1 = true;
-   });
-    
+    });
+
     this.physics.add.overlap(this.player, this.door13, () => {
       this.movingP1 = true;
     });
@@ -1294,7 +1294,7 @@ class scene0 extends Phaser.Scene {
         } else if (!this.direction) {
           this.player.anims.play("idleLeft", true);
         }
-        
+
         this.door21.anims.play("open-door", true);
         this.light21.setColor(0x90ee90);
 
@@ -1302,15 +1302,14 @@ class scene0 extends Phaser.Scene {
           if (anim.key === "open-door") {
             this.iaBox.setVelocityX(0).setPosition(1009, 33);
             this.player
-            .setPosition(108, 1835)
-            //.setVelocity(0, 0)
-            .anims.play("idleRight");
+              .setPosition(108, 1835)
+              //.setVelocity(0, 0)
+              .anims.play("idleRight");
             this.direction = true;
             this.enemyGravity = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
             this.door12.anims.play("close-door", true);
-            
 
             this.iaBox.setVelocityX(-100);
             setTimeout(() => {
@@ -1333,7 +1332,6 @@ class scene0 extends Phaser.Scene {
         });
       }
     });
-
 
     this.physics.add.overlap(this.player, this.door22, () => {
       if (this.jetPack && this.doorOpen >= 2) {
@@ -1471,30 +1469,93 @@ class scene0 extends Phaser.Scene {
       },
     });
 
+    const hudBarX = 170;
+    const hudBarY = 43;
+    const hudBarWidth = 12;
+    const hudBarHeight = 80;
+    const hudBarInnerWidth = hudBarWidth - 4;
+    const hudBarInnerHeight = hudBarHeight - 4;
+
     this.o2BarBackground = this.add
-      .rectangle(100, 348, 250, 16, 0x888888, 0.5)
+      .rectangle(hudBarX, hudBarY, hudBarWidth, hudBarHeight, 0x888888, 0.5)
       .setOrigin(0, 0)
       .setScrollFactor(0);
 
     this.o2Bar = this.add
-      .rectangle(104, 350, 242, 12, 0x61dafb)
+      .rectangle(
+        hudBarX + 2,
+        hudBarY + 2,
+        hudBarInnerWidth,
+        hudBarInnerHeight,
+        0x0082e6,
+      )
       .setOrigin(0, 0)
       .setScrollFactor(0);
 
     this.o2BarBorder = this.add
-      .rectangle(100, 348, 250, 16)
-      .setStrokeStyle(2, 0xffffff)
+      .rectangle(hudBarX, hudBarY, hudBarWidth, hudBarHeight)
+      .setStrokeStyle(2, 0x000000)
       .setOrigin(0, 0)
       .setScrollFactor(0);
 
     this.o2Text = this.add
-      .text(225, 355, "Oxigênio: " + this.o2 + "%", {
-        fontSize: "10px",
-        fontFamily: "sarpanch",
-        fill: "#000000",
-      })
+      .text(
+        hudBarX + 2,
+        hudBarY + 15,
+        [...this.o2.toString(), "%"].join("\n"),
+        {
+          fontSize: "10px",
+          fontFamily: "sarpanch",
+          fill: "#000000",
+          align: "center",
+        },
+      )
       .setScrollFactor(0)
-      .setOrigin(0.5, 0.5);
+      .setOrigin(0, 0);
+
+    const cargaX = hudBarX + hudBarWidth + 8;
+    const cargaY = hudBarY;
+
+    this.cargaBarBackground = this.add
+      .rectangle(cargaX, cargaY, hudBarWidth, hudBarHeight, 0x888888, 0.5)
+      .setOrigin(0, 0)
+      .setScrollFactor(0)
+      .setVisible(false);
+
+    this.cargaBar = this.add
+      .rectangle(
+        cargaX + 2,
+        cargaY + 2,
+        hudBarInnerWidth,
+        hudBarInnerHeight,
+        0xdfff00,
+      )
+      .setOrigin(0, 0)
+      .setScrollFactor(0)
+      .setVisible(false);
+
+    this.cargaBarBorder = this.add
+      .rectangle(cargaX, cargaY, hudBarWidth, hudBarHeight)
+      .setStrokeStyle(2, 0x000000)
+      .setOrigin(0, 0)
+      .setScrollFactor(0)
+      .setVisible(false);
+
+    this.cargaJpText = this.add
+      .text(
+        cargaX + 2,
+        cargaY + 15,
+        [...this.cargaJPpercentage.toString(), "%"].join("\n"),
+        {
+          fontSize: "10px",
+          fontFamily: "sarpanch",
+          fill: "#000000",
+          align: "center",
+        },
+      )
+      .setScrollFactor(0)
+      .setOrigin(0, 0)
+      .setVisible(false);
 
     this.scoreText = this.add
       .text(135, 95, "crachás: " + this.score + "/4", {
@@ -1505,7 +1566,7 @@ class scene0 extends Phaser.Scene {
         strokeThickness: 2,
       })
       .setScrollFactor(0)
-      .setOrigin(0, 0.5);
+      .setOrigin(0, 0);
 
     this.engrenagemIcon = this.add
       .sprite(105, 77, "engrenagem", 8)
@@ -1516,19 +1577,14 @@ class scene0 extends Phaser.Scene {
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
     this.game.socket.on("scene1", (state) => {
-
-    });
-
-    this.game.socket.on("scene1", (state) => {
       if (state.doorOpen) {
         if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
           this.doorOpen = state.doorOpen.key;
         }
-
       }
 
-      const jklState = state.jkl || { J: false, L: false, K: false };
-      if (state.jkl){
+      if (state.jkl) {
+        const jklState = state.jkl || { J: false, L: false, K: false };
         if (this.movingTorreta) {
           if (jklState.J) {
             this.torreta.setVelocityX(-170);
@@ -1552,16 +1608,15 @@ class scene0 extends Phaser.Scene {
             }, 800);
           }
         }
-    }
-      
-    if (state.playerroxo) {
-      this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
-    }
-    if (state.playerroxo.animation) {
-      this.player2.anims.play(state.playerroxo.animation, true);
-    }
-    });
+      }
 
+      if (state.playerroxo) {
+        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
+      }
+      if (state.playerroxo.animation) {
+        this.player2.anims.play(state.playerroxo.animation, true);
+      }
+    });
   }
 
   typeIaText(text, speed = 50, onComplete = null) {
@@ -1602,11 +1657,17 @@ class scene0 extends Phaser.Scene {
       return;
     }
 
-    const width = Phaser.Math.Clamp((this.o2 / 100) * 242, 0, 242);
-    this.o2Bar.width = width;
+    const hudBarHeight = 80;
+    const innerHeight = hudBarHeight - 4;
+    const height = Phaser.Math.Clamp(
+      (this.o2 / 100) * innerHeight,
+      0,
+      innerHeight,
+    );
 
-    // Atualizar arco de oxigênio na borda do semicírculo
-    this.updateO2BarArc();
+    this.o2Bar.height = height;
+    this.o2Bar.y = this.o2BarBackground.y + 2 + (innerHeight - height);
+    this.o2Text.setText([...this.o2.toString(), "%"].join("\n"));
   }
 
   updateO2BarArc() {
@@ -1641,68 +1702,43 @@ class scene0 extends Phaser.Scene {
   }
 
   updateCargaBar() {
-    if (!this.cargaBarGraphics) {
+    if (!this.cargaBar) {
       return;
     }
 
     const maxCarga = 1000;
-    const radius = 20;
+    const hudBarHeight = 80;
+    const innerHeight = hudBarHeight - 4;
+    const height = Phaser.Math.Clamp(
+      (this.cargaJp / maxCarga) * innerHeight,
+      0,
+      innerHeight,
+    );
 
-    // Limpar o graphics
-    this.cargaBarGraphics.clear();
-
-    // Desenhar círculo de fundo (cinza claro)
-    this.cargaBarGraphics.lineStyle(2, 0x666666, 0.3);
-    this.cargaBarGraphics.beginPath();
-    this.cargaBarGraphics.arc(0, 0, radius, 0, Phaser.Math.PI2);
-    this.cargaBarGraphics.strokePath();
-
-    // Desenhar círculo preenchido baseado na carga
-    if (this.cargaJp > 0) {
-      // Calcular o ângulo baseado na carga (360 graus = carga máxima)
-      const cargaPercentage = this.cargaJp / maxCarga;
-      const cargaAngle = 360 * cargaPercentage;
-
-      // Verde para carga
-      const color = 0x00dd0f;
-
-      // Desenhar o arco preenchido
-      this.cargaBarGraphics.fillStyle(color, 0.8);
-      this.cargaBarGraphics.beginPath();
-      this.cargaBarGraphics.moveTo(0, 0);
-      this.cargaBarGraphics.arc(
-        0,
-        0,
-        radius,
-        Phaser.Math.DegToRad(270),
-        Phaser.Math.DegToRad(270 + cargaAngle),
-        false,
-      );
-      this.cargaBarGraphics.lineTo(0, 0);
-      this.cargaBarGraphics.fillPath();
-
-      // Desenhar contorno do círculo preenchido
-      this.cargaBarGraphics.lineStyle(2, color, 1);
-      this.cargaBarGraphics.beginPath();
-      this.cargaBarGraphics.arc(
-        0,
-        0,
-        radius,
-        Phaser.Math.DegToRad(270),
-        Phaser.Math.DegToRad(270 + cargaAngle),
-        false,
-      );
-      this.cargaBarGraphics.strokePath();
-    }
+    this.cargaBar.height = height;
+    this.cargaBar.y = this.cargaBarBackground.y + 2 + (innerHeight - height);
+    this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
   }
 
   createSemicircleLifeBar() {
-    // Posição da barra semicircular (perto do coração)
-    const x = 145;
-    const y = 93;
-    const radius = 35;
+    // Posição da barra de vida segmentada
+    const x = 130;
+    const y = 80;
+    const radius = 30;
+    const bgRadius = radius + 6;
 
-    // Criar graphics object para a barra de vida
+    this.lifeBarBgGraphics = this.make
+      .graphics({
+        x: x,
+        y: y,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(9);
+
+    this.lifeBarBgGraphics.fillStyle(0x000000, 1);
+    this.lifeBarBgGraphics.fillCircle(0, 0, bgRadius);
+
     this.lifeBarGraphics = this.make
       .graphics({
         x: x,
@@ -1712,37 +1748,8 @@ class scene0 extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(10);
 
-    // Criar graphics object para a barra de oxigênio (na borda)
-    this.o2BarArcGraphics = this.make
-      .graphics({
-        x: x,
-        y: y,
-        add: true,
-      })
-      .setScrollFactor(0)
-      .setDepth(11);
-
-    this.lifeBarGraphics.lineStyle(2, 0x00ff00, 0.3);
-    this.lifeBarGraphics.beginPath();
-    this.lifeBarGraphics.arc(0, 0, radius, 0, Phaser.Math.PI2);
-    this.lifeBarGraphics.strokePath();
-
-    this.lifeBarGraphics.fillStyle(0x00ff00, 0.8);
-    this.lifeBarGraphics.beginPath();
-    this.lifeBarGraphics.moveTo(0, 0);
-    this.lifeBarGraphics.arc(
-      0,
-      0,
-      radius,
-      Phaser.Math.DegToRad(270),
-      Phaser.Math.DegToRad(270 + 360),
-      false,
-    );
-    this.lifeBarGraphics.lineTo(0, 0);
-    this.lifeBarGraphics.fillPath();
-    // Desenhar círculo de fundo (cinza claro)
-
-    this.updateO2BarArc();
+    this.lifeRadius = radius;
+    this.updateSemicircleLifeBar();
   }
 
   updateSemicircleLifeBar() {
@@ -1751,54 +1758,29 @@ class scene0 extends Phaser.Scene {
     }
 
     const maxLife = 6;
-    const radius = 35;
+    const radius = this.lifeRadius;
+    const segmentCount = 6;
+    const gapDegrees = 6;
+    const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
-    // Limpar o graphics
     this.lifeBarGraphics.clear();
 
-    // Desenhar círculo preenchido baseado na vida
-    if (this.life > 0) {
-      // Calcular o ângulo baseado na vida (360 graus = vida máxima)
-      const lifePercentage = this.life / maxLife;
-      const lifeAngle = 360 * lifePercentage;
+    const activeColor =
+      this.life <= 2 ? 0xff0000 : this.life <= 3 ? 0xffff00 : 0x00ff00;
 
-      // Cores diferentes baseadas na vida
-      let color = 0x00ff00; // Verde
-      if (this.life >= 4) {
-        color = 0x00ff00;
-      } else if (this.life <= 2) {
-        color = 0xff0000; // Vermelho
-      } else if (this.life <= 3) {
-        color = 0xffff00; // Amarelo
-      }
-
-      // Desenhar o arco preenchido (começando do topo, girando no sentido horário)
-      this.lifeBarGraphics.fillStyle(color, 0.8);
-      this.lifeBarGraphics.beginPath();
-      this.lifeBarGraphics.moveTo(0, 0);
-      this.lifeBarGraphics.arc(
-        0,
-        0,
-        radius,
-        Phaser.Math.DegToRad(270),
-        Phaser.Math.DegToRad(270 + lifeAngle),
-        false,
+    for (let i = 0; i < segmentCount; i++) {
+      const startAngle = Phaser.Math.DegToRad(
+        270 + i * (segmentDegrees + gapDegrees),
       );
-      this.lifeBarGraphics.lineTo(0, 0);
-      this.lifeBarGraphics.fillPath();
-
-      // Desenhar contorno do círculo preenchido
-      this.lifeBarGraphics.lineStyle(2, color, 1);
-      this.lifeBarGraphics.beginPath();
-      this.lifeBarGraphics.arc(
-        0,
-        0,
-        radius,
-        Phaser.Math.DegToRad(270),
-        Phaser.Math.DegToRad(270 + 360),
-        false,
+      const endAngle = Phaser.Math.DegToRad(
+        270 + i * (segmentDegrees + gapDegrees) + segmentDegrees,
       );
-      this.lifeBarGraphics.strokePath();
+      const color = i < this.life ? activeColor : 0x555555;
+
+      this.lifeBarGraphics.lineStyle(4, color, 1)
+      .beginPath()
+      .arc(0, 0, radius, startAngle, endAngle, false)
+      .strokePath();
     }
   }
 
@@ -1807,71 +1789,30 @@ class scene0 extends Phaser.Scene {
 
     this.jetPack = true;
 
-    // Criar graphics object para a barra de carga (círculo)
-    const cargaX = 800;
-    const cargaY = 348;
-    this.cargaBarGraphics = this.make
-      .graphics({
-        x: cargaX,
-        y: cargaY,
-        add: true,
-      })
-      .setScrollFactor(0)
-      .setDepth(10);
-
-    // Criar graphics object para a moldura de carga (O2-like)
-    this.cargaBarBorderGraphics = this.make
-      .graphics({
-        x: cargaX,
-        y: cargaY,
-        add: true,
-      })
-      .setScrollFactor(0)
-      .setDepth(11);
-
-    // Desenhar moldura de carga (arco externo)
-    this.updateCargaBarBorder();
-
-    this.cargaJpText = this.add
-      .text(cargaX, cargaY - 30, "Cargas: " + this.cargaJPpercentage + "%", {
-        fontSize: "10px",
-        fontFamily: "sarpanch",
-        fill: "#ffffff",
-      })
-      .setScrollFactor(0)
-      .setOrigin(0.5, 0.5);
+    if (this.cargaBarBackground) {
+      this.cargaBarBackground.setVisible(true);
+    }
+    if (this.cargaBar) {
+      this.cargaBar.setVisible(true);
+    }
+    if (this.cargaBarBorder) {
+      this.cargaBarBorder.setVisible(true);
+    }
+    if (this.cargaJpText) {
+      this.cargaJpText.setVisible(true);
+    }
 
     this.updateCargaBar();
   }
 
   updateCargaBarBorder() {
-    if (!this.cargaBarBorderGraphics) {
-      return;
-    }
-
-    // Limpar o graphics
-    this.cargaBarBorderGraphics.clear();
-
-    const outerRadius = 27;
-
-    // Desenhar moldura de carga (similar ao O2 bar)
-    this.cargaBarBorderGraphics.lineStyle(3, 0xcccccc, 1);
-    this.cargaBarBorderGraphics.beginPath();
-    this.cargaBarBorderGraphics.arc(
-      0,
-      0,
-      outerRadius,
-      Phaser.Math.DegToRad(270),
-      Phaser.Math.DegToRad(630),
-      false,
-    );
-    this.cargaBarBorderGraphics.strokePath();
+    return;
   }
 
   update() {
     this.cannon.setAngle(this.angleCannon);
 
-    this.cargaJPpercentage = this.cargaJp / 10;
+    
 
     //this.o2Text.setText("Oxigênio: " + this.o2 + "%");
 
@@ -1920,7 +1861,7 @@ class scene0 extends Phaser.Scene {
     } catch (e) {
       console.error("Error updating player:", e);
     }
-    // }
+    //}
 
     if (this.fase5 === false && this.energy === true) {
       this.lights.enable().setAmbientColor(0xe0f7ff);
@@ -1938,7 +1879,10 @@ class scene0 extends Phaser.Scene {
     this.lamp.y = this.player.y;
 
     if (this.cargaJp <= 0 && this.jetPack) {
-      this.cargaJpText.setText("Cargas: Sem Carga");
+      this.cargaJPpercentage = 0;
+      this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+    } else {
+      this.cargaJPpercentage = this.cargaJp / 10;
     }
 
     const movingHorizontally = Math.abs(this.player.body.velocity.x) > 1;
@@ -1955,6 +1899,14 @@ class scene0 extends Phaser.Scene {
       this.input.gamepad && this.input.gamepad.total > 0
         ? this.input.gamepad.getPad(0)
         : null;
+
+    const padPressed =
+      !!pad && Array.isArray(pad.buttons)
+        ? pad.buttons.some(
+            (button) => button && (button.pressed || button.value > 0.1),
+          )
+        : false;
+
     let horizontal = 0;
     let vertical = 0;
     let jumpPressed = false;
@@ -1965,14 +1917,48 @@ class scene0 extends Phaser.Scene {
     if (pad && pad.axes.length > 0) {
       horizontal = pad.axes[0].getValue();
       vertical = pad.axes[1].getValue();
-      jumpPressed = !!pad.A;
-      interectPressed = pad.X;
+      jumpPressed = !!pad.X;
+      interectPressed = !!pad.buttons[9].pressed;
       comunicationPressed = !!pad.L1;
       reloadPressed = !!pad.R1;
     }
 
     if (reloadPressed) {
       window.location.reload();
+    }
+
+    if (padPressed && pad && Array.isArray(pad.buttons)) {
+      pad.buttons.forEach((button, idx) => {
+        if (!button) return;
+        const pressed =
+          !!button.pressed || (button.value && button.value > 0.1);
+        if (pressed) {
+          // tenta identificar por nome comum, senão mostra índice e valor
+          const nameMap = {
+            0: "A / Botão 0",
+            1: "B / Botão 1",
+            2: "X / Botão 2",
+            3: "Y / Botão 3",
+            4: "LB / Botão 4",
+            5: "RB / Botão 5",
+            6: "LT / Botão 6",
+            7: "RT / Botão 7",
+            8: "Back / Select / Botão 8",
+            9: "Start / Botão 9",
+            10: "Stick Left / Botão 10",
+            11: "Stick Right / Botão 11",
+            12: "DPad Up / Botão 12",
+            13: "DPad Down / Botão 13",
+            14: "DPad Left / Botão 14",
+            15: "DPad Right / Botão 15",
+            16: "Home / Guide / Botão 16",
+          };
+          const name = nameMap[idx] || `Botão ${idx}`;
+          console.log(
+            `Gamepad: ${name} (índice ${idx}) pressionado, value=${button.value}`,
+          );
+        }
+      });
     }
 
     // Controla volume de áudio baseado em comunicationPressed
@@ -2016,7 +2002,7 @@ class scene0 extends Phaser.Scene {
     }
 
     if (this.movingP1) {
-      if (horizontal < 0) {
+      if (horizontal > 0) {
         this.player.setVelocityX(200);
         this.direction = true;
         if (this.player.body.velocity.y === 0 && this.jetPack === false) {
@@ -2024,7 +2010,7 @@ class scene0 extends Phaser.Scene {
         } else if (this.player.body.velocity.y === 0 && this.jetPack === true) {
           this.player.anims.play("walk-rightJp", true);
         }
-      } else if (horizontal > 0) {
+      } else if (horizontal < 0) {
         this.player.setVelocityX(-200);
         this.direction = false;
         if (this.player.body.velocity.y === 0 && this.jetPack === false) {
@@ -2041,13 +2027,13 @@ class scene0 extends Phaser.Scene {
 
         if (this.player.body.blocked.down) {
           this.doubleJump = false;
-          if (jumpPressed || vertical > 0) this.player.setVelocityY(-300);
+          if (jumpPressed || vertical < 0) this.player.setVelocityY(-300);
         }
 
         if (this.player.body.blocked.left || this.player.body.blocked.right) {
           if (
             this.player.body.velocity.x != 0 &&
-            (jumpPressed || vertical > 0) &&
+            (jumpPressed || vertical < 0) &&
             !this.doubleJump
           ) {
             this.player.setVelocityY(-415);
@@ -2058,7 +2044,7 @@ class scene0 extends Phaser.Scene {
         this.physics.world.gravity.y = 50;
 
         if (
-          (jumpPressed || vertical > 0) &&
+          (jumpPressed || vertical < 0) &&
           (this.player.body.blocked.down ||
             (this.doubleJump && this.cargaJp > 0))
         ) {
@@ -2066,7 +2052,7 @@ class scene0 extends Phaser.Scene {
           this.doubleJump = false;
           if (!this.player.body.blocked.down) {
             this.cargaJp -= 30;
-            this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
+            this.cargaJpText.setText(["Cargas: ", this.cargaJPpercentage, "%"].join("\n"));
             this.updateCargaBar();
           }
 
@@ -2094,21 +2080,21 @@ class scene0 extends Phaser.Scene {
           this.player.body.velocity.x != 0
         ) {
           if (this.direction === true) {
-            this.player.setFrame("58");
-            this.player.setAngle(10);
             if (this.cargaJp > 0) {
+              this.player.setFrame("58");
+              this.player.setAngle(10);
               this.cargaJp -= 1;
-              this.cargaJpText.setText(
-                "Cargas: " + this.cargaJPpercentage + "%",
-              );
+              this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
               this.updateCargaBar();
             }
           } else if (this.direction === false) {
-            this.player.setFrame("56");
-            this.player.setAngle(-10);
-            this.cargaJp -= 1;
-            this.cargaJpText.setText("Cargas: " + this.cargaJPpercentage + "%");
-            this.updateCargaBar();
+            if (this.cargaJp > 0) {
+              this.player.setFrame("56");
+              this.player.setAngle(-10);
+              this.cargaJp -= 1;
+              this.cargaJpText.setText([...this.cargaJPpercentage.toString(), "%"].join("\n"));
+              this.updateCargaBar();
+            }
           }
         } else if (
           (this.player.body.velocity.y != 0 &&
@@ -2173,16 +2159,16 @@ class scene0 extends Phaser.Scene {
         }
       }
     } else if (!this.movingP1) {
-      if (horizontal === 0 && vertical > 0) {
+      if (horizontal === 0 && vertical < 0) {
         this.angleCannon = 0;
       }
-      if (horizontal < 0 && vertical <= 0) {
+      if (horizontal > 0 && vertical >= 0) {
         this.angleCannon = 80;
-      } else if (horizontal > 0 && vertical <= 0) {
+      } else if (horizontal < 0 && vertical >= 0) {
         this.angleCannon = -80;
-      } else if (horizontal < 0 && vertical > 0) {
+      } else if (horizontal > 0 && vertical < 0) {
         this.angleCannon = 50;
-      } else if (horizontal > 0 && vertical > 0) {
+      } else if (horizontal < 0 && vertical < 0) {
         this.angleCannon = -50;
       }
 
