@@ -90,6 +90,11 @@ class preloader extends Phaser.Scene {
       frameWidth: 64,
       frameHeight: 64,
     });
+
+    this.load.spritesheet("playersIcon", "playersIcon.png", {
+      frameWidth: 30,
+      frameHeight: 30,
+    });
     this.load.spritesheet("gargantua", "assets-usados/gargantua.png", {
       frameWidth: 320,
       frameHeight: 320,
@@ -201,8 +206,7 @@ class preloader extends Phaser.Scene {
       frameHeight: 18,
       frameWidth: 46,
     });
-    this.load.font("sarpanchregular", "sarpanchregular.otf");
-    this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
+    // Fontes carregadas via CSS ou WebFontLoader
     this.load.spritesheet("comojogar", "comojogarsprite.png", {
       frameWidth: 32,
       frameHeight: 32,

@@ -5,7 +5,8 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = true;
+    this.fase4 = false;
+    this.fase5 = false;
     this.vida = 3;
     this.invulnerable = false;
     this.positionP2 = false;
@@ -1129,15 +1130,18 @@ class scene1 extends Phaser.Scene {
       if (state.fase4) {
         this.fase4 = state.fase4.key;
       }
+      if (state.fase5) {
+        this.fase5 = state.fase5.key;
+      }
 
       if (state.player) {
         this.player2.setPosition(state.player.x, state.player.y - 1184);
-        //   this.player2.sprite.anims.play(state.player.animation, true);
+         this.player2.anims.play(state.player.animation, true);
       }
 
-      if (state.player.animation) {
+      /*if (state.player.animation) {
         this.player2.anims.play(state.player.animation, true);
-      }
+      }*/
 
       if (state.platform12) {
         this.platform12.setPosition(
@@ -1156,6 +1160,7 @@ class scene1 extends Phaser.Scene {
         this.angleCannon = state.cannon.angle;
         this.shoot = state.cannon.shooting;
       }
+
     });
   }
 
@@ -1363,34 +1368,16 @@ class scene1 extends Phaser.Scene {
       this.limites,
    );
     this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);*/
+    if (this.fase5) {
+      if (qe.E.isDown) {
+        this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
+        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
 
-    if (qe.E.isDown) {
-      this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
-      this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
-
-      this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
-    } else if (qe.Q.isDown) {
-      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-      this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
-
-      /*if (this.estoutrabalhando === false) {
-        if (isOverlapLimites) {
-          // Define as bounds da câmera baseado no sprite limites
-          const limitesLeft = 40;
-          const limitesTop = 950;
-          const limitesRight = 1302;
-          const limitesBottom = 1720;
-          this.cameras.main.setBounds(
-          limitesLeft,
-            limitesTop,
-            limitesRight - limitesLeft,
-            limitesBottom - limitesTop,
-          );
-        } else if (!isOverlapLimites) {
-          // Se não estiver mais sobre os limites, redefine as bounds para o tamanho total do mapa
-          this.cameras.main.setBounds(0, 0, this.tilemap.widthInPixels, 735); //this.tilemap.heightInPixels);
-        }
-      }*/
+        this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
+      } else if (qe.Q.isDown) {
+        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
+        this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
+      }
     }
 
     // Animações e som baseado no movimento
