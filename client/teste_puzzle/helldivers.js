@@ -48,11 +48,11 @@ export default class helldivers extends Phaser.Scene {
     this.cameras.main.setZoom(0.7);
     this.cameras.main.centerOn(width / 2, height / 1.3);
 
-    this.comojogar = this.physics.add.sprite(1100, 55, "comojogar");
+    this.comojogar = this.physics.add.sprite(675, 50, "comojogar");
     this.comojogar.setScrollFactor(0);
     this.comojogar.body.allowGravity = false;
     this.comojogar.setDepth(2);
-    this.comojogar.setScale(5);
+    this.comojogar.setScale(3.5);
     this.comojogar.setInteractive({ cursor: "pointer" });
 
     this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
