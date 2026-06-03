@@ -812,11 +812,11 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
-          if (!this.puzzleAberto) {
-            this.puzzleAberto = true;
-            this.scene.launch("helldivers", {
-            });
-          }
+      if (!this.puzzleAberto) {
+        this.puzzleAberto = true;
+        this.scene.launch("helldivers", {
+        });
+      }
     });
 
     const destroyLaser = (laser, limit) => {
@@ -999,23 +999,27 @@ class scene1 extends Phaser.Scene {
       }
 
       if (state.platform12) {
-      this.platform12.setPosition(
-        state.platform12.x,
-        state.platform12.y - 1184,
-      );
+        this.platform12.setPosition(
+          state.platform12.x,
+          state.platform12.y - 1184,
+        );
       }
-      if(state.platform15) {
-      this.platform15.setPosition(
-        state.platform15.x,
-        state.platform15.y - 1184,
-      );
+      if (state.platform15) {
+        this.platform15.setPosition(
+          state.platform15.x,
+          state.platform15.y - 1184,
+        );
       }
 
-       if (state.cannon) {
+      
+    });
+
+    this.game.socket.on("scene0", (state) => {
+      if (state.cannon) {
         this.angleCannon = state.cannon.angle;
         this.shoot = state.cannon.shooting;
       }
-    });
+  })
 
   }
 
