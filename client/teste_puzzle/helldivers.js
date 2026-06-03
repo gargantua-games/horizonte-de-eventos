@@ -1,6 +1,7 @@
 export default class helldivers extends Phaser.Scene {
   constructor() {
     super("helldivers");
+    this.lendotutorial = false;
   }
 
   init(data) {
@@ -46,6 +47,50 @@ export default class helldivers extends Phaser.Scene {
 
     this.cameras.main.setZoom(0.7);
     this.cameras.main.centerOn(width / 2, height / 1.3);
+
+    this.comojogar = this.physics.add.sprite(1100, 55, "comojogar");
+    this.comojogar.setScrollFactor(0);
+    this.comojogar.body.allowGravity = false;
+    this.comojogar.setDepth(2);
+    this.comojogar.setScale(5);
+    this.comojogar.setInteractive({ cursor: "pointer" });
+
+    this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
+    this.fundocomojogar.setVisible(false);
+    this.fundocomojogar.setScrollFactor(0);
+    this.fundocomojogar.body.allowGravity = false;
+    this.fundocomojogar.setDepth(1);
+    this.fundocomojogar.setScale(2);
+
+    this.comojogarText = this.add
+      .text(
+        650,
+        215,
+        "Aperte as teclas das setas correspondentes à sequência.\nMas rápido, o seu tempo é limitado!\nClique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
+        {
+          fill: "#00ff0d",
+          fontFamily: "sarpanchregular",
+          fontSize: "30px",
+        },
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(101)
+      .setVisible(false);
+
+    this.comojogar.on("pointerdown", () => {
+      if (this.lendotutorial === false) {
+        this.comojogarText.setVisible(true);
+        this.lendotutorial = true;
+        this.fundocomojogar.setVisible(true);
+        //this.scene.pause();
+      } else if (this.lendotutorial === true) {
+        this.lendotutorial = false;
+        this.comojogarText.setVisible(false);
+        this.fundocomojogar.setVisible(false);
+        this.scene.restart();
+      }
+    });
 
     // Fundo estilo Terminal Militar (Preto/Verde Escuro)
     this.add.rectangle(400, 300, 800, 600, 0x050b08);

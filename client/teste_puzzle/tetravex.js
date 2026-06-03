@@ -1,6 +1,7 @@
 export default class Tetravex extends Phaser.Scene {
   constructor() {
     super("tetravex");
+    this.lendotutorial = false;
   }
 
   init(data) {
@@ -85,6 +86,50 @@ export default class Tetravex extends Phaser.Scene {
   create() {
     let width = this.cameras.main.width;
     let height = this.cameras.main.height;
+
+    this.comojogar = this.physics.add.sprite(400, 50, "comojogar");
+    this.comojogar.setScrollFactor(0);
+    this.comojogar.body.allowGravity = false;
+    this.comojogar.setDepth(2);
+    this.comojogar.setScale(3);
+    this.comojogar.setInteractive({ cursor: "pointer" });
+
+    this.fundocomojogar = this.physics.add.sprite(580, 190, "bigIa");
+    this.fundocomojogar.setVisible(false);
+    this.fundocomojogar.setScrollFactor(0);
+    this.fundocomojogar.body.allowGravity = false;
+    this.fundocomojogar.setDepth(1);
+    this.fundocomojogar.setScale(1.7);
+
+    this.comojogarText = this.add
+      .text(
+        650,
+        190,
+        "Cada quadrado desse jogo tem, em cada lateral, um número/cor.\nOs mesmos números sempre corresponderão às mesmas cores.\nEntão o número sete (7) sempre será roxo, o roxo sempre será o número 7;\no número zero (0) sempre será preto, e por aí vai.\nVocê deve encaixar os quadrados no tabuleiro, de forma que a lateral de um quadrado\nfique encostando na lateral de outro quadrado com o mesmo número/cor. Por exemplo,\num quadrado com a lateral esquerda contendo o número 5 e a cor verde, só poderá ter\nna sua esquerda, um outro quadrado cuja lateral direita contém o número 5/cor verde.\nClique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
+        {
+          fill: "#00ff0d",
+          fontFamily: "sarpanchregular",
+          fontSize: "25px",
+        },
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(101)
+      .setVisible(false);
+
+    this.comojogar.on("pointerdown", () => {
+      if (this.lendotutorial === false) {
+        this.comojogarText.setVisible(true);
+        this.lendotutorial = true;
+        this.fundocomojogar.setVisible(true);
+        //this.scene.pause();
+      } else if (this.lendotutorial === true) {
+        this.lendotutorial = false;
+        this.comojogarText.setVisible(false);
+        this.fundocomojogar.setVisible(false);
+        this.scene.restart();
+      }
+    });
 
     // Criar superfície dinâmica de desenho dentro do Phaser
     this.canvasTexture = this.textures.createCanvas(

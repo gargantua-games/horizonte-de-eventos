@@ -1,6 +1,7 @@
 export default class sudoku extends Phaser.Scene {
   constructor() {
     super("sudoku");
+    this.lendotutorial = false;
   }
 
   init(data) {
@@ -16,6 +17,50 @@ export default class sudoku extends Phaser.Scene {
     this.cameras.main.setZoom(1);
     this.cameras.main.centerOn(width / 2, height / 2);
     this.AmbientLight = this.add.rectangle(400, 450, 600, 900, 0x111111);
+
+    this.comojogar = this.physics.add.sprite(600, 55, "comojogar");
+    this.comojogar.setScrollFactor(0);
+    this.comojogar.body.allowGravity = false;
+    this.comojogar.setDepth(2);
+    this.comojogar.setScale(3);
+    this.comojogar.setInteractive({ cursor: "pointer" });
+
+    this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
+    this.fundocomojogar.setVisible(false);
+    this.fundocomojogar.setScrollFactor(0);
+    this.fundocomojogar.body.allowGravity = false;
+    this.fundocomojogar.setDepth(1);
+    this.fundocomojogar.setScale(1.7);
+
+    this.comojogarText = this.add
+      .text(
+        600,
+        215,
+        "Utilize as teclas dos números 1,2,3 e 4. Cada coluna/linha deve ter um dígito de cada,\nou seja, uma coluna/linha não deve ter dígitos repetidos.\nCaso termine o sudoku e ele ficar vermelho, significa que algum número\ndo tabuleiro está errado. Descubra onde está seu(s) erro(s) e coloque o(s) número(s) certo(s)\nno lugar. Clique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
+        {
+          fill: "#00ff0d",
+          fontFamily: "sarpanchregular",
+          fontSize: "20px",
+        },
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(101)
+      .setVisible(false);
+
+    this.comojogar.on("pointerdown", () => {
+      if (this.lendotutorial === false) {
+        this.comojogarText.setVisible(true);
+        this.lendotutorial = true;
+        this.fundocomojogar.setVisible(true);
+        //this.scene.pause();
+      } else if (this.lendotutorial === true) {
+        this.lendotutorial = false;
+        this.comojogarText.setVisible(false);
+        this.fundocomojogar.setVisible(false);
+        this.scene.restart();
+      }
+    });
 
     //this.AmbientLight = this.add.rectangle(530, 360, 700, 720, 0x111111);
 

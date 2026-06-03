@@ -1,6 +1,7 @@
 export default class quebraCabeca extends Phaser.Scene {
     constructor() {
-        super("quebraCabeca");
+      super("quebraCabeca");
+      this.lendotutorial = false;
     }
 
     init(data) {
@@ -22,6 +23,50 @@ export default class quebraCabeca extends Phaser.Scene {
       this.cameras.main.setZoom(0.4);
         this.cameras.main.centerOn(width / 1.5, height / 1);
         this.AmbientLight = this.add.rectangle(590, 450, 1500, 900, 0x111111);
+
+      this.comojogar = this.physics.add.sprite(400, 500, "comojogar");
+      this.comojogar.setScrollFactor(0);
+      this.comojogar.body.allowGravity = false;
+      this.comojogar.setDepth(2);
+      this.comojogar.setScale(6);
+      this.comojogar.setInteractive({ cursor: "pointer" });
+
+      this.fundocomojogar = this.physics.add.sprite(600, 250, "bigIa");
+      this.fundocomojogar.setVisible(false);
+      this.fundocomojogar.setScrollFactor(0);
+      this.fundocomojogar.body.allowGravity = false;
+      this.fundocomojogar.setDepth(1);
+      this.fundocomojogar.setScale(3);
+
+      this.comojogarText = this.add
+        .text(
+          650,
+          215,
+          "Use o mouse para arrastar as peças do quebra-cabeça aos lugares certos.\nSe a peça estiver no lugar errado, ela retornará ao lado do tabuleiro.\nClique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
+          {
+            fill: "#00ff0d",
+            fontFamily: "sarpanchregular",
+            fontSize: "45px",
+          },
+        )
+        .setOrigin(0.5)
+        .setScrollFactor(0)
+        .setDepth(101)
+        .setVisible(false);
+
+      this.comojogar.on("pointerdown", () => {
+        if (this.lendotutorial === false) {
+          this.comojogarText.setVisible(true);
+          this.lendotutorial = true;
+          this.fundocomojogar.setVisible(true);
+          //this.scene.pause();
+        } else if (this.lendotutorial === true) {
+          this.lendotutorial = false;
+          this.comojogarText.setVisible(false);
+          this.fundocomojogar.setVisible(false);
+          this.scene.restart();
+        }
+      });
 
       // Variáveis de tamanho para facilitar (o tamanho exato das tuas peças)
       const largPeca = 182;
