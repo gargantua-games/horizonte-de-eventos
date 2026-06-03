@@ -822,7 +822,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("termo", {
+            this.scene.launch("tetravex", {
               portaId: 1,
               cenaOrigem: "scene1",
             });
