@@ -1267,13 +1267,26 @@ class scene0 extends Phaser.Scene {
       }
     });
 
+   this.physics.add.overlap(this.player, this.door12, () => {
+      this.movingP1 = true;
+   });
+    
+    this.physics.add.overlap(this.player, this.door13, () => {
+      this.movingP1 = true;
+    });
+
+    this.physics.add.overlap(this.player, this.door14, () => {
+      this.movingP1 = true;
+    });
+
+    this.physics.add.overlap(this.player, this.door15, () => {
+      this.movingP1 = true;
+    });
+
     this.physics.add.overlap(this.player, this.door21, () => {
       if (this.doorOpen === 1) {
         setTimeout(() => {
           this.movingP1 = false;
-         /* setTimeout(() => {
-            this.movingP1 = true; 
-          }, 100);*/
         }, 200);
         this.player.setVelocity(0, 100);
         if (this.direction) {
@@ -1321,13 +1334,13 @@ class scene0 extends Phaser.Scene {
       }
     });
 
-    this.physics.add.overlap(this.player, this.door12, () => {
-      this.movingP1 = true;
-    });
 
     this.physics.add.overlap(this.player, this.door22, () => {
       if (this.jetPack && this.doorOpen >= 2) {
-        this.movingP1 = false;
+        setTimeout(() => {
+          this.movingP1 = false;
+        }, 200);
+        this.player.setVelocity(0, 100);
         this.door22.anims.play("open-door", true);
         this.light22.setColor(0x90ee90);
 
@@ -1337,7 +1350,6 @@ class scene0 extends Phaser.Scene {
               .setPosition(69, 2508)
               .setVelocity(0, 0)
               .anims.play("idleRightJP");
-            this.movingP1 = true;
             this.direction = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 3.8 - 120;
@@ -1355,7 +1367,10 @@ class scene0 extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.door23, () => {
       if (this.doorOpen >= 3) {
-        this.movingP1 = false;
+        setTimeout(() => {
+          this.movingP1 = false;
+        }, 200);
+        this.player.setVelocity(0, 100);
         this.door23.anims.play("open-door", true);
         this.door23.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
@@ -1364,7 +1379,6 @@ class scene0 extends Phaser.Scene {
               .setVelocity(0, 0)
               .setAngle(0)
               .anims.play("idleRightJP");
-            this.movingP1 = true;
             this.direction = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
@@ -1377,7 +1391,7 @@ class scene0 extends Phaser.Scene {
                 this.light14.setColor(0xff0000);
                 this.fase4 = true;
                 try {
-                  this.game.socket.emit("fase4", this.game.room, {
+                  this.game.socket.emit("scene0", this.game.room, {
                     fase4: {
                       key: this.fase4,
                     },
@@ -1394,7 +1408,10 @@ class scene0 extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.door24, () => {
       if (this.doorOpen >= 4) {
-        this.movingP1 = false;
+        setTimeout(() => {
+          this.movingP1 = false;
+        }, 200);
+        this.player.setVelocity(0, 100);
         this.door24.anims.play("open-door", true);
         this.door24.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
@@ -1403,7 +1420,7 @@ class scene0 extends Phaser.Scene {
             this.stopPlatformMovement();
             this.o2Ship = false;
             try {
-              this.game.socket.emit("fase5", this.game.room, {
+              this.game.socket.emit("scene0", this.game.room, {
                 fase5: {
                   key: this.fase5,
                 },
@@ -1415,7 +1432,6 @@ class scene0 extends Phaser.Scene {
               .setPosition(92, 3532)
               .setVelocity(0, 0)
               .anims.play("idleRghtJP");
-            this.movingP1 = true;
             this.direction = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
@@ -1500,44 +1516,52 @@ class scene0 extends Phaser.Scene {
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
     this.game.socket.on("scene1", (state) => {
+
+    });
+
+    this.game.socket.on("scene1", (state) => {
+      if (state.doorOpen) {
+        if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
+          this.doorOpen = state.doorOpen.key;
+        }
+
+      }
+
       const jklState = state.jkl || { J: false, L: false, K: false };
-      if (this.movingTorreta) {
-        if (jklState.J) {
-          this.torreta.setVelocityX(-170);
-        } else if (jklState.L) {
-          this.torreta.setVelocityX(170);
-        } else {
-          this.torreta.setVelocityX(0);
-        }
-        if (jklState.K && this.bullet === true) {
-          this.bullet = false;
+      if (state.jkl){
+        if (this.movingTorreta) {
+          if (jklState.J) {
+            this.torreta.setVelocityX(-170);
+          } else if (jklState.L) {
+            this.torreta.setVelocityX(170);
+          } else {
+            this.torreta.setVelocityX(0);
+          }
+          if (jklState.K && this.bullet === true) {
+            this.bullet = false;
 
-          this.laser
-            .create(this.torreta.x - 15, this.torreta.y - 5, "torreta", 9) //873, 950 //400, 40
-            .setOrigin(0, 0)
-            .setSize(20, 10)
-            .setOffset(6, 15)
-            .setVelocityY(300);
+            this.laser
+              .create(this.torreta.x - 15, this.torreta.y - 5, "torreta", 9) //873, 950 //400, 40
+              .setOrigin(0, 0)
+              .setSize(20, 10)
+              .setOffset(6, 15)
+              .setVelocityY(300);
 
-          setTimeout(() => {
-            this.bullet = true;
-          }, 800);
+            setTimeout(() => {
+              this.bullet = true;
+            }, 800);
+          }
         }
-      }
+    }
+      
+    if (state.playerroxo) {
+      this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
+    }
+    if (state.playerroxo.animation) {
+      this.player2.anims.play(state.playerroxo.animation, true);
+    }
     });
-    this.game.socket.on("scene1", (state) => {
-      if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
-        this.doorOpen = state.doorOpen.key;
-      }
-    });
-    this.game.socket.on("scene1", (state) => {
-      if (state.playerroxo) {
-        this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
-      }
-      if (state.playerroxo.animation) {
-        this.player2.anims.play(state.playerroxo.animation, true);
-      }
-    });
+
   }
 
   typeIaText(text, speed = 50, onComplete = null) {
@@ -1855,7 +1879,7 @@ class scene0 extends Phaser.Scene {
 
     if (this.doorOpen >= 4) {
       try {
-        this.game.socket.emit("scene1", this.game.room, {
+        this.game.socket.emit("scene0", this.game.room, {
           player: {
             x: this.player.x,
             y: this.player.y,
@@ -1870,7 +1894,7 @@ class scene0 extends Phaser.Scene {
     }
     if (this.fase5 === false && this.energy === false) {
       try {
-        this.game.socket.emit("fase5", this.game.room, {
+        this.game.socket.emit("scene0", this.game.room, {
           platform12: {
             x: this.platform12.x,
             y: this.platform12.y,
@@ -1982,9 +2006,6 @@ class scene0 extends Phaser.Scene {
         this.layerEnfeites.setScrollFactor(0.9, 1);
       } else if (this.interecting) {
         this.iaBox.setVisible(false);
-        /*this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
-          this.cameras.main.scrollY =
-            this.player2.y - this.cameras.main.height / 2 - 120;*/
         this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
         this.cameras.main.scrollY =
           this.cannon.y - this.cameras.main.height - 14;
