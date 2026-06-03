@@ -185,6 +185,66 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
+     this.anims.create({
+       key: "idleesquerdaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 60,
+         end: 61,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+      this.anims.create({
+        key: "idlefrenteverde",
+        frames: this.anims.generateFrameNumbers("playerroxo", {
+          start: 62,
+          end: 63,
+        }),
+        frameRate: 2,
+        repeat: -1,
+      });
+    
+     this.anims.create({
+       key: "idledireitaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 64,
+         end: 65,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "andaresquerdaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 66,
+         end: 73,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+    this.anims.create({
+      key: "andarfrenteverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 74,
+        end: 81,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+     this.anims.create({
+       key: "andardireitaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 82,
+         end: 89,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+    
     //animação inimigo
     this.anims.create({
       key: "enemyWalk",
@@ -602,16 +662,6 @@ class scene1 extends Phaser.Scene {
       .body.setSize(20, 30)
       .setOffset(10, 0);
 
-    this.antenas
-      .create(820, 1420, "NewPiskel")
-      .setScale(-1, 1)
-      .body.setSize(20, 30)
-      .setOffset(27, 0);
-
-    this.antenas
-      .create(433, 1483, "NewPiskel")
-      .body.setSize(20, 30)
-      .setOffset(10, 0);
 
     this.antenas
       .create(880, 1514, "NewPiskel")
@@ -694,7 +744,6 @@ class scene1 extends Phaser.Scene {
     this.antena2.body.allowGravity = false;
     this.antena2.body.setSize(20, 30);
     this.antena2.setOffset(10, 0);
-    this.antena2.setScale(-1, 1);
     this.antena2.setImmovable(true);
 
     //faisca no telescopio
@@ -707,6 +756,18 @@ class scene1 extends Phaser.Scene {
     this.telescopio3.body.allowGravity = false;
     this.telescopio3.body.setSize(20, 20);
     this.telescopio3.setImmovable(true);
+    
+    this.faisca4 = this.physics.add.sprite(433, 1468, "faisca");
+    this.faisca4.anims.play("faiscando");
+    this.faisca4.body.allowGravity = false;
+    this.faisca4.setScale(2);
+
+    this.antena4 = this.physics.add.sprite(433, 1468, "NewPiskel");
+    this.antena4.body.allowGravity = false;
+    this.antena4.body.setSize(20, 30);
+    this.antena4.setOffset(10, 0);
+    this.antena4.setImmovable(true);
+
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
@@ -771,11 +832,11 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.layerParede);
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
-      if (this.doorOpen === 3) {
+      if (this.doorOpen === 4) {
         if (this.playerroxo.y > 530) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("termo", { portaId: 4, cenaOrigem: "scene1" });
+            this.scene.launch("termo", { portaId: 5, cenaOrigem: "scene1" });
           }
         }
       }
@@ -791,16 +852,7 @@ class scene1 extends Phaser.Scene {
         console.error("Error updating player:", e);
       }
     });*/
-    this.physics.add.collider(this.playerroxo, this.consoles, () => {
-      if (this.doorOpen === 4) {
-        if (this.playerroxo.y > 236) {
-          if (!this.puzzleAberto) {
-            this.puzzleAberto = true;
-            this.scene.launch("termo", { portaId: 5, cenaOrigem: "scene1" });
-          }
-        }
-      }
-    });
+    this.physics.add.collider(this.playerroxo, this.consoles);
 
     this.physics.add.collider(this.playerroxo, this.consoles2);
     this.physics.add.collider(this.playerroxo, this.consoles3);
@@ -823,7 +875,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("tetravex", {
+            this.scene.launch("helldivers", {
               portaId: 1,
               cenaOrigem: "scene1",
             });
@@ -836,7 +888,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 566) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("quebraCabeca", {
+            this.scene.launch("termo", {
               portaId: 3,
               cenaOrigem: "scene1",
             });
@@ -859,7 +911,56 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
       if (!this.puzzleAberto) {
         this.puzzleAberto = true;
-        this.scene.launch("helldivers", {});
+        this.scene.launch("helldivers", {
+          onComplete: () => {
+            if (this.faisca1) {
+              this.faisca1.setVisible(false);
+            }
+            this.puzzleAberto = false;
+          },
+        });
+      }
+    });
+
+    this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
+      if (!this.puzzleAberto) {
+        this.puzzleAberto = true;
+        this.scene.launch("genius", {
+          onComplete: () => {
+            if (this.faisca3) {
+              this.faisca3.setVisible(false);
+            }
+            this.puzzleAberto = false;
+          },
+        });
+      }
+    });
+
+    this.physics.add.collider(this.playerroxo, this.antena2, () => {
+      if (!this.puzzleAberto) {
+        this.puzzleAberto = true;
+        this.scene.launch("helldivers", {
+          onComplete: () => {
+            if (this.faisca2) {
+              this.faisca2.setVisible(false);
+            }
+            this.puzzleAberto = false;
+          },
+        });
+      }
+    });
+
+    this.physics.add.collider(this.playerroxo, this.antena4, () => {
+      if (!this.puzzleAberto) {
+        this.puzzleAberto = true;
+        this.scene.launch("genius", {
+          onComplete: () => {
+            if (this.faisca4) {
+              this.faisca4.setVisible(false);
+            }
+            this.puzzleAberto = false;
+          },
+        });
       }
     });
 
@@ -1072,9 +1173,10 @@ class scene1 extends Phaser.Scene {
     } else if (this.doorOpen === 2) {
       this.avisoconsole.setPosition(933, 550);
     } else if (this.doorOpen === 3) {
-      this.avisoconsole.setPosition(640, 505);
+      this.avisoconsole.setVisible(false); 
     } else if (this.doorOpen === 4) {
-      this.avisoconsole.setPosition(370, 200);
+      this.avisoconsole.setVisible(true);
+      this.avisoconsole.setPosition(640, 505);
     }
 
     //if (this.fase4) {
@@ -1312,7 +1414,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-    if (this.inimigosaliens) {
+     if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1464,8 +1566,12 @@ class scene1 extends Phaser.Scene {
   teletransporte2() {
     this.porta2.anims.play("portaabrindo", true);
     this.positionP2 = false;
+
+    // Define a porta aberta como 4 no estado local e também envia para o servidor.
+    this.abrirPorta(4);
+
     this.time.delayedCall(1000, () => {
-      this.playerroxo.setPosition(640, 651); //teletransporte para o interior da nave
+      this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
       this.outShip = false;
       this.porta2.anims.play("portafechando", true);
     });

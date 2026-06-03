@@ -127,7 +127,7 @@ export default class Tetravex extends Phaser.Scene {
         this.lendotutorial = false;
         this.comojogarText.setVisible(false);
         this.fundocomojogar.setVisible(false);
-        this.scene.restart();
+        //this.scene.restart();
       }
     });
 

@@ -4,9 +4,10 @@ export default class helldivers extends Phaser.Scene {
     this.lendotutorial = false;
   }
 
-  init(data) {
+  init(data = {}) {
     this.portaId = data.portaId;
     this.cenaOrigem = data.cenaOrigem;
+    this.onComplete = data.onComplete;
     this.jogoTerminou = false;
 
     // Banco de Estratagemas inspirados no Helldivers 2
@@ -48,11 +49,11 @@ export default class helldivers extends Phaser.Scene {
     this.cameras.main.setZoom(0.7);
     this.cameras.main.centerOn(width / 2, height / 1.3);
 
-    this.comojogar = this.physics.add.sprite(1100, 55, "comojogar");
+    this.comojogar = this.physics.add.sprite(675, 50, "comojogar");
     this.comojogar.setScrollFactor(0);
     this.comojogar.body.allowGravity = false;
     this.comojogar.setDepth(2);
-    this.comojogar.setScale(5);
+    this.comojogar.setScale(3.5);
     this.comojogar.setInteractive({ cursor: "pointer" });
 
     this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
@@ -208,19 +209,19 @@ export default class helldivers extends Phaser.Scene {
     let teclaPremida = null;
     switch (event.key.toUpperCase()) {
       case "ARROWUP":
-      //case "W":
+        //case "W":
         teclaPremida = "UP";
         break;
       case "ARROWDOWN":
-      //case "S":
+        //case "S":
         teclaPremida = "DOWN";
         break;
       case "ARROWLEFT":
-      //case "A":
+        //case "A":
         teclaPremida = "LEFT";
         break;
       case "ARROWRIGHT":
-      //case "D":
+        //case "D":
         teclaPremida = "RIGHT";
         break;
     }
@@ -329,13 +330,13 @@ export default class helldivers extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    // Retorna com sucesso para a tua Scene principal após 2 segundos
-      this.time.delayedCall(2000, () => {
-          //if (this.fase4 = false) {
-           //   this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
-          //}
-          this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
-          this.scene.stop();
+    this.time.delayedCall(2000, () => {
+      if (typeof this.onComplete === "function") {
+        this.onComplete();
+      } else if (this.cenaOrigem && this.portaId !== undefined) {
+        this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+      }
+      this.scene.stop();
     });
   }
 }

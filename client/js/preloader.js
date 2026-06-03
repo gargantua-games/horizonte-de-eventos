@@ -78,6 +78,8 @@ class preloader extends Phaser.Scene {
     this.load.image("consolemedio", "assets-usados/consolemedio.png");
     this.load.image("telescopio", "assets-usados/telescopio.png");
     this.load.image("osciloscopio", "assets-usados/osciloscopio.png");
+      this.load.image("remasterized2", "assets-usados/remasterized.png");
+      this.load.image("remasterizedEnfeites","assets-usados/remasterizedEnfeites.png", );
 
     // Personagens e Entidades
     this.load.spritesheet("player", "player.png", {

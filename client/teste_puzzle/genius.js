@@ -4,9 +4,10 @@ export default class Genius extends Phaser.Scene {
     this.lendotutorial = false;
   }
 
-  init(data) {
+  init(data = {}) {
     this.portaId = data.portaId;
     this.cenaOrigem = data.cenaOrigem;
+    this.onComplete = data.onComplete;
 
     this.sequencia = [];
     this.jogadaAtual = 0;
@@ -15,58 +16,57 @@ export default class Genius extends Phaser.Scene {
     this.maxRodadas = 8;
   }
 
-    create() {
-      const width = this.cameras.main.width;
-      const height = this.cameras.main.height;
+  create() {
+    const width = this.cameras.main.width;
+    const height = this.cameras.main.height;
 
-      this.cameras.main.setZoom(0.5);
-        this.cameras.main.centerOn(width / 2, height / 1.2);
-        
+    this.cameras.main.setZoom(0.5);
+    this.cameras.main.centerOn(width / 2, height / 1.2);
+
     console.log("A cena Genius carregou com sucesso no ecrã!");
 
-      this.comojogar = this.physics.add.sprite(1160, -10, "comojogar");
-      this.comojogar.setScrollFactor(0);
-      this.comojogar.body.allowGravity = false;
-      this.comojogar.setDepth(2);
-      this.comojogar.setScale(5);
-      this.comojogar.setInteractive({ cursor: "pointer" });
+    this.comojogar = this.physics.add.sprite(1160, -10, "comojogar");
+    this.comojogar.setScrollFactor(0);
+    this.comojogar.body.allowGravity = false;
+    this.comojogar.setDepth(2);
+    this.comojogar.setScale(5);
+    this.comojogar.setInteractive({ cursor: "pointer" });
 
-      this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
-      this.fundocomojogar.setVisible(false);
-      this.fundocomojogar.setScrollFactor(0);
-      this.fundocomojogar.body.allowGravity = false;
-      this.fundocomojogar.setDepth(1);
-      this.fundocomojogar.setScale(3.5);
+    this.fundocomojogar = this.physics.add.sprite(600, 210, "bigIa");
+    this.fundocomojogar.setVisible(false);
+    this.fundocomojogar.setScrollFactor(0);
+    this.fundocomojogar.body.allowGravity = false;
+    this.fundocomojogar.setDepth(1);
+    this.fundocomojogar.setScale(3.5);
 
-      this.comojogarText = this.add
-        .text(
-          600,
-          215,
-          "Primeiro, um quadrado brilhará/aumentará de tamanho.\nDepois, você deve apertar o quadrado correspondente\n(ou seja, o mesmo quadrado que acabou de se destacar).\nA cada rodada, adiciona-se um elemento\n(quadrado brilhando/aumentado de tamanho) à sequência.\nVocê deve lembrar corretamente qual a sequência para completar esse desafio.\nClique em como jogar de novo para fechar o tutorial e recomeçar o desafio",
-          {
-            fill: "#00ff0d",
-            fontFamily: "sarpanchregular",
-            fontSize: "45px",
-          },
-        )
-        .setOrigin(0.5)
-        .setScrollFactor(0)
-        .setDepth(101)
-        .setVisible(false);
+    this.comojogarText = this.add
+      .text(
+        600,
+        215,
+        "Primeiro, um quadrado brilhará/aumentará de tamanho.\nDepois, você deve apertar o quadrado correspondente\n(ou seja, o mesmo quadrado que acabou de se destacar).\nA cada rodada, adiciona-se um elemento\n(quadrado brilhando/aumentado de tamanho) à sequência.\nVocê deve lembrar corretamente qual a sequência para completar esse desafio.\nClique em como jogar de novo para fechar o tutorial e recomeçar o desafio",
+        {
+          fill: "#00ff0d",
+          fontFamily: "sarpanchregular",
+          fontSize: "45px",
+        },
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(101)
+      .setVisible(false);
 
-      this.comojogar.on("pointerdown", () => {
-        if (this.lendotutorial === false) {
-          this.comojogarText.setVisible(true);
-          this.lendotutorial = true;
-          this.fundocomojogar.setVisible(true);
-          //this.scene.pause();
-        } else if (this.lendotutorial === true) { 
-          this.lendotutorial = false;
-          this.comojogarText.setVisible(false);
-          this.fundocomojogar.setVisible(false);
-          this.scene.restart();
-        }
-      
+    this.comojogar.on("pointerdown", () => {
+      if (this.lendotutorial === false) {
+        this.comojogarText.setVisible(true);
+        this.lendotutorial = true;
+        this.fundocomojogar.setVisible(true);
+        //this.scene.pause();
+      } else if (this.lendotutorial === true) {
+        this.lendotutorial = false;
+        this.comojogarText.setVisible(false);
+        this.fundocomojogar.setVisible(false);
+        this.scene.restart();
+      }
     });
 
     // Fundo escuro do terminal
@@ -206,10 +206,11 @@ export default class Genius extends Phaser.Scene {
     this.textoStatus.setColor("#00ff00");
     this.botoes.forEach((btn) => (btn.fillColor = 0x00ff00));
     this.time.delayedCall(2000, () => {
-       ///if (!this.fase4) {
-        /// this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
-      //}
-      this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+      if (typeof this.onComplete === "function") {
+        this.onComplete();
+      } else if (this.cenaOrigem && this.portaId !== undefined) {
+        this.scene.get(this.cenaOrigem).abrirPorta(this.portaId);
+      }
       this.scene.stop();
     });
   }
