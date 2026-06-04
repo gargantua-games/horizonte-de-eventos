@@ -1707,7 +1707,7 @@ class scene0 extends Phaser.Scene {
       
     });
 
-    this.game.socket.on('destruir-alien', (idRecebido) => {
+    this.game.socket.on(' -alien', (idRecebido) => {
     if (this.inimigosaliens) {
         this.inimigosaliens.getChildren().forEach(alien => {
             // Procura qual dos aliens na tela tem o ID deletado
