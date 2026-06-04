@@ -51,6 +51,12 @@ io.on("connection", (socket) => {
     }
   });
 
+  // Escuta quando a scene1 avisa que um alien deve nascer
+    socket.on('alien-spawnado-scene1', (dadosAlien) => {
+        // Envia para os outros jogadores criarem o mesmo alien na scene0 deles
+        socket.broadcast.emit('criar-alien-scene0', dadosAlien);
+    });
+
   socket.on("scene2", (room, state) => {
     if (room) {
       socket.to(room).emit("scene2", state);

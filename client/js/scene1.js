@@ -1126,6 +1126,13 @@ class scene1 extends Phaser.Scene {
       },
     });
 
+    this.time.addEvent({
+            delay: 2000,                         // Tempo em milissegundos (2000ms = 2 segundos)
+            callback: this.spawnAlienAleatorio,  // Nome da função que vai rodar (SEM parênteses no final)
+            callbackScope: this,                 // Mantém o escopo da cena correto
+            loop: true                           // Faz o relógio repetir para sempre
+        });
+
     this.game.socket.on("scene0", (state) => {
       if (state.fase4) {
         this.fase4 = state.fase4.key;
@@ -1138,10 +1145,6 @@ class scene1 extends Phaser.Scene {
         this.player2.setPosition(state.player.x, state.player.y - 1184);
          this.player2.anims.play(state.player.animation, true);
       }
-
-      /*if (state.player.animation) {
-        this.player2.anims.play(state.player.animation, true);
-      }*/
 
       if (state.platform12) {
         this.platform12.setPosition(
@@ -1168,7 +1171,16 @@ class scene1 extends Phaser.Scene {
     //if (this.doorOpen === 0) {
     //  this.avisoconsole.setPosition(843, 222);
     //} else
-    console.log("Angulo atual do canhão:", this.angleCannon)
+    if (this.inimigosaliens) {
+      this.inimigosaliens.getChildren().forEach(enemy => {
+        // Se o enemy passou do final da tela (ex: Y maior que 650)
+        if (enemy.y > 1650) {
+          enemy.destroy(); // Remove do jogo definitivamente e libera espaço no grupo!
+          console.log("Um enemy antigo saiu da tela e foi destruído.");
+        }
+      });
+    }
+    
     this.cannon.setAngle(this.angleCannon);
     
     if (this.doorOpen === 1) {
@@ -1176,7 +1188,7 @@ class scene1 extends Phaser.Scene {
     } else if (this.doorOpen === 2) {
       this.avisoconsole.setPosition(933, 550);
     } else if (this.doorOpen === 3) {
-      this.avisoconsole.setVisible(false); 
+      this.avisoconsole.setVisible(false);
     } else if (this.doorOpen === 4) {
       this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(640, 505);
@@ -1237,7 +1249,7 @@ class scene1 extends Phaser.Scene {
           .setVelocityX(-150);
       }
     }
-    if (this.positionP2)
+    /*if (this.positionP2)
       if (this.inimigosalienscount < 3 && !this.enemySpawnBlocked) {
         const spawninimigosx = Phaser.Math.Between(87, 1260);
         const spawninimigosy = Phaser.Math.Between(1360, 1400);
@@ -1251,7 +1263,7 @@ class scene1 extends Phaser.Scene {
         enemy.lastFlipX = false;
         enemy.isAttacking = false;
         this.inimigosalienscount += 1;
-      }
+      }*/
 
     if (this.puzzleAberto) {
       if (this.playerroxo) {
@@ -1417,7 +1429,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-     if (this.inimigosaliens) {
+    if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1440,27 +1452,8 @@ class scene1 extends Phaser.Scene {
           enemy.lastDirection = "down";
         }
 
-        if (isTouchingCaixa) {
-          enemy.isAttacking = true;
-        } else {
-          enemy.isAttacking = false;
-        }
-
-        if (enemy.isAttacking) {
-          if (enemy.lastDirection === "horizontal") {
-            enemy.anims.play("enemyAtaque", true);
-            enemy.setFlipX(enemy.lastFlipX);
-            enemy.setVelocity(0, 0);
-          } else if (enemy.lastDirection === "up") {
-            enemy.anims.play("enemyAtaqueCima", true);
-            enemy.setFlipX(false);
-            enemy.setVelocity(0, 0);
-          } else {
-            enemy.anims.play("enemyAtaqueBaixo", true);
-            enemy.setFlipX(false);
-            enemy.setVelocity(0, 0);
-          }
-        } else if (distance > 0) {
+        console.log(enemy.lastDirection)
+      if (distance > 0) {
           if (Math.abs(dx) > Math.abs(dy)) {
             enemy.anims.play("enemyWalk", true);
             enemy.setFlipX(dx > 0);
@@ -1476,19 +1469,72 @@ class scene1 extends Phaser.Scene {
         }
       });
     }
+    
+    if (this.inimigosaliens && this.inimigosaliens.getLength() > 0) {
+        let pacoteAliens = [];
 
-    /*this.events.on("animationcomplete", (anim) => {
-       if (anim.key === "portaabrindo") {
-         this.porta.anims.play("portafechando", true);
-       }
-     });*/
+        this.inimigosaliens.getChildren().forEach(alien => {
+            pacoteAliens.push({
+                id: alien.getData('id'),
+                x: alien.x,
+                y: alien.y,
+                vx: alien.body.velocity.x,
+                vy: alien.body.velocity.y,
+                flipX: alien.flipX, // Lado para onde está olhando
+                anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null // Animação atual
+            });
+        });
+
+        // Transmite o bloco de movimentos para a scene0
+        this.game.socket.emit('atualizar-movimento-aliens', pacoteAliens);
+    }
+    
+
   } // fim update
 
-  perdervida(caixa, alien) {
+  // Método de spawn dentro da sua scene1.js
+  spawnAlienAleatorio() {
+
+    if (!this.positionP2) {
+        return; 
+    }
+
+    // TESTE 3: O grupo existe e quantos aliens tem?
+    if (this.inimigosaliens) {
+        if (this.inimigosaliens.getLength() >= 3) {
+           
+            return; 
+        }
+    }
+    
+    const dadosAlien = {
+        // Gera um ID único essencial para saber qual alien foi atingido depois
+        id: Phaser.Utils.String.UUID(), 
+        x: Phaser.Math.Between(87, 1200),      // Posição X aleatória
+        y: Phaser.Math.Between(1360, 1400),       // Começa fora da tela (topo)
+        tipo: 'inimigo',                  // Nome da textura/sprite
+        velocidadeY: Phaser.Math.Between(100, 200) // Velocidade aleatória
+    };
+
+    // 1. Cria o alien na cena atual (scene1) se aplicável
+    let alien = this.inimigosaliens.create(dadosAlien.x, dadosAlien.y, dadosAlien.tipo).setDepth(10);
+
+    if (alien) {
+      alien.setDepth(999)
+      alien.body.setSize(30, 37); 
+      alien.setData('id', dadosAlien.id);
+  }
+
+    // 2. Transmite via socket para a rede
+    this.game.socket.emit('alien-spawnado-scene1', dadosAlien);
+}
+
+  perdervida(caixa, enemy) {
     // Verifica se já está em cooldown de invencibilidade
     if (this.invulnerable) {
       return;
     }
+
 
     // Ativa invencibilidade e desativa colisão por 1 segundo
     this.invulnerable = true;
@@ -1640,18 +1686,17 @@ class scene1 extends Phaser.Scene {
   }
 
   killEnemy(enemy, laser) {
-    // destroy only the overlapping enemy and the laser projectile
-    if (enemy && enemy.disableBody) {
-      enemy.disableBody(true, true);
-      this.inimigosalienscount -= 1;
-    } else if (enemy && enemy.destroy) {
-      enemy.destroy();
+
+    let idAlien = enemy.getData('id');
+    
+    if (idAlien) {
+        // Avisa a outra tela para apagar o alien com esse ID
+        this.game.socket.emit('destruir-alien', idAlien);
     }
-    if (laser && laser.disableBody) {
-      laser.disableBody(true, true);
-    } else if (laser && laser.destroy) {
-      laser.destroy();
-    }
+   
+    enemy.destroy();
+    laser.destroy();
+    
   }
 
   webrtcMakeCall() {
