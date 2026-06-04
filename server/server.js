@@ -56,6 +56,16 @@ io.on("connection", (socket) => {
         // Envia para os outros jogadores criarem o mesmo alien na scene0 deles
         socket.broadcast.emit('criar-alien-scene0', dadosAlien);
     });
+  
+  // 2. Quando um alien morre, o servidor avisa a outra tela para apagá-lo
+    socket.on('destruir-alien', (idAlien) => {
+        socket.broadcast.emit('destruir-alien', idAlien);
+    });
+
+    // 3. Repassa os dados de posição, velocidade e animação a cada frame
+    socket.on('atualizar-movimento-aliens', (pacoteAliens) => {
+        socket.broadcast.emit('atualizar-movimento-aliens', pacoteAliens);
+    });
 
   socket.on("scene2", (room, state) => {
     if (room) {
