@@ -55,6 +55,7 @@ class preloader extends Phaser.Scene {
     // Áudios
     this.load.audio("passos", "walkamongus.mp3");
     this.load.audio("trilhasonora", "trilhasonora.mp3");
+    this.load.audio("respiracao", "respiracao.mp3");
 
     // Mapas e Elementos de Cenário
     this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");

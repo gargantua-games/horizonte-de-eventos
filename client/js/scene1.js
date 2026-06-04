@@ -5,7 +5,7 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = false;
+    this.fase4 = true;
     this.fase5 = false;
     this.vida = 3;
     this.invulnerable = false;
@@ -36,6 +36,7 @@ class scene1 extends Phaser.Scene {
       .add("trilhasonora", { loop: true, volume: 0.2 })
       .play();
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
+    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 1 });
 
     //adiciona o espaço ao fundo
     this.space = this.add.image("space1");
@@ -185,45 +186,45 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
-     this.anims.create({
-       key: "idleesquerdaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 60,
-         end: 61,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "idleesquerdaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 60,
+        end: 61,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
 
-      this.anims.create({
-        key: "idlefrenteverde",
-        frames: this.anims.generateFrameNumbers("playerroxo", {
-          start: 62,
-          end: 63,
-        }),
-        frameRate: 2,
-        repeat: -1,
-      });
-    
-     this.anims.create({
-       key: "idledireitaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 64,
-         end: 65,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "idlefrenteverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 62,
+        end: 63,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
 
-     this.anims.create({
-       key: "andaresquerdaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 66,
-         end: 73,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "idledireitaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 64,
+        end: 65,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "andaresquerdaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 66,
+        end: 73,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
 
     this.anims.create({
       key: "andarfrenteverde",
@@ -235,16 +236,16 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
-     this.anims.create({
-       key: "andardireitaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 82,
-         end: 89,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
-    
+    this.anims.create({
+      key: "andardireitaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 82,
+        end: 89,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
     //animação inimigo
     this.anims.create({
       key: "enemyWalk",
@@ -662,7 +663,6 @@ class scene1 extends Phaser.Scene {
       .body.setSize(20, 30)
       .setOffset(10, 0);
 
-
     this.antenas
       .create(880, 1514, "NewPiskel")
       .setScale(-1, 1)
@@ -756,7 +756,7 @@ class scene1 extends Phaser.Scene {
     this.telescopio3.body.allowGravity = false;
     this.telescopio3.body.setSize(20, 20);
     this.telescopio3.setImmovable(true);
-    
+
     this.faisca4 = this.physics.add.sprite(433, 1468, "faisca");
     this.faisca4.anims.play("faiscando");
     this.faisca4.body.allowGravity = false;
@@ -767,7 +767,6 @@ class scene1 extends Phaser.Scene {
     this.antena4.body.setSize(20, 30);
     this.antena4.setOffset(10, 0);
     this.antena4.setImmovable(true);
-
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
@@ -894,7 +893,7 @@ class scene1 extends Phaser.Scene {
             });
           }
         }
-        this.fase4 = true;
+        // this.fase4 = true;
       }
     });
 
@@ -1131,11 +1130,11 @@ class scene1 extends Phaser.Scene {
     });
 
     this.time.addEvent({
-            delay: 2000,                         // Tempo em milissegundos (2000ms = 2 segundos)
-            callback: this.spawnAlienAleatorio,  // Nome da função que vai rodar (SEM parênteses no final)
-            callbackScope: this,                 // Mantém o escopo da cena correto
-            loop: true                           // Faz o relógio repetir para sempre
-        });
+      delay: 2000, // Tempo em milissegundos (2000ms = 2 segundos)
+      callback: this.spawnAlienAleatorio, // Nome da função que vai rodar (SEM parênteses no final)
+      callbackScope: this, // Mantém o escopo da cena correto
+      loop: true, // Faz o relógio repetir para sempre
+    });
 
     this.game.socket.on("scene0", (state) => {
       if (state.fase4) {
@@ -1147,7 +1146,7 @@ class scene1 extends Phaser.Scene {
 
       if (state.player) {
         this.player2.setPosition(state.player.x, state.player.y - 1184);
-         this.player2.anims.play(state.player.animation, true);
+        this.player2.anims.play(state.player.animation, true);
       }
 
       if (state.platform12) {
@@ -1167,7 +1166,6 @@ class scene1 extends Phaser.Scene {
         this.angleCannon = state.cannon.angle;
         this.shoot = state.cannon.shooting;
       }
-
     });
   }
 
@@ -1176,7 +1174,7 @@ class scene1 extends Phaser.Scene {
     //  this.avisoconsole.setPosition(843, 222);
     //} else
     if (this.inimigosaliens) {
-      this.inimigosaliens.getChildren().forEach(enemy => {
+      this.inimigosaliens.getChildren().forEach((enemy) => {
         // Se o enemy passou do final da tela (ex: Y maior que 650)
         if (enemy.y > 1650) {
           enemy.destroy(); // Remove do jogo definitivamente e libera espaço no grupo!
@@ -1184,9 +1182,9 @@ class scene1 extends Phaser.Scene {
         }
       });
     }
-    
+
     this.cannon.setAngle(this.angleCannon);
-    
+
     if (this.doorOpen === 1) {
       this.avisoconsole.setPosition(843, 222);
     } else if (this.doorOpen === 2) {
@@ -1395,7 +1393,12 @@ class scene1 extends Phaser.Scene {
         this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
       } else if (qe.Q.isDown) {
         this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-        this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
+        this.cameras.main.setBounds(
+          24,
+          24,
+          this.tilemap.widthInPixels - 48,
+          708,
+        );
       }
     }
 
@@ -1473,72 +1476,69 @@ class scene1 extends Phaser.Scene {
         }
       });
     }*/
-    
+
     if (this.inimigosaliens && this.inimigosaliens.getLength() > 0) {
-        let pacoteAliens = [];
+      let pacoteAliens = [];
 
-        this.inimigosaliens.getChildren().forEach(alien => {
-            pacoteAliens.push({
-                id: alien.getData('id'),
-                x: alien.x,
-                y: alien.y,
-                vx: alien.body.velocity.x,
-                vy: alien.body.velocity.y,
-                flipX: alien.flipX, // Lado para onde está olhando
-                anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null // Animação atual
-            });
+      this.inimigosaliens.getChildren().forEach((alien) => {
+        pacoteAliens.push({
+          id: alien.getData("id"),
+          x: alien.x,
+          y: alien.y,
+          vx: alien.body.velocity.x,
+          vy: alien.body.velocity.y,
+          flipX: alien.flipX, // Lado para onde está olhando
+          anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null, // Animação atual
         });
+      });
 
-        // Transmite o bloco de movimentos para a scene0
-        this.game.socket.emit('atualizar-movimento-aliens', pacoteAliens);
+      // Transmite o bloco de movimentos para a scene0
+      this.game.socket.emit("atualizar-movimento-aliens", pacoteAliens);
     }
-    
-
   } // fim update
 
   // Método de spawn dentro da sua scene1.js
   spawnAlienAleatorio() {
-
     if (!this.positionP2) {
-        return; 
+      return;
     }
 
     // TESTE 3: O grupo existe e quantos aliens tem?
     if (this.inimigosaliens) {
-        if (this.inimigosaliens.getLength() >= 3) {
-           
-            return; 
-        }
+      if (this.inimigosaliens.getLength() >= 3) {
+        return;
+      }
     }
-    
+
     const dadosAlien = {
-        // Gera um ID único essencial para saber qual alien foi atingido depois
-        id: Phaser.Utils.String.UUID(), 
-        x: Phaser.Math.Between(87, 1200),      // Posição X aleatória
-        y: Phaser.Math.Between(1360, 1400),       // Começa fora da tela (topo)
-        tipo: 'inimigo',                  // Nome da textura/sprite
-        velocidadeY: Phaser.Math.Between(100, 200) // Velocidade aleatória
+      // Gera um ID único essencial para saber qual alien foi atingido depois
+      id: Phaser.Utils.String.UUID(),
+      x: Phaser.Math.Between(87, 1200), // Posição X aleatória
+      y: Phaser.Math.Between(1360, 1400), // Começa fora da tela (topo)
+      tipo: "inimigo", // Nome da textura/sprite
+      velocidadeY: Phaser.Math.Between(100, 200), // Velocidade aleatória
     };
 
     // 1. Cria o alien na cena atual (scene1) se aplicável
-    let alien = this.inimigosaliens.create(dadosAlien.x, dadosAlien.y, dadosAlien.tipo).setDepth(10);
+    let alien = this.inimigosaliens
+      .create(dadosAlien.x, dadosAlien.y, dadosAlien.tipo)
+      .setDepth(10);
 
     if (alien) {
-      alien.setDepth(999)
-      alien.body.setSize(30, 37); 
-      alien.setData('id', dadosAlien.id);
-  }
+      alien.setDepth(999);
+      alien.body.setSize(30, 37);
+      alien.setData("id", dadosAlien.id);
+    }
 
     // 2. Transmite via socket para a rede
-    this.game.socket.emit('alien-spawnado-scene1', dadosAlien);
-}
+    this.game.socket.emit("alien-spawnado-scene1", dadosAlien);
+  }
 
   perdervida(caixa, enemy) {
     // Verifica se já está em cooldown de invencibilidade
     if (this.invulnerable) {
       return;
     }
-
 
     // Ativa invencibilidade e desativa colisão por 1 segundo
     this.invulnerable = true;
@@ -1617,19 +1617,20 @@ class scene1 extends Phaser.Scene {
   }
 
   teletransporte2() {
-    if (this.antenasconsertadas === 3) {
-       this.porta2.anims.play("portaabrindo", true);
-       this.positionP2 = false;
+    //if (this.antenasconsertadas === 3)
+    {
+      this.porta2.anims.play("portaabrindo", true);
+      this.positionP2 = false;
 
-       // Define a porta aberta como 4 no estado local e também envia para o servidor.
-       this.abrirPorta(4);
+      // Define a porta aberta como 4 no estado local e também envia para o servidor.
+      this.abrirPorta(4);
 
-       this.time.delayedCall(1000, () => {
-         this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
-         this.outShip = false;
-         this.porta2.anims.play("portafechando", true);
-       });
-     }
+      this.time.delayedCall(1000, () => {
+        this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
+        this.outShip = false;
+        this.porta2.anims.play("portafechando", true);
+      });
+    }
   }
 
   abrirPorta(idPorta) {
@@ -1692,17 +1693,15 @@ class scene1 extends Phaser.Scene {
   }
 
   killEnemy(enemy, laser) {
+    let idAlien = enemy.getData("id");
 
-    let idAlien = enemy.getData('id');
-    
     if (idAlien) {
-        // Avisa a outra tela para apagar o alien com esse ID
-        this.game.socket.emit('destruir-alien', idAlien);
+      // Avisa a outra tela para apagar o alien com esse ID
+      this.game.socket.emit("destruir-alien", idAlien);
     }
-   
+
     enemy.destroy();
     laser.destroy();
-    
   }
 
   webrtcMakeCall() {
