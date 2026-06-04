@@ -211,6 +211,9 @@ class preloader extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
+
+    this.load.font("sarpanchregular", "sarpanchregular.otf");
+    this.load.font("sarpanchextrabold", "sarpanchextrabold.otf");
   }
 
   create() {

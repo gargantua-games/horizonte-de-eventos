@@ -5,7 +5,7 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = true;
+    this.fase4 = false;
     this.fase5 = false;
     this.vida = 3;
     this.invulnerable = false;
@@ -15,7 +15,6 @@ class scene1 extends Phaser.Scene {
     this.porta2OverlapTime = 0;
     this.portalTeleported = false;
     this.portal2Teleported = false;
-    //this.termoativo = true;
     this.bulletP1 = true;
     this.shoot = false;
     this.angleCannon = 0;
@@ -23,6 +22,7 @@ class scene1 extends Phaser.Scene {
     this.outShip = false;
     this.comunicationP2 = true;
     this.enemySpawnBlocked = false;
+    this.antenasconsertadas = 0;
     //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
@@ -894,6 +894,7 @@ class scene1 extends Phaser.Scene {
             });
           }
         }
+        this.fase4 = true;
       }
     });
 
@@ -917,6 +918,7 @@ class scene1 extends Phaser.Scene {
               this.faisca1.setVisible(false);
             }
             this.puzzleAberto = false;
+            this.antenasconsertadas += 1;
           },
         });
       }
@@ -945,6 +947,7 @@ class scene1 extends Phaser.Scene {
               this.faisca2.setVisible(false);
             }
             this.puzzleAberto = false;
+            this.antenasconsertadas += 1;
           },
         });
       }
@@ -959,6 +962,7 @@ class scene1 extends Phaser.Scene {
               this.faisca4.setVisible(false);
             }
             this.puzzleAberto = false;
+            this.antenasconsertadas += 1;
           },
         });
       }
@@ -1429,7 +1433,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-    if (this.inimigosaliens) {
+    /*if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1468,7 +1472,7 @@ class scene1 extends Phaser.Scene {
           enemy.anims.stop();
         }
       });
-    }
+    }*/
     
     if (this.inimigosaliens && this.inimigosaliens.getLength() > 0) {
         let pacoteAliens = [];
@@ -1613,17 +1617,19 @@ class scene1 extends Phaser.Scene {
   }
 
   teletransporte2() {
-    this.porta2.anims.play("portaabrindo", true);
-    this.positionP2 = false;
+    if (this.antenasconsertadas === 3) {
+       this.porta2.anims.play("portaabrindo", true);
+       this.positionP2 = false;
 
-    // Define a porta aberta como 4 no estado local e também envia para o servidor.
-    this.abrirPorta(4);
+       // Define a porta aberta como 4 no estado local e também envia para o servidor.
+       this.abrirPorta(4);
 
-    this.time.delayedCall(1000, () => {
-      this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
-      this.outShip = false;
-      this.porta2.anims.play("portafechando", true);
-    });
+       this.time.delayedCall(1000, () => {
+         this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
+         this.outShip = false;
+         this.porta2.anims.play("portafechando", true);
+       });
+     }
   }
 
   abrirPorta(idPorta) {
