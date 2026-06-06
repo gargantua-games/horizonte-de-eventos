@@ -1138,6 +1138,20 @@ class scene1 extends Phaser.Scene {
       loop: true, // Faz o relógio repetir para sempre
     });
 
+       this.lifeBarBgGraphics = this.make
+        .graphics({
+          x: 217,
+          y: 110,
+          add: true,
+        })
+        .setScrollFactor(0)
+        .setDepth(8);
+    
+        this.lifeBarBgGraphics.fillStyle(0x000000, 1);
+        this.lifeBarBgGraphics.fillCircle(0, 0, 36);
+    
+       // this.uI = this.add.container(0, 0);
+
     this.game.socket.on("scene0", (state) => {
       if (state.fase4) {
         this.fase4 = state.fase4.key;
@@ -1173,8 +1187,8 @@ class scene1 extends Phaser.Scene {
   
     createSemicircleLifeBar() {
     // Posição da barra de vida segmentada
-    const x = 130;
-    const y = 80;
+    const x = 217;
+    const y = 110;
     const radius = 30;
     const bgRadius = radius + 6;
 
@@ -1186,8 +1200,8 @@ class scene1 extends Phaser.Scene {
         y: y,
         add: true,
       })
-      .setScrollFactor(0, 0)
-      .setDepth(1000);
+      .setScrollFactor(0)
+      .setDepth(10);
 
     this.lifeRadius = radius;
     this.updateSemicircleLifeBar();
@@ -1198,9 +1212,9 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
-    const maxLife = 6;
+    const maxLife = 3;
     const radius = this.lifeRadius;
-    const segmentCount = 6;
+    const segmentCount = 3;
     const gapDegrees = 5;
     const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
