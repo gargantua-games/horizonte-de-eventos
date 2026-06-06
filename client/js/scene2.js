@@ -16,7 +16,7 @@ class scene2 extends Phaser.Scene {
 
     this.statusNave = this.atributosNave[this.engrenagem];
     this.vidaAtual = this.statusNave.vidaMax;
-    this.playerIsDead = false; 
+    this.playerIsDead = false;
 
     if (this.engrenagem <= 1) {
       this.spriteTiroJogador = "tiroaliado";
@@ -29,8 +29,8 @@ class scene2 extends Phaser.Scene {
     this.velocidadeFundo = 2;
 
     if (this.engrenagem <= 1) {
-      this.modAmbiente = 1.6; 
-      this.frequenciaAsteroides = 1600;  
+      this.modAmbiente = 1.6;
+      this.frequenciaAsteroides = 1600;
       this.velModAsteroides = 1.4;
     } else if (this.engrenagem === 2) {
       this.modAmbiente = 1.0;
@@ -46,22 +46,53 @@ class scene2 extends Phaser.Scene {
   create() {
     this.physics.world.gravity.y = 0;
     this.physics.world.setBounds(0, 0, 2000, 800);
-    this.cameras.main.setBounds(0, 0, 2000, 800);  
+    this.cameras.main.setBounds(0, 0, 2000, 800);
 
     this.space = this.add.tileSprite(0, 0, 2000, 800, "space1").setOrigin(0, 0).setDisplaySize(2000, 800).setScrollFactor(0);
 
-    if (!this.anims.exists('boss_destruido')) {
-      this.anims.create({ key: 'boss_destruido', frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 17 }), frameRate: 10, repeat: 0 });
-      this.anims.create({ key: 'boss_escudo', frames: this.anims.generateFrameNumbers('boss', { start: 18, end: 23 }), frameRate: 12, repeat: -1 });
-      this.anims.create({ key: 'boss_preparando', frames: this.anims.generateFrameNumbers('boss', { start: 24, end: 35 }), frameRate: 15, repeat: 0 });
-      this.anims.create({ key: 'boss_laser', frames: this.anims.generateFrameNumbers('boss', { start: 36, end: 41 }), frameRate: 15, repeat: -1 });
-      this.anims.create({ key: 'boss_voando', frames: this.anims.generateFrameNumbers('boss', { start: 42, end: 49 }), frameRate: 15, repeat: -1 });
-    }
+    // === SISTEMA PARA MUDAR DE NAVE COM O TECLADO ===
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.scene.restart({ engrenagem: 0 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.scene.restart({ engrenagem: 1 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE).on('down', () => this.scene.restart({ engrenagem: 2 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR).on('down', () => this.scene.restart({ engrenagem: 3 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FIVE).on('down', () => this.scene.restart({ engrenagem: 4 }));
 
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_ONE).on('down', () => this.scene.restart({ engrenagem: 0 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO).on('down', () => this.scene.restart({ engrenagem: 1 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE).on('down', () => this.scene.restart({ engrenagem: 2 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR).on('down', () => this.scene.restart({ engrenagem: 3 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE).on('down', () => this.scene.restart({ engrenagem: 4 }));
+
+    // === LIMPEZA DE CACHE DE ANIMAÇÕES ANTIGAS ===
+    const animsParaLimpar = ['boss_preparando', 'boss_laser', 'boss_voando', 'boss_destruido', 'meteoro_destruido', 'explosao_anim', 'escudo_anim', 'laser_anim'];
+    animsParaLimpar.forEach(key => {
+      if (this.anims.exists(key)) {
+        this.anims.remove(key);
+      }
+    });
+
+    // === CRIAÇÃO DAS ANIMAÇÕES NOVAS ===
+    this.anims.create({ key: 'boss_preparando', frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 21 }), frameRate: 15, repeat: 0 });
+    this.anims.create({ key: 'boss_laser', frames: this.anims.generateFrameNumbers('boss', { start: 22, end: 33 }), frameRate: 15, repeat: -1 });
+    this.anims.create({ key: 'boss_voando', frames: this.anims.generateFrameNumbers('boss', { start: 34, end: 35 }), frameRate: 10, repeat: -1 });
+    this.anims.create({ key: 'boss_destruido', frames: this.anims.generateFrameNumbers('boss', { start: 36, end: 51 }), frameRate: 12, repeat: 0 });
+
+    this.anims.create({ key: 'meteoro_destruido', frames: this.anims.generateFrameNumbers('meteoro', { start: 1, end: 7 }), frameRate: 15, repeat: 0 });
+    this.anims.create({ key: 'explosao_anim', frames: this.anims.generateFrameNumbers('explosao', { start: 0, end: 7 }), frameRate: 15, repeat: 0 });
+    this.anims.create({ key: 'escudo_anim', frames: this.anims.generateFrameNumbers('escudoboss', { start: 0, end: 7 }), frameRate: 15, repeat: -1 });
+    this.anims.create({
+      key: 'laser_anim',
+      frames: this.anims.generateFrameNumbers('feixelaser', { start: 0, end: 5 }),
+      frameRate: 16,
+      repeat: -1
+    });
+
+    // === CRIAÇÃO DA NAVE E FÍSICA ===
     this.nave = this.physics.add.sprite(100, 400, "nave-" + (this.engrenagem + 1)).setScale(0.5);
     this.nave.setCollideWorldBounds(true);
-    this.nave.body.setSize(this.nave.width * 0.8, this.nave.height * 0.5); 
-    this.nave.setDepth(10); // Nave por cima de tudo
+    this.nave.body.setSize(this.nave.width * 0.7, this.nave.height * 0.4);
+    this.nave.body.setOffset(this.nave.width * 0.15, this.nave.height * 0.3);
+    this.nave.setDepth(10);
     this.cameras.main.startFollow(this.nave, true, 0.1, 0.1);
 
     this.playerBullets = this.physics.add.group();
@@ -70,9 +101,9 @@ class scene2 extends Phaser.Scene {
     this.asteroides = this.physics.add.group();
 
     this.nextFire = 0;
-    this.enemyIndex = 0; 
-    
-    this.spawnNextEnemy(); 
+    this.enemyIndex = 0;
+
+    this.spawnNextEnemy();
 
     this.physics.add.overlap(this.playerBullets, this.asteroides, this.atingirAsteroide, null, this);
     this.physics.add.overlap(this.playerBullets, this.enemies, this.atingirInimigo, null, this);
@@ -88,7 +119,7 @@ class scene2 extends Phaser.Scene {
 
     this.graphicsBarraBoss = this.add.graphics().setScrollFactor(0);
     this.bossText = this.add.text(400, 15, "PROTOTYPE: BOSS", { font: "bold 18px Arial", fill: "#ff0000" })
-      .setScrollFactor(0).setOrigin(0.5, 0).setVisible(false); 
+      .setScrollFactor(0).setOrigin(0.5, 0).setVisible(false);
 
     this.add.text(20, 520, "TESTAR NAVES:", { font: "bold 12px Arial", fill: "#ffff00" }).setScrollFactor(0);
     const botoesNave = [
@@ -105,19 +136,13 @@ class scene2 extends Phaser.Scene {
       botaoVisual.on('pointerdown', () => this.scene.restart({ engrenagem: btnConfig.valor }));
     });
 
-    this.input.keyboard.on('keydown-ONE', () => this.scene.restart({ engrenagem: 0 }));
-    this.input.keyboard.on('keydown-TWO', () => this.scene.restart({ engrenagem: 1 }));
-    this.input.keyboard.on('keydown-THREE', () => this.scene.restart({ engrenagem: 2 }));
-    this.input.keyboard.on('keydown-FOUR', () => this.scene.restart({ engrenagem: 3 }));
-    this.input.keyboard.on('keydown-FIVE', () => this.scene.restart({ engrenagem: 4 }));
-
     this.asteroidTimerEvent = this.time.addEvent({ delay: this.frequenciaAsteroides, loop: true, callback: this.spawnAsteroide, callbackScope: this });
   }
 
   update(time, delta) {
     this.space.tilePositionX += this.velocidadeFundo;
 
-    if (this.playerIsDead) return; 
+    if (this.playerIsDead) return;
 
     this.nave.x = 100;
     this.nave.setVelocityX(0);
@@ -134,34 +159,55 @@ class scene2 extends Phaser.Scene {
     if ((this.spaceKey.isDown || ratoClicado) && time > this.nextFire) {
       let tiro = this.playerBullets.create(this.nave.x + 40, this.nave.y, this.spriteTiroJogador);
       tiro.setVelocityX(this.statusNave.velTiro);
-      tiro.dano = this.statusNave.dano; 
-      tiro.body.setSize(35, 10); 
-      tiro.setDepth(5); // Projétil por baixo da nave
+      tiro.dano = this.statusNave.dano;
+      tiro.body.setSize(26, 10);
+      tiro.body.setOffset((tiro.width / 2) - 13, (tiro.height / 2) - 5);
+      tiro.setDepth(5);
+      
       this.nextFire = time + this.statusNave.cadencia;
     }
 
     this.playerBullets.getChildren().forEach((b) => { if (b.x > 1150) b.destroy(); });
     this.enemyBullets.getChildren().forEach((b) => { if (b.x < -100 || b.y < -100 || b.y > 900) b.destroy(); });
-    this.asteroides.getChildren().forEach((a) => { if (a.x < -100) a.destroy(); });
+
+    this.asteroides.getChildren().forEach((a) => {
+      if (a.x < -100 && a.body) a.destroy();
+    });
 
     this.enemies.getChildren().forEach((e) => {
       if (e.active && !e.isDead && e.barraVida) {
-        e.barraVida.clear();
         
+        // === AJUSTE: Perseguição vertical fluida do Boss durante o escudo ===
+        if (e.isBoss && e.isInvulnerable && !this.playerIsDead) {
+          if (e.y < this.nave.y - 10) {
+            e.body.setVelocityY(140); // Desce em direção ao player
+          } else if (e.y > this.nave.y + 10) {
+            e.body.setVelocityY(-140); // Sobe em direção ao player
+          } else {
+            e.body.setVelocityY(0);
+          }
+        }
+
+        e.barraVida.clear();
+
         if (e.isBoss) {
+          if (e.escudoSprite && e.escudoSprite.active) {
+            e.escudoSprite.setPosition(e.x - 20, e.y);
+          }
+
           this.graphicsBarraBoss.clear();
           this.graphicsBarraBoss.fillStyle(0x333333, 1).fillRect(150, 45, 500, 20);
-          
+
           let corBorda = e.isInvulnerable ? 0x00aaff : 0xff0000;
           this.graphicsBarraBoss.lineStyle(2, corBorda, 1).strokeRect(150, 45, 500, 20);
 
           const percentagemBoss = Math.max(0, e.hp / e.maxHp);
           this.graphicsBarraBoss.fillStyle(0xff0000, 1).fillRect(150, 45, 500 * percentagemBoss, 20);
         } else {
-          const larguraBarra = 50; 
+          const larguraBarra = 50;
           const alturaBarra = 6;
           const posX = e.x - larguraBarra / 2;
-          const posY = e.y - 50; 
+          const posY = e.y - 50;
 
           e.barraVida.fillStyle(0x333333, 1).fillRect(posX, posY, larguraBarra, alturaBarra);
           const percentagem = Math.max(0, e.hp / e.maxHp);
@@ -176,13 +222,19 @@ class scene2 extends Phaser.Scene {
   spawnAsteroide() {
     if (this.playerIsDead) return;
     let yAleatorio = Phaser.Math.Between(50, 750);
-    
-    let asteroide = this.asteroides.create(1100, yAleatorio, "meteoro").setScale(Phaser.Math.FloatBetween(0.8, 1.2));
+
+    // === AJUSTE: Meteoro maior (Escala 1.2) ===
+    let asteroide = this.asteroides.create(1100, yAleatorio, "meteoro").setScale(1.2);
+    asteroide.setFrame(0);
     asteroide.setAngle(Phaser.Math.Between(0, 360));
-    asteroide.body.setCircle(35); 
-    asteroide.hp = Math.round(4 * this.modAmbiente); 
-    asteroide.setDepth(6);
     
+    // Alinhamento perfeito com base no tamanho padrão de 96x96 pixels do frame
+    let raioColisao = 38; 
+    asteroide.body.setCircle(raioColisao, 48 - raioColisao, 48 - raioColisao);
+    
+    asteroide.hp = Math.round(4 * this.modAmbiente);
+    asteroide.setDepth(6);
+
     let velBase = this.enemyIndex === 4 ? -450 : -280;
     velBase = velBase * this.velModAsteroides;
 
@@ -191,21 +243,20 @@ class scene2 extends Phaser.Scene {
   }
 
   atingirAsteroide(tiro, asteroide) {
-    if (!tiro.active || !asteroide.active) return;
+    if (!tiro.active || !asteroide.active || !asteroide.body) return;
     asteroide.hp -= tiro.dano;
-    tiro.destroy(); 
+    tiro.destroy();
 
     asteroide.setTint(0xff8888);
     this.time.delayedCall(50, () => { if (asteroide.active) asteroide.clearTint(); });
 
     if (asteroide.hp <= 0) {
-      for(let i = 0; i < 5; i++) {
-        let pedacinho = this.add.rectangle(asteroide.x, asteroide.y, 8, 8, 0x888888);
-        this.physics.add.existing(pedacinho);
-        pedacinho.body.setVelocity(Phaser.Math.Between(-150, 150), Phaser.Math.Between(-150, 150));
-        this.tweens.add({ targets: pedacinho, duration: 600, alpha: 0, onComplete: () => pedacinho.destroy() });
-      }
-      asteroide.destroy(); 
+      asteroide.body.enable = false;
+      asteroide.setVelocity(0, 0);
+      asteroide.setAngularVelocity(0);
+      asteroide.play("meteoro_destruido");
+
+      asteroide.on("animationcomplete", () => { asteroide.destroy(); });
     }
   }
 
@@ -216,35 +267,37 @@ class scene2 extends Phaser.Scene {
 
     if (this.enemyIndex < 3) {
       e = this.enemies.create(spawnX, spawnY, "naveet").setScale(0.5).setFlipX(true);
-      e.body.setSize(e.width * 0.8, e.height * 0.7); 
+      e.body.setSize(e.width * 0.8, e.height * 0.7);
       e.setDepth(10);
-      
-      const hpBaseInimigosComuns = [20, 25, 30, 32, 35]; 
+
+      const hpBaseInimigosComuns = [20, 25, 30, 32, 35];
       e.hp = hpBaseInimigosComuns[this.engrenagem] + (this.enemyIndex * 5);
       e.isBoss = false;
-      
+
     } else if (this.enemyIndex === 3) {
       e = this.enemies.create(spawnX, spawnY, "boss").setScale(1.2);
-      e.setAngle(-90); 
+      e.setAngle(-90);
       e.play("boss_voando");
-      e.body.setSize(100, 100); 
+      e.body.setSize(80, 80);
+      e.body.setOffset((e.width / 2) - 40, (e.height / 2) - 40);
       e.setDepth(10);
 
-      const hpBaseBoss = [150, 250, 350, 500, 650]; 
-      e.hp = hpBaseBoss[this.engrenagem]; 
-      
+      const hpBaseBoss = [150, 250, 350, 500, 650];
+      e.hp = hpBaseBoss[this.engrenagem];
+
       e.isBoss = true;
       e.isInvulnerable = false;
+      e.escudoSprite = null;
 
       this.bossText.setVisible(true);
-      this.velocidadeFundo = 8; 
+      this.velocidadeFundo = 8;
     } else {
-      return; 
+      return;
     }
 
-    e.maxHp = e.hp; 
-    e.barraVida = this.add.graphics(); 
-    e.isDead = false; 
+    e.maxHp = e.hp;
+    e.barraVida = this.add.graphics();
+    e.isDead = false;
     e.indexInimigo = this.enemyIndex;
     this.configurarMovimentoInimigo(e);
     this.enemyIndex++;
@@ -256,7 +309,7 @@ class scene2 extends Phaser.Scene {
     } else {
       let velY = inimigo.isBoss ? 80 : (100 + (inimigo.indexInimigo * 20)) * this.modAmbiente;
       inimigo.body.setVelocityY(velY);
-      
+
       inimigo.moveTimer = this.time.addEvent({
         delay: 2000, loop: true,
         callback: () => {
@@ -268,7 +321,7 @@ class scene2 extends Phaser.Scene {
     }
 
     inimigo.shootTimer = this.time.addEvent({
-      delay: inimigo.isBoss ? 5000 : (1300 / this.modAmbiente), 
+      delay: inimigo.isBoss ? 5000 : (1300 / this.modAmbiente),
       loop: true,
       callback: () => this.atirarInimigo(inimigo)
     });
@@ -279,31 +332,42 @@ class scene2 extends Phaser.Scene {
 
     if (inimigo.isBoss) {
       let sorteioAtaque = Phaser.Math.Between(1, 6);
-      
-      inimigo.paralisado = true; 
+
+      inimigo.paralisado = true;
       let velocidadeAtual = inimigo.body.velocity.y;
       inimigo.body.setVelocityY(0);
-      
-      inimigo.play("boss_preparando"); 
+
+      inimigo.play("boss_preparando");
 
       this.time.delayedCall(800, () => {
         if (!inimigo.active || inimigo.isDead) return;
 
         if (sorteioAtaque === 1) {
-          inimigo.play("boss_laser"); 
+          inimigo.play("boss_laser");
           let aviso = this.add.rectangle(inimigo.x - 1000, inimigo.y, 2000, 8, 0xff0000, 0.4).setOrigin(0, 0.5);
 
           this.time.delayedCall(500, () => {
             if (!inimigo.active || inimigo.isDead) { aviso.destroy(); return; }
             aviso.destroy();
 
+            // 1. Criamos o sprite e definimos o pivot na ponta esquerda
             let raio = this.enemyBullets.create(inimigo.x - 1000, inimigo.y, "feixelaser");
-            raio.setDisplaySize(2000, 60).setOrigin(0, 0.5); 
-            raio.body.setSize(2000, 40); 
-            raio.dano = 3; 
+            raio.setOrigin(0, 0.5);
+            
+            // 2. IMPORTANTE: Arrancamos a animação PRIMEIRO
+            raio.play("laser_anim");
+
+            // 3. AGORA SIM, esticamos a animação já em execução para os 2000 pixels
+            raio.setDisplaySize(2000, 60);
+            
+            // 4. Configuramos a física e o dano normalmente
+            raio.body.setSize(2000, 30);
+            raio.body.setOffset(0, 15);
+            raio.dano = 3;
             raio.setDepth(5);
 
-            this.time.delayedCall(2000, () => { 
+            // Duração de 4 segundos
+            this.time.delayedCall(4000, () => {
               if (raio.active) raio.destroy();
               if (inimigo.active && !inimigo.isDead) {
                 inimigo.paralisado = false;
@@ -314,11 +378,14 @@ class scene2 extends Phaser.Scene {
           });
 
         } else if (sorteioAtaque === 4) {
-          if (!inimigo.isInvulnerable) { 
+          if (!inimigo.isInvulnerable) {
             inimigo.isInvulnerable = true;
-            inimigo.play("boss_escudo"); 
+            inimigo.play("boss_voando");
 
-            let ataqueEscudoEvent = this.time.addEvent({
+            inimigo.escudoSprite = this.add.sprite(inimigo.x, inimigo.y, "escudoboss").setScale(1.3).setDepth(11);
+            inimigo.escudoSprite.play("escudo_anim");
+        
+            this.time.addEvent({
               delay: 600,
               repeat: 6,
               callback: () => {
@@ -327,8 +394,10 @@ class scene2 extends Phaser.Scene {
                 angulos.forEach(ang => {
                   let b = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
                   this.physics.velocityFromAngle(ang, 360, b.body.velocity);
-                  b.setAngle(ang); 
+                  b.setAngle(ang);
                   b.setDepth(5);
+                  b.body.setSize(16, 16);
+                  b.body.setOffset((b.width / 2) - 8, (b.height / 2) - 8);
                   b.dano = 1;
                 });
               }
@@ -337,9 +406,12 @@ class scene2 extends Phaser.Scene {
             this.time.delayedCall(5000, () => {
               if (inimigo.active && !inimigo.isDead) {
                 inimigo.isInvulnerable = false;
+                if (inimigo.escudoSprite) {
+                  inimigo.escudoSprite.destroy();
+                  inimigo.escudoSprite = null;
+                }
                 inimigo.paralisado = false;
                 inimigo.body.setVelocityY(velocidadeAtual);
-                inimigo.play("boss_voando");
               }
             });
           } else {
@@ -356,20 +428,22 @@ class scene2 extends Phaser.Scene {
             angulosDiferentes.forEach(angulo => {
               let bala = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
               this.physics.velocityFromAngle(angulo, 400, bala.body.velocity);
-              bala.setAngle(angulo); 
+              bala.setAngle(angulo);
               bala.setDepth(5);
-              bala.body.setSize(20, 20);
+              bala.body.setSize(16, 16);
+              bala.body.setOffset((bala.width / 2) - 8, (bala.height / 2) - 8);
               bala.dano = 1;
             });
-          } 
+          }
           else if (sorteioAtaque === 3) {
             for (let i = 0; i < 6; i++) {
               this.time.delayedCall(i * 180, () => {
                 if (!inimigo.active || inimigo.isDead) return;
                 let bala = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigo").setVelocityX(-480);
-                bala.setAngle(180); 
+                bala.setAngle(180);
                 bala.setDepth(5);
-                bala.body.setSize(35, 10);
+                bala.body.setSize(26, 10);
+                bala.body.setOffset((bala.width / 2) - 13, (bala.height / 2) - 5);
                 bala.dano = 1;
               });
             }
@@ -383,9 +457,10 @@ class scene2 extends Phaser.Scene {
             for (let angulo = 0; angulo < 360; angulo += 30) {
               let bala = this.enemyBullets.create(inimigo.x, inimigo.y, "tiroinimigoforte");
               this.physics.velocityFromAngle(angulo, 300, bala.body.velocity);
-              bala.setAngle(angulo); 
+              bala.setAngle(angulo);
               bala.setDepth(5);
-              bala.body.setCircle(10);
+              bala.body.setSize(14, 14);
+              bala.body.setOffset((bala.width / 2) - 7, (bala.height / 2) - 7);
               bala.dano = 1;
             }
           }
@@ -398,31 +473,32 @@ class scene2 extends Phaser.Scene {
           });
         }
       });
-    } 
+    }
     else {
       let velTiroComum = -290 * (this.modAmbiente >= 1 ? this.modAmbiente : 0.8);
-      
+
       if (inimigo.indexInimigo === 2) {
         let b1 = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte").setVelocity(velTiroComum, 0);
-        b1.setAngle(180);
-        b1.setDepth(5);
-        
+        b1.setAngle(180); b1.setDepth(5);
+
         let b2 = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte").setVelocity(velTiroComum, -110);
-        b2.setRotation(Math.atan2(-110, velTiroComum)); 
-        b2.setDepth(5);
-        
+        b2.setRotation(Math.atan2(-110, velTiroComum)); b2.setDepth(5);
+
         let b3 = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigoforte").setVelocity(velTiroComum, 110);
-        b3.setRotation(Math.atan2(110, velTiroComum)); 
-        b3.setDepth(5);
-        
-        b1.body.setSize(35, 10); b2.body.setSize(35, 10); b3.body.setSize(35, 10);
-        b1.dano = 1; b2.dano = 1; b3.dano = 1;
+        b3.setRotation(Math.atan2(110, velTiroComum)); b3.setDepth(5);
+
+        [b1, b2, b3].forEach(b => {
+          b.body.setSize(16, 16);
+          b.body.setOffset((b.width / 2) - 8, (b.height / 2) - 8);
+          b.dano = 1;
+        });
       } else {
         let bala = this.enemyBullets.create(inimigo.x - 50, inimigo.y, "tiroinimigo").setVelocityX(velTiroComum);
         bala.setAngle(180);
         bala.setDepth(5);
         bala.dano = 1;
-        bala.body.setSize(35, 10); 
+        bala.body.setSize(26, 10);
+        bala.body.setOffset((bala.width / 2) - 13, (bala.height / 2) - 5);
       }
     }
   }
@@ -432,40 +508,50 @@ class scene2 extends Phaser.Scene {
 
     if (inimigo.isInvulnerable) {
       tiro.destroy();
-      return; 
+      return;
     }
 
     inimigo.hp -= tiro.dano;
-    tiro.destroy(); 
+    tiro.destroy();
 
-    // Piscar em Vermelho sem transparência
     inimigo.setTint(0xff3333);
     this.time.delayedCall(100, () => { if (inimigo && inimigo.active) inimigo.clearTint(); });
 
     if (inimigo.hp <= 0) {
       inimigo.isDead = true;
-      if (inimigo.shootTimer) inimigo.shootTimer.remove(); 
-      if (inimigo.moveTimer) inimigo.moveTimer.remove(); 
-      
-      inimigo.setVelocity(0, 0); 
-      if (inimigo.barraVida) inimigo.barraVida.destroy(); 
+      if (inimigo.shootTimer) inimigo.shootTimer.remove();
+      if (inimigo.moveTimer) inimigo.moveTimer.remove();
+
+      inimigo.setVelocity(0, 0);
+      if (inimigo.barraVida) inimigo.barraVida.destroy();
 
       if (inimigo.isBoss) {
+        if (inimigo.escudoSprite) {
+          inimigo.escudoSprite.destroy();
+          inimigo.escudoSprite = null;
+        }
+
         this.graphicsBarraBoss.clear();
         if (this.bossText) this.bossText.destroy();
-        this.velocidadeFundo = 2; 
+        this.velocidadeFundo = 2;
 
         inimigo.play("boss_destruido");
-        
+
         this.time.delayedCall(1800, () => {
-          if (typeof text !== 'undefined') text.destroy();
           inimigo.destroy();
-          this.time.delayedCall(600, () => this.spawnNextEnemy()); 
+          this.time.delayedCall(600, () => this.spawnNextEnemy());
         });
 
       } else {
-        inimigo.destroy();
-        this.time.delayedCall(600, () => this.spawnNextEnemy()); 
+        inimigo.setVisible(false);
+        let explosao = this.add.sprite(inimigo.x, inimigo.y, "explosao").setDepth(11).setScale(2.5);
+        explosao.play("explosao_anim");
+        explosao.on("animationcomplete", () => {
+          explosao.destroy();
+          inimigo.destroy();
+        });
+
+        this.time.delayedCall(600, () => this.spawnNextEnemy());
       }
     }
   }
@@ -473,8 +559,8 @@ class scene2 extends Phaser.Scene {
   atingirJogador(jogador, tiroInimigo) {
     if (!tiroInimigo.active || this.playerIsDead) return;
     let dano = tiroInimigo.dano || 1;
-    tiroInimigo.destroy(); 
-    this.computarDanoJogador(dano); 
+    tiroInimigo.destroy();
+    this.computarDanoJogador(dano);
   }
 
   colisaoCorpoACorpo(jogador, inimigo) {
@@ -482,20 +568,29 @@ class scene2 extends Phaser.Scene {
     this.computarDanoJogador(inimigo.isBoss ? 3 : 2);
   }
 
+  colisaoAsteroide(jogador, asteroide) {
+    if (this.playerIsDead || !asteroide.active || !asteroide.body) return;
+    asteroide.body.enable = false;
+    asteroide.setVelocity(0, 0);
+    asteroide.play("meteoro_destruido");
+    asteroide.on("animationcomplete", () => { asteroide.destroy(); });
+
+    this.computarDanoJogador(2);
+  }
+
   computarDanoJogador(quantidadeDano) {
     this.vidaAtual -= quantidadeDano;
     this.vidaAtual = Phaser.Math.Clamp(this.vidaAtual, 0, this.statusNave.vidaMax);
     this.desenharBarraVida();
 
-    // Piscar em vermelho sem transparência
     this.nave.setTint(0xff3333);
     this.time.delayedCall(150, () => { if (!this.playerIsDead && this.nave.active) this.nave.clearTint(); });
 
     if (this.vidaAtual <= 0) {
       this.playerIsDead = true;
       this.nave.setVelocity(0, 0);
-      this.nave.setTint(0xff0000); 
-      this.time.delayedCall(1500, () => this.scene.start("gameover1")); 
+      this.nave.setTint(0xff0000);
+      this.time.delayedCall(1500, () => this.scene.start("gameover1"));
     }
   }
 
@@ -506,9 +601,9 @@ class scene2 extends Phaser.Scene {
     this.graphicsBarra.lineStyle(2, 0x888888, 1).strokeRect(20, 15, 200, 20);
     let larguraPreenchida = (this.vidaAtual / this.statusNave.vidaMax) * 200;
     if (larguraPreenchida > 0) {
-      let corBarra = 0x00ff00; 
-      if (this.vidaAtual / this.statusNave.vidaMax <= 0.35) corBarra = 0xff0000; 
-      else if (this.vidaAtual / this.statusNave.vidaMax <= 0.65) corBarra = 0xffa500; 
+      let corBarra = 0x00ff00;
+      if (this.vidaAtual / this.statusNave.vidaMax <= 0.35) corBarra = 0xff0000;
+      else if (this.vidaAtual / this.statusNave.vidaMax <= 0.65) corBarra = 0xffa500;
       this.graphicsBarra.fillStyle(corBarra, 1).fillRect(20, 15, larguraPreenchida, 20);
     }
   }

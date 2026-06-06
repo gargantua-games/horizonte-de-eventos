@@ -165,10 +165,10 @@ class preloader extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
-    this.load.spritesheet("bigboss", "InvisibleSprite.png", {
-      frameWidth: 25,
-      frameHeight: 25,
-    });
+    // this.load.spritesheet("bigboss", "InvisibleSprite.png", {
+    //   frameWidth: 25,
+    //   frameHeight: 25,
+    // });
 
     // Projéteis e Efeitos
     this.load.spritesheet("bulletP1", "laserBullet.png", {
@@ -184,12 +184,16 @@ class preloader extends Phaser.Scene {
     this.load.image("tiroaliadomegapotente", "tiros/tiroaliadomegapotente.png");
     this.load.image("tiroinimigo", "tiros/tiroinimigo.png");
     this.load.image("tiroinimigoforte", "tiros/tiroinimigoforte.png");
-    this.load.image(
-      "tiroinimigomegapotente",
-      "tiros/tiroinimigomegapotente.png",
-    );
+    this.load.image("tiroinimigomegapotente", "tiros/tiroinimigomegapotente.png");
 
-    // Naves Aliadas (Jogadores)
+    // ADICIONA AS NOVIDADES AQUI:
+    
+    this.load.spritesheet("boss", "naves/boss.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("escudoboss", "escudoboss.png", { frameWidth: 128, frameHeight: 128 });
+
+    this.load.spritesheet("meteoro", "assets-usados/asteroideumex.png", { frameWidth: 96, frameHeight: 96 });
+    this.load.spritesheet("explosao", "assets-usados/explosion.png", { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet("feixelaser", "tiros/feixelaser.png", { frameWidth: 256, frameHeight: 64 });this.load.image("feixelaser", "tiros/feixelaser.png");
     this.load.image("nave-1", "naves/nave-1.png");
     this.load.image("nave-2", "naves/nave-2.png");
     this.load.image("nave-3", "naves/nave-3.png");
@@ -198,6 +202,7 @@ class preloader extends Phaser.Scene {
     this.load.image("naveet", "naves/naveet.png");
 
     // UI e Fontes
+
     this.load.spritesheet("vidasroxas", "vidasroxas.png", {
       frameWidth: 48,
       frameHeight: 16,
@@ -214,8 +219,7 @@ class preloader extends Phaser.Scene {
   }
 
   create() {
-    // SEÇÃO CORRIGIDA: O plano de fundo agora é calculado aqui, garantindo que
-    // bg.width e bg.height possuam o tamanho real do ficheiro carregado!
+
     const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
     const imageRatio = bg.width / bg.height;
     const screenRatio = this.scale.width / this.scale.height;
@@ -237,7 +241,6 @@ class preloader extends Phaser.Scene {
       (this.scale.height - displayHeight) / 2,
     );
 
-    // Finaliza a cena atual e inicia a próxima
     this.scene.stop("preloader");
     this.scene.start(this.nextScene);
   }
