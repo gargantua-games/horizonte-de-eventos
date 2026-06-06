@@ -249,7 +249,7 @@ class scene1 extends Phaser.Scene {
     //animação inimigo
     this.anims.create({
       key: "enemyWalk",
-      frames: this.anims.generateFrameNumbers("inimigo3", {
+      frames: this.anims.generateFrameNumbers("inimigo", {
         start: 26,
         end: 33,
       }),
@@ -259,7 +259,7 @@ class scene1 extends Phaser.Scene {
 
     this.anims.create({
       key: "enemyWalkCima",
-      frames: this.anims.generateFrameNumbers("inimigo3", {
+      frames: this.anims.generateFrameNumbers("inimigo", {
         start: 18,
         end: 25,
       }),
@@ -269,7 +269,7 @@ class scene1 extends Phaser.Scene {
 
     this.anims.create({
       key: "enemyWalkBaixo",
-      frames: this.anims.generateFrameNumbers("inimigo3", {
+      frames: this.anims.generateFrameNumbers("inimigo", {
         start: 34,
         end: 41,
       }),
@@ -279,7 +279,7 @@ class scene1 extends Phaser.Scene {
 
     this.anims.create({
       key: "enemyAtaque",
-      frames: this.anims.generateFrameNumbers("inimigo3", {
+      frames: this.anims.generateFrameNumbers("inimigo", {
         start: 2,
         end: 5,
       }),
@@ -289,7 +289,7 @@ class scene1 extends Phaser.Scene {
 
     this.anims.create({
       key: "enemyAtaqueBaixo",
-      frames: this.anims.generateFrameNumbers("inimigo3", {
+      frames: this.anims.generateFrameNumbers("inimigo", {
         start: 7,
         end: 8,
       }),
@@ -299,7 +299,7 @@ class scene1 extends Phaser.Scene {
 
     this.anims.create({
       key: "enemyAtaqueCima",
-      frames: this.anims.generateFrameNumbers("inimigo3", {
+      frames: this.anims.generateFrameNumbers("inimigo", {
         start: 11,
         end: 12,
       }),
@@ -780,7 +780,7 @@ class scene1 extends Phaser.Scene {
     );
     this.caixa.body.setSize(36, 55);
     this.caixa.body.allowGravity = false;
-    //this.caixa.immovable = false;
+    this.caixa.body.immovable = false;
 
     this.platforms = this.physics.add.group({
       allowGravity: false,
@@ -1173,7 +1173,7 @@ class scene1 extends Phaser.Scene {
     //if (this.doorOpen === 0) {
     //  this.avisoconsole.setPosition(843, 222);
     //} else
-    if (this.inimigosaliens) {
+   /* if (this.inimigosaliens) {
       this.inimigosaliens.getChildren().forEach((enemy) => {
         // Se o enemy passou do final da tela (ex: Y maior que 650)
         if (enemy.y > 1650) {
@@ -1181,7 +1181,7 @@ class scene1 extends Phaser.Scene {
           console.log("Um enemy antigo saiu da tela e foi destruído.");
         }
       });
-    }
+    }*/
 
     this.cannon.setAngle(this.angleCannon);
 
@@ -1251,21 +1251,23 @@ class scene1 extends Phaser.Scene {
           .setVelocityX(-150);
       }
     }
-    /*if (this.positionP2)
-      if (this.inimigosalienscount < 3 && !this.enemySpawnBlocked) {
+  /*  if (this.positionP2) {
+      /*if (this.inimigosalienscount < 3 && !this.enemySpawnBlocked) {
         const spawninimigosx = Phaser.Math.Between(87, 1260);
         const spawninimigosy = Phaser.Math.Between(1360, 1400);
         const enemy = this.inimigosaliens.create(
           spawninimigosx,
           spawninimigosy,
-          "inimigo3",
+          "inimigo",
         );
+      
         enemy.body.setSize(30, 37);
         enemy.lastDirection = "horizontal";
         enemy.lastFlipX = false;
         enemy.isAttacking = false;
         this.inimigosalienscount += 1;
-      }*/
+      }
+    }*/
 
     if (this.puzzleAberto) {
       if (this.playerroxo) {
@@ -1436,7 +1438,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-    /*if (this.inimigosaliens) {
+    if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1475,7 +1477,7 @@ class scene1 extends Phaser.Scene {
           enemy.anims.stop();
         }
       });
-    }*/
+    }
 
     if (this.inimigosaliens && this.inimigosaliens.getLength() > 0) {
       let pacoteAliens = [];
@@ -1485,8 +1487,8 @@ class scene1 extends Phaser.Scene {
           id: alien.getData("id"),
           x: alien.x,
           y: alien.y,
-          vx: alien.body.velocity.x,
-          vy: alien.body.velocity.y,
+         // vx: alien.body.velocity.x,
+         // vy: alien.body.velocity.y,
           flipX: alien.flipX, // Lado para onde está olhando
           anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null, // Animação atual
         });
@@ -1547,11 +1549,26 @@ class scene1 extends Phaser.Scene {
 
     // Teletransporta playerroxo, destrói inimigos e bloqueia spawn por 1 segundo
     this.playerroxo.setPosition(111, 1573);
-    this.inimigosaliens.clear(true, true);
-    this.inimigosalienscount = 0;
+   
+if (this.inimigosaliens) {
+      // Cria uma cópia da lista de aliens vivos para não bugar enquanto deleta
+      let aliensVivos = this.inimigosaliens.getChildren().slice(); 
+
+      aliensVivos.forEach(alien => {
+        let idAlien = alien.getData("id");
+        
+        if (idAlien) {
+          // Usa o MESMO socket do laser para avisar a scene0 para destruir este ID
+          this.game.socket.emit("destruir-alien", idAlien);
+        }
+        
+        // Destrói o alien localmente
+        alien.destroy();
+      });
+    }
     this.enemySpawnBlocked = true;
     this.time.delayedCall(1000, () => {
-      this.enemySpawnBlocked = false;
+    this.enemySpawnBlocked = false;
     });
 
     // Efeito de piscada do playerroxo (300ms visível/invisível, 1000ms total)

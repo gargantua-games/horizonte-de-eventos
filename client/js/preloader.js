@@ -146,10 +146,7 @@ class preloader extends Phaser.Scene {
       frameWidth: 117,
       frameHeight: 70,
     });
-    this.load.spritesheet("inimigo3", "inimigo3.png", {
-      frameWidth: 117,
-      frameHeight: 70,
-    });
+
     this.load.spritesheet("torreta", "torretaetiro.png", {
       frameWidth: 32,
       frameHeight: 32,

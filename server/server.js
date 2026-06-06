@@ -66,6 +66,11 @@ io.on("connection", (socket) => {
     socket.on('atualizar-movimento-aliens', (pacoteAliens) => {
         socket.broadcast.emit('atualizar-movimento-aliens', pacoteAliens);
     });
+  
+  // Quando a Scene1 pedir para limpar tudo, o servidor repassa para a Scene0
+    socket.on("limpar-todos-aliens", () => {
+        socket.broadcast.emit("limpar-todos-aliens");
+    });
 
   socket.on("scene2", (room, state) => {
     if (room) {

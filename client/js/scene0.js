@@ -541,6 +541,56 @@ class scene0 extends Phaser.Scene {
       repeat: 0,
     });
 
+    this.anims.create({
+      key: "enemyWalkCima",
+      frames: this.anims.generateFrameNumbers("inimigo", {
+        start: 18,
+        end: 25,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "enemyWalkBaixo",
+      frames: this.anims.generateFrameNumbers("inimigo", {
+        start: 34,
+        end: 41,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "enemyAtaque",
+      frames: this.anims.generateFrameNumbers("inimigo", {
+        start: 2,
+        end: 5,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "enemyAtaqueBaixo",
+      frames: this.anims.generateFrameNumbers("inimigo", {
+        start: 7,
+        end: 8,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "enemyAtaqueCima",
+      frames: this.anims.generateFrameNumbers("inimigo", {
+        start: 11,
+        end: 12,
+      }),
+      frameRate: 12,
+      repeat: -1,
+    });
+
     this.lastLife = this.life;
 
     this.laser = this.physics.add.group({
@@ -1085,8 +1135,8 @@ class scene0 extends Phaser.Scene {
     this.turretP1 = this.add.sprite(656, 4337, "turret");
     this.turretP1.setPipeline("Light2D");
 
-   this.inimigosaliens = this.physics.add.group({
-      allowGravity: false,
+   this.inimigosaliens = this.add.group({
+     // allowGravity: false,
       immovable: false,
       pipeline: "Light2D",
     });
@@ -1697,17 +1747,23 @@ class scene0 extends Phaser.Scene {
     this.game.socket.on('criar-alien-scene0', (dadosAlien) => {
       console.log("Scene0 recebeu o sinal do alien!", dadosAlien);
         let alien = this.inimigosaliens.create(dadosAlien.x, (dadosAlien.y + 2624), dadosAlien.tipo);
-        
-      if (alien) {
-          
         alien.setData('id', dadosAlien.id);
-        alien.setDepth(999)
-      }
-        //alien.body.setVelocityY(dadosAlien.velocidadeY);
+
+      
+       
       
     });
 
-    this.game.socket.on(' -alien', (idRecebido) => {
+    this.game.socket.on("limpar-todos-aliens", () => {
+      console.log("sinal recebido");
+        if (this.inimigosaliens) {
+            // Limpa todos os monstros da Scene0 instantaneamente!
+            this.inimigosaliens.clear(true, true);
+            console.log("💥 Todos os aliens foram limpos da Scene0 em sincronia!");
+        }
+     });
+
+    this.game.socket.on('destruir-alien', (idRecebido) => {
     if (this.inimigosaliens) {
         this.inimigosaliens.getChildren().forEach(alien => {
             // Procura qual dos aliens na tela tem o ID deletado
@@ -1718,6 +1774,8 @@ class scene0 extends Phaser.Scene {
         });
     }
     });
+
+
     
     this.game.socket.on('atualizar-movimento-aliens', (pacoteAliens) => {
     if (!this.inimigosaliens) return;
@@ -1729,9 +1787,6 @@ class scene0 extends Phaser.Scene {
                 // Sincroniza Posição e Velocidade
                 alien.x = dados.x;
                 alien.y = dados.y + 2624; // Mantendo o seu ajuste de offset do mapa da scene0
-                alien.body.setVelocity(dados.vx, dados.vy);
-                
-                // Sincroniza a Direção do Olhar (Esquerda/Direita)
                 alien.setFlipX(dados.flipX);
 
                 // Sincroniza a Animação ("enemyWalk", etc.)
