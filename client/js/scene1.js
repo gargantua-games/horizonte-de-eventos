@@ -414,11 +414,13 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.vidasroxas = this.physics.add.sprite(250, 130, "vidasroxas");
+    this.createSemicircleLifeBar();
+
+   /* this.vidasroxas = this.physics.add.sprite(250, 130, "vidasroxas");
     this.vidasroxas.setScrollFactor(0);
     this.vidasroxas.body.allowGravity = false;
     this.vidasroxas.setDepth(2);
-    this.vidasroxas.setScale(2);
+    this.vidasroxas.setScale(2);*/
 
     /*this.comojogar = this.physics.add.sprite(250, 170, "comojogar");
     this.comojogar.setScrollFactor(0);
@@ -1184,8 +1186,8 @@ class scene1 extends Phaser.Scene {
         y: y,
         add: true,
       })
-      .setScrollFactor(0)
-      .setDepth(10);
+      .setScrollFactor(0, 0)
+      .setDepth(1000);
 
     this.lifeRadius = radius;
     this.updateSemicircleLifeBar();
@@ -1214,7 +1216,7 @@ class scene1 extends Phaser.Scene {
       const endAngle = Phaser.Math.DegToRad(
         270 + i * (segmentDegrees + gapDegrees) + segmentDegrees,
       );
-      const color = i < this.life ? activeColor : 0x555555;
+      const color = i < this.vida ? activeColor : 0x555555;
 
       this.lifeBarGraphics
         .lineStyle(4, color, 1)
