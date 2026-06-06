@@ -1168,6 +1168,61 @@ class scene1 extends Phaser.Scene {
       }
     });
   }
+  
+    createSemicircleLifeBar() {
+    // Posição da barra de vida segmentada
+    const x = 130;
+    const y = 80;
+    const radius = 30;
+    const bgRadius = radius + 6;
+
+
+
+    this.lifeBarGraphics = this.make
+      .graphics({
+        x: x,
+        y: y,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(10);
+
+    this.lifeRadius = radius;
+    this.updateSemicircleLifeBar();
+  }
+
+  updateSemicircleLifeBar() {
+    if (!this.lifeBarGraphics) {
+      return;
+    }
+
+    const maxLife = 6;
+    const radius = this.lifeRadius;
+    const segmentCount = 6;
+    const gapDegrees = 5;
+    const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
+
+    this.lifeBarGraphics.clear();
+
+    const activeColor = 0xb40000;
+      
+
+    for (let i = 0; i < segmentCount; i++) {
+      const startAngle = Phaser.Math.DegToRad(
+        270 + i * (segmentDegrees + gapDegrees),
+      );
+      const endAngle = Phaser.Math.DegToRad(
+        270 + i * (segmentDegrees + gapDegrees) + segmentDegrees,
+      );
+      const color = i < this.life ? activeColor : 0x555555;
+
+      this.lifeBarGraphics
+        .lineStyle(4, color, 1)
+        .beginPath()
+        .arc(0, 0, radius, startAngle, endAngle, false)
+        .strokePath();
+    }
+  }
 
   update(time, delta) {
     //if (this.doorOpen === 0) {
