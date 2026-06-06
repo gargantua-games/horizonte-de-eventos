@@ -736,7 +736,10 @@ class scene1 extends Phaser.Scene {
     this.antena2.setImmovable(true);
 
     //faisca no telescopio
-
+    this.faisca3 = this.physics.add.sprite(1107, 1490, "faisca");
+    this.faisca3.anims.play("faiscando")
+    .setScale(2)
+    .body.allowGravity = false;
 
     this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
     this.telescopio3.body.allowGravity = false;
@@ -766,7 +769,7 @@ class scene1 extends Phaser.Scene {
     );
     this.caixa.body.setSize(36, 55);
     this.caixa.body.allowGravity = false;
-    this.caixa.body.immovable = false;
+    this.caixa.body.immovable = true;
 
     this.platforms = this.physics.add.group({
       allowGravity: false,
@@ -895,7 +898,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
-      if (!this.puzzleAberto) {
+      if (!this.puzzleAberto && this.faisca1.visible) {
         this.puzzleAberto = true;
         this.scene.launch("helldivers", {
           onComplete: () => {
@@ -911,7 +914,7 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
-      if (!this.puzzleAberto && this.antenasconsertadas === 3) {
+      if (!this.puzzleAberto && this.faisca3.visible) {
         this.puzzleAberto = true;
         this.scene.launch("genius", {
           onComplete: () => {
@@ -925,7 +928,7 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
-      if (!this.puzzleAberto) {
+      if (!this.puzzleAberto && this.faisca2.visible) {
         this.puzzleAberto = true;
         this.scene.launch("helldivers", {
           onComplete: () => {
@@ -941,7 +944,7 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.antena4, () => {
-      if (!this.puzzleAberto) {
+      if (!this.puzzleAberto && this.faisca4.visible) {
         this.puzzleAberto = true;
         this.scene.launch("genius", {
           onComplete: () => {
@@ -1209,18 +1212,13 @@ class scene1 extends Phaser.Scene {
   liberarIa() {
 
     if (this.antenasconsertadas != 3) {
-    console.log("ia não disponivel");
+      console.log("ia não disponivel");
+      this.faisca3.setVisible(false);
       return;
     }
 
     console.log("ia disponivel");
-
-    this.faisca3 = this.physics.add.sprite(1107, 1490, "faisca");
-    this.faisca3.anims.play("faiscando")
-    .setScale(2)
-    .body.allowGravity = false;
-    
-
+    this.faisca3.setVisible(true);
   }
    
   playerIa() {
