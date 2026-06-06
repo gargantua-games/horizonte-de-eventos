@@ -407,66 +407,6 @@ class scene0 extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "life5",
-      frames: this.anims.generateFrameNumbers("redLife", {
-        start: 0,
-        end: 2,
-      }),
-      frameRate: 11,
-      repeat: 0,
-    });
-
-    this.anims.create({
-      key: "life4",
-      frames: this.anims.generateFrameNumbers("redLife", {
-        start: 2,
-        end: 4,
-      }),
-      frameRate: 11,
-      repeat: 0,
-    });
-
-    this.anims.create({
-      key: "life3",
-      frames: this.anims.generateFrameNumbers("redLife", {
-        start: 4,
-        end: 6,
-      }),
-      frameRate: 11,
-      repeat: 0,
-    });
-
-    this.anims.create({
-      key: "life2",
-      frames: this.anims.generateFrameNumbers("redLife", {
-        start: 6,
-        end: 8,
-      }),
-      frameRate: 11,
-      repeat: 0,
-    });
-
-    this.anims.create({
-      key: "life1",
-      frames: this.anims.generateFrameNumbers("redLife", {
-        start: 8,
-        end: 10,
-      }),
-      frameRate: 11,
-      repeat: 0,
-    });
-
-    this.anims.create({
-      key: "life0",
-      frames: this.anims.generateFrameNumbers("redLife", {
-        start: 10,
-        end: 12,
-      }),
-      frameRate: 11,
-      repeat: 0,
-    });
-
-    this.anims.create({
       key: "engrenagem-idlelaranja",
       frames: this.anims.generateFrameNumbers("engrenagem", {
         start: 0,
@@ -615,8 +555,6 @@ class scene0 extends Phaser.Scene {
       frameRate: 12,
       repeat: -1,
     });
-
-    this.lastLife = this.life;
 
     this.laser = this.physics.add.group({
       allowGravity: false,

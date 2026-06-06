@@ -50,6 +50,12 @@ class preloader extends Phaser.Scene {
       frameWidth: 640,
       frameHeight: 224,
     });
+
+    this.load.spritesheet("iaChip", "iaChip.png", {
+      frameHeight: 32,
+      frameWidth: 32,
+    });
+    
     this.load.image("cai", "buttons.png");
 
     // Áudios
