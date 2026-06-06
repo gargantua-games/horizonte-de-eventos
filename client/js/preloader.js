@@ -193,11 +193,12 @@ class preloader extends Phaser.Scene {
     // ADICIONA AS NOVIDADES AQUI:
     
     this.load.spritesheet("boss", "naves/boss.png", { frameWidth: 128, frameHeight: 128 });
-    this.load.spritesheet("escudoboss", "escudoboss.png", { frameWidth: 128, frameHeight: 128 });
+    // Substitui LARGURA e ALTURA pelos valores reais de um único frame do teu escudo (ex: 64, 64)
+    this.load.spritesheet("escudoboss", "/escudoboss.png", { frameWidth: 128, frameHeight: 128 });
 
     this.load.spritesheet("meteoro", "assets-usados/asteroideumex.png", { frameWidth: 96, frameHeight: 96 });
     this.load.spritesheet("explosao", "assets-usados/explosion.png", { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet("feixelaser", "tiros/feixelaser.png", { frameWidth: 256, frameHeight: 64 });this.load.image("feixelaser", "tiros/feixelaser.png");
+    this.load.spritesheet("feixelaser", "/tiros/feixelaser.png", { frameWidth: 256, frameHeight: 64 });
     this.load.image("nave-1", "naves/nave-1.png");
     this.load.image("nave-2", "naves/nave-2.png");
     this.load.image("nave-3", "naves/nave-3.png");
