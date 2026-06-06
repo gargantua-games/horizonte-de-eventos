@@ -36,10 +36,35 @@ class scene0 extends Phaser.Scene {
     this.interecting = false;
     this.doubleInterecting = true;
     this.comunication = true;
+    this.gameOver = false;
   }
 
   init() {
     this.webrtcAnswerCall();
+  }
+
+  GameOver() {
+    if (this.gameOver) {
+      console.log("game Over:" + this.gameOver);
+      console.log("life" + this.life);
+      return;
+    }
+
+    console.log("game Over:" + this.gameOver);
+
+    if (this.life > 0) {
+      console.log("life" + this.life);
+      return;
+    }
+
+    this.gameOver = true;
+    this.game.socket.emit("GameOver", this.game.room, {
+      gameOver: this.gameOver,
+    });
+
+    this.scene.stop("scene0");
+    this.scene.start("gameover1");
+
   }
 
  startPlatformMovement() {
@@ -1661,14 +1686,14 @@ class scene0 extends Phaser.Scene {
       repeat: -1,
     });
     
-      
-      // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
-    let imagem = this.add.sprite(pIconX, pIconY, "playersIcon")
+      this.playerIcon = this.add.sprite(pIconX, pIconY, "playersIcon")
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(9)
       .anims.play("playersIconIdle", true)
       .setScale(1.5);
+      // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
+    let imagem = this.playerIcon;
     
       
       // 2. Cria um objeto gráfico que servirá de molde (o círculo)
@@ -1702,6 +1727,26 @@ class scene0 extends Phaser.Scene {
     
         this.lifeBarBgGraphics.fillStyle(0x000000, 1);
         this.lifeBarBgGraphics.fillCircle(0, 0, 36);
+    
+        this.uI = this.add.container(0, 0);
+
+        this.uI.add([
+          this.cargaBar,      
+          this.cargaBarBackground,
+          this.cargaBarBorder,
+          this.cargaJpText,
+          this.o2Bar,
+          this.o2BarBackground,
+          this.o2BarBorder,
+          this.o2Text,
+          this.lifeBarBgGraphics,
+          this.lifeBarGraphics,
+          this.playerIcon,
+          this.scoreText,      
+          this.engrenagemIcon,
+          ])
+          
+        this.uI.setScrollFactor(0, 0);
         
         const jkl = this.input.keyboard.addKeys("J,K,L");
 
@@ -1986,10 +2031,7 @@ class scene0 extends Phaser.Scene {
 
   update() {
     this.cannon.setAngle(this.angleCannon);
-
-    //this.o2Text.setText("Oxigênio: " + this.o2 + "%");
-
-    //this.updateCargaBar();
+    this.GameOver();
 
     if (this.fase5) {
       try {
@@ -2164,10 +2206,12 @@ class scene0 extends Phaser.Scene {
         this.cameras.main.scrollY =
           this.player.y - this.cameras.main.height / 2 - 120;
         this.iaBox.setVisible(true);
+        this.uI.setVisible(true);
         this.invisible3.enableBody(true, 540, 300, true, true);
         this.layerEnfeites.setScrollFactor(0.9, 1);
       } else if (this.interecting) {
         this.iaBox.setVisible(false);
+        this.uI.setVisible(false);
         this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
         this.cameras.main.scrollY =
           this.cannon.y - this.cameras.main.height - 14;
