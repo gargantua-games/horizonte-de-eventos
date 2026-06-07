@@ -84,7 +84,6 @@ class start extends Phaser.Scene {
 
     // Click no player roxo abre scene1
     this.playerRoxo.on("pointerdown", () => {
-      //this.scene.start("scene1");
       this.webrtcGetMic();
       this.scene.stop("start");
       this.scene.start("preloader", { startScene: "scene1" });
@@ -92,13 +91,34 @@ class start extends Phaser.Scene {
 
     // Click no player vermelho abre scene0
     this.playerVermelho.on("pointerdown", () => {
-      //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");
-      this.scene.start("preloader", { startScene: "scene0" });
+      this.scene.start("preloader", { startScene: "scene1" });
     });
 
-    this.padStartTriggered = false;
+    this.textoInstrucao = this.add.text(
+    this.scale.width / 2,     // Centralizado no eixo X
+    this.scale.height - 50,   // Um pouco acima do fundo da tela
+    "Aperte na tela ou Q para iniciar", // Texto padrão
+    {
+      fontFamily: "sarpanchregular",
+      fontSize: "16px",
+      fill: "#dd9039",            // Cor do texto pedida
+      stroke: "#625042",          // Cor do contorno pedida
+      strokeThickness: 6          // Espessura do contorno (ajuste se achar grosso/fino)
+    }
+  ).setOrigin(0.5).setDepth(2);
+
+  // 2. Efeito do texto sumindo e aparecendo (Piscar)
+  this.tweens.add({
+    targets: this.textoInstrucao,
+    alpha: 0,                    // Vai reduzir a opacidade até ficar invisível
+    duration: 750,               // Tempo para sumir (750 milissegundos)
+    yoyo: true,                  // Quando terminar de sumir, faz o caminho inverso (aparece)
+    repeat: -1                   // -1 significa que vai repetir para sempre
+  });
+  
+  this.padStartTriggered = false;
   }
 
   update() {
@@ -107,6 +127,13 @@ class start extends Phaser.Scene {
       this.input.gamepad && this.input.gamepad.total > 0
         ? this.input.gamepad.getPad(0)
         : null;
+    
+    if (pad) {
+    this.textoInstrucao.setText("Aperte qualquer botão para iniciar");
+  } else if(!pad){
+    this.textoInstrucao.setText("Aperte na tela ou Q para iniciar");
+  }
+    
     let horizontal = 0;
     let reloadPressed = false;
     //let padPressed = false;

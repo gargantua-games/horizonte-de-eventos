@@ -45,15 +45,10 @@ class scene0 extends Phaser.Scene {
 
   GameOver() {
     if (this.gameOver) {
-      console.log("game Over:" + this.gameOver);
-      console.log("life" + this.life);
       return;
     }
 
-    console.log("game Over:" + this.gameOver);
-
     if (this.life > 0) {
-      console.log("life" + this.life);
       return;
     }
 
@@ -128,6 +123,9 @@ class scene0 extends Phaser.Scene {
 
     this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
+    this.space = this.add.image( 500, 3890, "space");
+    this.space.setPipeline("Light2D");
+   
 
     this.anims.create({
       key: "bigIaIdle",
@@ -1685,6 +1683,10 @@ class scene0 extends Phaser.Scene {
           ])
           
         this.uI.setScrollFactor(0, 0);
+
+    this.game.socket.on("GameOver", (state) => {
+      this.gameOver = state.gameOver;
+    });
         
         const jkl = this.input.keyboard.addKeys("J,K,L");
 
@@ -1693,7 +1695,7 @@ class scene0 extends Phaser.Scene {
         if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
           this.doorOpen = state.doorOpen.key;
         }
-      }
+      }//Ana Vitória
 
       if (state.jkl) {
         const jklState = state.jkl || { J: false, L: false, K: false };
@@ -2123,12 +2125,6 @@ class scene0 extends Phaser.Scene {
         this.game.audio.volume = comunicationPressed ? 1 : 0;
     }
 
-    if (interectPressed && this.doubleInterecting) {
-      this.interecting = !this.interecting;
-      this.doubleInterecting = false;
-    } else if (!interectPressed) {
-      this.doubleInterecting = true;
-    }
 
     const estaSobreInvisible3 = this.physics.overlap(
       this.player,
@@ -2138,7 +2134,15 @@ class scene0 extends Phaser.Scene {
     if (!estaSobreInvisible3) {
       this.camP2 = true;
     } else if (estaSobreInvisible3) {
-      if (!this.interecting && !this.camP2) {
+
+    if (interectPressed && this.doubleInterecting) {
+      this.interecting = !this.interecting;
+      this.doubleInterecting = false;
+    } else if (!interectPressed) {
+      this.doubleInterecting = true;
+    }
+
+      if (!this.interecting && !this.camP2 && interectPressed) {
         this.movingP1 = true;
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
@@ -2147,7 +2151,7 @@ class scene0 extends Phaser.Scene {
         this.uI.setVisible(true);
         this.invisible3.enableBody(true, 540, 300, true, true);
         this.layerEnfeites.setScrollFactor(0.9, 1);
-      } else if (this.interecting) {
+      } else if (this.interecting && interectPressed) {
         this.iaBox.setVisible(false);
         this.uI.setVisible(false);
         this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;

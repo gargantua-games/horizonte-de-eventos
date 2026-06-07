@@ -26,6 +26,11 @@ class scene1 extends Phaser.Scene {
     this.antenasconsertadas = 0;
     this.collectIa = false;
     this.gameOver = false;
+    this.bloqueioColisao = false;
+    this.bancoMinigames = [
+      { id: "genius", aparicoes: 0 },
+      { id: "helldivers", aparicoes: 0 },
+    ]
     //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
@@ -40,10 +45,8 @@ class scene1 extends Phaser.Scene {
     }
     
     console.log("antenas" + this.antenasconsertadas);
-    //console.log("game Over:" + this.gameOver);
 
     if (this.vida > 0) {
-      //console.log("life" + this.vida);
       return;
     }
 
@@ -894,35 +897,32 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
       if (!this.puzzleAberto && this.faisca1.visible) {
-        this.puzzleAberto = true;
-        this.scene.launch("helldivers", {
-          onComplete: () => {
-            if (this.faisca1) {
-              this.faisca1.setVisible(false);
-            }
-            this.puzzleAberto = false;
-            this.antenasconsertadas += 1;
-            this.liberarIa();
-          },
-        });
+      
+      this.abrirMinigameAleatorio(() => {
+      if (this.faisca1) {
+        this.faisca1.setVisible(false);
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
     });
+
+  }
+});
 
     this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
       if (!this.puzzleAberto && this.faisca3.visible) {
-        this.puzzleAberto = true;
-        this.scene.launch("genius", {
-          onComplete: () => {
-            if (this.faisca3) {
-              this.faisca3.setVisible(false);
-              this.iaChip.enableBody(true, (this.playerroxo.x + 35), this.playerroxo.y, true, true)
-            }
-            this.puzzleAberto = false;
-          },
-        });
+         this.abrirMinigameAleatorio(() => {
+      if (this.faisca3) {
+        this.faisca3.setVisible(false);
+        this.iaChip.enableBody(true, (this.playerroxo.x + 35), this.playerroxo.y, true, true)
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
     });
 
+  }
+});
+   
     this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
       
       this.playerIa();
@@ -930,35 +930,29 @@ class scene1 extends Phaser.Scene {
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
       if (!this.puzzleAberto && this.faisca2.visible) {
-        this.puzzleAberto = true;
-        this.scene.launch("helldivers", {
-          onComplete: () => {
-            if (this.faisca2) {
-              this.faisca2.setVisible(false);
-            }
-            this.puzzleAberto = false;
-            this.antenasconsertadas += 1;
-            this.liberarIa();
-          },
-        });
+         this.abrirMinigameAleatorio(() => {
+      if (this.faisca2) {
+        this.faisca2.setVisible(false);
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
     });
+
+  }
+});
 
     this.physics.add.collider(this.playerroxo, this.antena4, () => {
       if (!this.puzzleAberto && this.faisca4.visible) {
-        this.puzzleAberto = true;
-        this.scene.launch("genius", {
-          onComplete: () => {
-            if (this.faisca4) {
-              this.faisca4.setVisible(false);
-            }
-            this.puzzleAberto = false;
-            this.antenasconsertadas += 1;
-            this.liberarIa();
-          },
-        });
+         this.abrirMinigameAleatorio(() => {
+      if (this.faisca4) {
+        this.faisca4.setVisible(false);
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
     });
+
+  }
+});
 
     const destroyLaser = (laser, limit) => {
       if (laser && laser.disableBody) {
@@ -1175,7 +1169,10 @@ class scene1 extends Phaser.Scene {
         this.lifeBarBgGraphics.fillStyle(0x000000, 1);
         this.lifeBarBgGraphics.fillCircle(0, 0, 36);
     
-       // this.uI = this.add.container(0, 0);
+    // this.uI = this.add.container(0, 0);
+    this.game.socket.on("GameOver", (state) => {
+      this.gameOver = state.gameOver;
+    });
 
     this.game.socket.on("scene0", (state) => {
       if (state.fase4) {
@@ -1227,6 +1224,49 @@ class scene1 extends Phaser.Scene {
     this.collectIa = true;
     this.playerIcon.anims.play("playerIconVerde")
     }
+
+ abrirMinigameAleatorio(callbackSucesso) {
+// 1. A SUA IDEIA: Conta quantos minigames estão abertos neste exato segundo
+  let minigamesAbertos = 0;
+  this.bancoMinigames.forEach(m => {
+    if (this.scene.isActive(m.id)) {
+      minigamesAbertos++;
+    }
+  });
+
+  // 2. A TRAVA SUPREMA: 
+  // Se tiver 1 minigame aberto OU se o jogo estiver no bloqueio temporário, CANCELA!
+  if (minigamesAbertos >= 1 || this.bloqueioColisao) {
+    return; 
+  }
+
+  // 3. ATIVA O BLOQUEIO DE TEMPO IMEDIATAMENTE
+  this.bloqueioColisao = true;
+
+  // Desativa o bloqueio após 1 segundo (tempo mais que suficiente pro Phaser processar a abertura)
+  this.time.delayedCall(1000, () => {
+    this.bloqueioColisao = false;
+  });
+
+  // Mantém a sua variável que trava o player
+  this.puzzleAberto = true;
+
+  // --- RESTO DO CÓDIGO DO SORTEIO NORMAL ---
+  let minigamesDisponiveis = this.bancoMinigames.filter(m => m.aparicoes < 2);
+
+  if (minigamesDisponiveis.length === 0) {
+    this.bancoMinigames.forEach(m => m.aparicoes = 0);
+    minigamesDisponiveis = this.bancoMinigames;
+  }
+
+  let minigameEscolhido = Phaser.Utils.Array.GetRandom(minigamesDisponiveis);
+  minigameEscolhido.aparicoes++;
+
+  this.scene.launch(minigameEscolhido.id, {
+    cenaOrigem: this.scene.key,
+    onComplete: callbackSucesso 
+  });
+}
   
     createSemicircleLifeBar() {
     // Posição da barra de vida segmentada
@@ -1287,6 +1327,28 @@ class scene1 extends Phaser.Scene {
     this.GameOver();
     this.puzzleAberto = this.verificarMinigamesAtivos();
     this.cannon.setAngle(this.angleCannon);
+
+    if (this.puzzleAberto) {
+    let minigamesRodando = [];
+
+    // 1. Checa quais minigames estão abertos AGORA e anota o nome deles
+    this.bancoMinigames.forEach(m => {
+      if (this.scene.isActive(m.id)) {
+        minigamesRodando.push(m.id);
+      }
+    });
+
+    // 2. Se a lista tiver mais de 1 minigame aberto... TEMOS UM PROBLEMA!
+    if (minigamesRodando.length > 1) {
+      // 3. Deixa o primeiro em paz (índice 0), e fecha todos os outros!
+      for (let i = 1; i < minigamesRodando.length; i++) {
+        console.log("Failsafe ativado! Fechando o minigame intruso: " + minigamesRodando[i]);
+        
+        // Manda o Phaser parar e destruir a cena extra na mesma hora
+        this.scene.stop(minigamesRodando[i]); 
+      }
+    }
+  }
 
     if (this.doorOpen === 1) {
       this.avisoconsole.setPosition(843, 222);
@@ -1412,8 +1474,40 @@ class scene1 extends Phaser.Scene {
     if (this.puzzleAberto) {
       if (this.playerroxo) {
         this.playerroxo.setVelocity(0, 0);
-        this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
+        if(!this.collectIa){
+        // Idle baseado na última direção
+        if (this.playerroxo.anims.currentAnim) {
+          const currentKey = this.playerroxo.anims.currentAnim.key;
+          if (currentKey === "andardireita") {
+            this.playerroxo.anims.play("idledireita", true);
+          } else if (currentKey === "andaresquerda") {
+            this.playerroxo.anims.play("idleesquerda", true);
+          } else if (currentKey === "andarfrente") {
+            this.playerroxo.anims.play("idlefrente", true);
+          } else if (currentKey === "andarcostas") {
+            this.playerroxo.anims.play("idlecostas", true);
+          }
+        }
       }
+     else if (this.collectIa) {
+        // Idle baseado na última direção
+        if (this.playerroxo.anims.currentAnim) {
+          const currentKey = this.playerroxo.anims.currentAnim.key;
+          if (currentKey === "andardireitaverde") {
+            this.playerroxo.anims.play("idledireitaverde", true);
+          } else if (currentKey === "andaresquerdaverde") {
+            this.playerroxo.anims.play("idleesquerdaverde", true);
+          } else if (currentKey === "andarfrenteverde") {
+            this.playerroxo.anims.play("idlefrenteverde", true);
+          } else if (currentKey === "andarcostas") {
+            this.playerroxo.anims.play("idlecostas", true);
+          }
+        }
+      }
+  
+      }
+
+      this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
       if (this.passos && this.passos.isPlaying) {
         this.passos.stop();
       }
@@ -1579,7 +1673,6 @@ class scene1 extends Phaser.Scene {
           enemy.lastDirection = "down";
         }
 
-        console.log(enemy.lastDirection)
       if (distance > 0) {
           if (Math.abs(dx) > Math.abs(dy)) {
             enemy.anims.play("enemyWalk", true);
