@@ -1,15 +1,15 @@
 class scene2 extends Phaser.Scene {
   constructor() {
-    super({key: "scene2",
+    super({
+      key: "scene2",
       physics: {
-        default: "matter", 
+        default: "matter",
         matter: {
           gravity: { x: 0, y: 0 },
-          debug: true 
+          debug: true
         }
       }
     });
-   
   }
 
   init(data) {
@@ -74,7 +74,7 @@ class scene2 extends Phaser.Scene {
     if (!this.anims.exists('boss_preparando')) {
       this.anims.create({ key: 'boss_preparando', frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 21 }), frameRate: 15, repeat: 0 });
       this.anims.create({ key: 'boss_laser', frames: this.anims.generateFrameNumbers('boss', { start: 22, end: 33 }), frameRate: 15, repeat: -1 });
-      this.anims.create({ key: 'boss_voando', frames: this.anims.generateFrameNumbers('boss', { start: 34, end: 35 }), frameRate: 10, repeat: -1 });
+      this.anims.create({ key: 'boss_voando', frames: this.anims.generateFrameNumbers('boss', { frames: [0, 34] }), frameRate: 10, repeat: -1 });
       this.anims.create({ key: 'boss_destruido', frames: this.anims.generateFrameNumbers('boss', { start: 36, end: 51 }), frameRate: 12, repeat: 0 });
       this.anims.create({ key: 'meteoro_destruido', frames: this.anims.generateFrameNumbers('meteoro', { start: 1, end: 7 }), frameRate: 15, repeat: 0 });
       this.anims.create({ key: 'explosao_anim', frames: this.anims.generateFrameNumbers('explosao', { start: 0, end: 7 }), frameRate: 15, repeat: 0 });
@@ -88,14 +88,65 @@ class scene2 extends Phaser.Scene {
       this.anims.create({ key: 'escudo_anim', frames: this.anims.generateFrameNumbers('escudoboss', { start: 0, end: 7 }), frameRate: 15, repeat: -1 });
     }
 
+    if (!this.anims.exists('nave-1_voando')) {
+      this.anims.create({ key: 'nave-1_voando', frames: this.anims.generateFrameNumbers('nave-1', { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
+      this.anims.create({ key: 'nave-2_voando', frames: this.anims.generateFrameNumbers('nave-2', { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
+      this.anims.create({ key: 'nave-3_voando', frames: this.anims.generateFrameNumbers('nave-3', { start: 0, end: 7 }), frameRate: 10, repeat: -1 });
+      this.anims.create({ key: 'nave-4_voando', frames: this.anims.generateFrameNumbers('nave-4', { start: 0, end: 3 }), frameRate: 10, repeat: -1 });
+      this.anims.create({ key: 'nave-5_voando', frames: this.anims.generateFrameNumbers('nave-5', { start: 0, end: 8 }), frameRate: 10, repeat: -1 });
+
+      this.anims.create({ key: 'naveinimiga1_voando', frames: this.anims.generateFrameNumbers('naveinimiga1', { start: 0, end: 8 }), frameRate: 12, repeat: -1 });
+      this.anims.create({ key: 'naveinimiga1_destruido', frames: this.anims.generateFrameNumbers('naveinimiga1', { start: 9, end: 14 }), frameRate: 12, repeat: 0 });
+
+      this.anims.create({ key: 'naveinimiga2_voando', frames: this.anims.generateFrameNumbers('naveinimiga2', { start: 0, end: 13 }), frameRate: 12, repeat: -1 });
+      this.anims.create({ key: 'naveinimiga2_destruido', frames: this.anims.generateFrameNumbers('naveinimiga2', { start: 14, end: 20 }), frameRate: 12, repeat: 0 });
+
+      this.anims.create({ key: 'naveinimiga3_voando', frames: this.anims.generateFrameNumbers('naveinimiga3', { start: 0, end: 9 }), frameRate: 12, repeat: -1 });
+      this.anims.create({ key: 'naveinimiga3_destruido', frames: this.anims.generateFrameNumbers('naveinimiga3', { start: 10, end: 20 }), frameRate: 12, repeat: 0 });
+    }
+
     this.nave = this.matter.add.sprite(100, 400, "nave-" + (this.engrenagem + 1));
-    this.nave.setRectangle(this.nave.width * 0.8, this.nave.height * 0.5);
-    this.nave.setScale(0.5);
+
+    // 1. Define a escala visual primeiro (todas ficam com tamanho final de 128x128)
+    let playerScale = this.engrenagem === 4 ? 1.0 : 2.0;
+    this.nave.setScale(playerScale);
+
+    // 2. MODIFICA AQUI AS COLISÕES DO JOGADOR (UMA POR UMA)
+    let pWidth, pHeight;
+    switch (this.engrenagem) {
+      case 0: // Nave 1 
+        pWidth = 50;   // Largura da colisão em píxeis
+        pHeight = 40;  // Altura da colisão em píxeis
+        break;
+      case 1: // Nave 2
+        pWidth = 60;
+        pHeight = 50;
+        break;
+      case 2: // Nave 3
+        pWidth = 100;
+        pHeight = 60;
+        break;
+      case 3: // Nave 4
+        pWidth = 90;
+        pHeight = 90;
+        break;
+      case 4: // Nave 5
+        pWidth = 70;
+        pHeight = 95;
+        break;
+    }
+    this.nave.setRectangle(pWidth, pHeight);
+
+    // 3. Roda a nave do jogador para a Direita
+    this.nave.setAngle(90);
+
     this.nave.setFixedRotation();
     this.nave.setIgnoreGravity(true);
     this.nave.tipo = 'player';
     this.nave.setDepth(10);
-    
+
+    this.nave.play(`nave-${this.engrenagem + 1}_voando`);
+
     this.cameras.main.startFollow(this.nave, true, 0.1, 0.1);
 
     this.playerBullets = this.add.group();
@@ -164,7 +215,8 @@ class scene2 extends Phaser.Scene {
 
     const ratoClicado = this.input.activePointer.isDown;
     if ((this.spaceKey.isDown || ratoClicado) && time > this.nextFire) {
-      let tiro = this.matter.add.sprite(this.nave.x + 40, this.nave.y, this.spriteTiroJogador);
+      // ATUALIZADO: Ajustado para x + 70 para o tiro nascer perfeitamente na ponta da nave maior
+      let tiro = this.matter.add.sprite(this.nave.x + 70, this.nave.y, this.spriteTiroJogador);
       tiro.setRectangle(35, 10);
       tiro.setSensor(true);
       tiro.setIgnoreGravity(true);
@@ -173,7 +225,7 @@ class scene2 extends Phaser.Scene {
       tiro.setVelocityX(this.statusNave.velTiro / 60);
       tiro.dano = this.statusNave.dano;
       tiro.setDepth(5);
-      
+
       this.playerBullets.add(tiro);
       this.nextFire = time + this.statusNave.cadencia;
     }
@@ -187,25 +239,23 @@ class scene2 extends Phaser.Scene {
 
     this.enemies.getChildren().forEach((e) => {
       if (e.active && !e.isDead && e.barraVida) {
-        
-        // --- NOVO: LÓGICA DE PERSEGUIÇÃO DO BOSS ---
+
         if (e.isBoss && !e.paralisado && this.nave) {
-          let speedBoss = 110 / 60; // Ajusta a velocidade de perseguição do boss aqui
+          let speedBoss = 110 / 60;
           if (e.y < this.nave.y - 15) {
             e.setVelocityY(speedBoss);
           } else if (e.y > this.nave.y + 15) {
             e.setVelocityY(-speedBoss);
           } else {
-            e.setVelocityY(0); // Fica alinhado
+            e.setVelocityY(0);
           }
         }
-        // -------------------------------------------
 
         e.barraVida.clear();
 
         if (e.isBoss) {
           if (e.escudoSprite && e.escudoSprite.active) {
-            e.escudoSprite.setPosition(e.x - 20, e.y);
+            e.escudoSprite.setPosition(e.x, e.y);
           }
 
           this.graphicsBarraBoss.clear();
@@ -220,7 +270,7 @@ class scene2 extends Phaser.Scene {
           const larguraBarra = 50;
           const alturaBarra = 6;
           const posX = e.x - larguraBarra / 2;
-          const posY = e.y - 50;
+          const posY = e.y - 55; // Ajustado ligeiramente para cima devido ao novo tamanho da nave
 
           e.barraVida.fillStyle(0x333333, 1).fillRect(posX, posY, larguraBarra, alturaBarra);
           const percentagem = Math.max(0, e.hp / e.maxHp);
@@ -264,19 +314,18 @@ class scene2 extends Phaser.Scene {
 
   spawnAsteroide(customY) {
     if (this.playerIsDead) return;
-    
-    // Suporte para customY ou random Y
+
     let yFinal = typeof customY === 'number' ? customY : Phaser.Math.Between(50, 750);
     let escala = Phaser.Math.FloatBetween(1.2, 1.8);
 
     let asteroide = this.matter.add.sprite(1100, yFinal, "meteoro");
-    asteroide.setCircle(14 * escala); 
+    asteroide.setCircle(14 * escala);
     asteroide.setScale(escala);
     asteroide.setSensor(true);
     asteroide.setIgnoreGravity(true);
-    asteroide.setFrictionAir(0); 
+    asteroide.setFrictionAir(0);
     asteroide.tipo = 'asteroide';
-    
+
     asteroide.setFrame(0);
     asteroide.setAngle(Phaser.Math.Between(0, 360));
     asteroide.hp = Math.round(4 * this.modAmbiente);
@@ -300,7 +349,7 @@ class scene2 extends Phaser.Scene {
     this.time.delayedCall(50, () => { if (asteroide.active) asteroide.clearTint(); });
 
     if (asteroide.hp <= 0) {
-      if (asteroide.body) this.matter.world.remove(asteroide.body); 
+      if (asteroide.body) this.matter.world.remove(asteroide.body);
       asteroide.setVelocity(0, 0);
       asteroide.setAngularVelocity(0);
       asteroide.play("meteoro_destruido");
@@ -315,15 +364,41 @@ class scene2 extends Phaser.Scene {
     let e;
 
     if (this.enemyIndex < 3) {
-      e = this.matter.add.sprite(spawnX, spawnY, "naveet");
-      e.setRectangle(e.width * 0.8, e.height * 0.7);
-      e.setScale(0.5);
-      e.setFlipX(true);
+      let keyInimigo = "naveinimiga" + (this.enemyIndex + 1);
+      e = this.matter.add.sprite(spawnX, spawnY, keyInimigo);
+
+      // 1. Define a escala visual primeiro
+      let enemyScale = (this.enemyIndex === 2) ? 1.0 : 2.0;
+      e.setScale(enemyScale);
+
+      // 2. MODIFICA AQUI AS COLISÕES DOS INIMIGOS COMUNS (UMA POR UMA)
+      let eWidth, eHeight;
+      switch (this.enemyIndex) {
+        case 0: // Nave Inimiga 1
+          eWidth = 70;   // Largura da colisão em píxeis
+          eHeight = 70;  // Altura da colisão em píxeis
+          break;
+        case 1: // Nave Inimiga 2
+          eWidth = 75;
+          eHeight = 75;
+          break;
+        case 2: // Nave Inimiga 3
+          eWidth = 75;
+          eHeight = 80;
+          break;
+      }
+      e.setRectangle(eWidth, eHeight);
+
+      // 3. Roda os inimigos comuns para a Esquerda
+      e.setAngle(-90);
+
+      // ... (restos dos comandos originais dos inimigos comuns)
       e.setSensor(true);
       e.setIgnoreGravity(true);
       e.setFixedRotation();
       e.tipo = 'enemy';
       e.setDepth(10);
+      e.play(keyInimigo + "_voando");
 
       const hpBaseInimigosComuns = [20, 25, 30, 32, 35];
       e.hp = hpBaseInimigosComuns[this.engrenagem] + (this.enemyIndex * 5);
@@ -331,14 +406,19 @@ class scene2 extends Phaser.Scene {
 
     } else if (this.enemyIndex === 3) {
       e = this.matter.add.sprite(spawnX, spawnY, "boss");
-      e.setRectangle(100, 100);
       e.setScale(1.2);
-      e.setSensor(true);
-      e.setIgnoreGravity(true);
-      e.setFixedRotation();
-      e.tipo = 'enemy';
-      
+
+      // 4. MODIFICA AQUI A COLISÃO DO BOSS
+      e.setRectangle(110, 110); // Ajusta a caixa de colisão do Boss
+
       e.setAngle(-90);
+
+      // CORREÇÃO: Propriedades de física e identificação que faltavam no Boss
+      e.setSensor(true);          // Permite detetar os tiros sem criar barreiras físicas duras
+      e.setIgnoreGravity(true);   // Ignora qualquer gravidade do mundo
+      e.setFixedRotation();       // Impede o Boss de girar se colidir com algo
+      e.tipo = 'enemy';
+
       e.play("boss_voando");
       e.setDepth(10);
 
@@ -352,14 +432,14 @@ class scene2 extends Phaser.Scene {
       this.bossText.setVisible(true);
       this.velocidadeFundo = 8;
     } else {
+
       return;
     }
-
     e.maxHp = e.hp;
     e.barraVida = this.add.graphics();
     e.isDead = false;
     e.indexInimigo = this.enemyIndex;
-    
+
     this.enemies.add(e);
     this.configurarMovimentoInimigo(e);
     this.enemyIndex++;
@@ -372,14 +452,14 @@ class scene2 extends Phaser.Scene {
       this.tweens.add({ targets: inimigo, y: { from: 100, to: 700 }, duration: 1600 / this.modAmbiente, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     } else {
       let velY = (100 + (inimigo.indexInimigo * 20)) * this.modAmbiente;
-      inimigo.minhaVelocidadeY = velY / 60; 
+      inimigo.minhaVelocidadeY = velY / 60;
       inimigo.setVelocityY(inimigo.minhaVelocidadeY);
 
       inimigo.moveTimer = this.time.addEvent({
         delay: 2000, loop: true,
         callback: () => {
           if (inimigo && inimigo.active && !inimigo.isDead && !inimigo.paralisado) {
-            inimigo.minhaVelocidadeY *= -1; 
+            inimigo.minhaVelocidadeY *= -1;
             inimigo.setVelocityY(inimigo.minhaVelocidadeY);
           }
         }
@@ -387,7 +467,6 @@ class scene2 extends Phaser.Scene {
     }
 
     inimigo.shootTimer = this.time.addEvent({
-      // Aumentei o tempo do Boss para 6 segundos para os ataques não se atropelarem
       delay: inimigo.isBoss ? 6000 : (1300 / this.modAmbiente),
       loop: true,
       callback: () => this.atirarInimigo(inimigo)
@@ -400,7 +479,6 @@ class scene2 extends Phaser.Scene {
     if (inimigo.isBoss) {
       let sorteioAtaque = Phaser.Math.Between(1, 6);
 
-      // NOVO: Se ele sortear o Escudo mas ainda tiver um escudo ativo, forçamos um ataque de tiros!
       if (sorteioAtaque === 4 && inimigo.isInvulnerable) {
         sorteioAtaque = 2;
       }
@@ -415,7 +493,7 @@ class scene2 extends Phaser.Scene {
 
         if (sorteioAtaque === 1) {
           inimigo.play("boss_laser");
-          
+
           let aviso = this.add.rectangle(inimigo.x - 1000, inimigo.y, 2000, 8, 0xff0000, 0.4).setOrigin(0.5, 0.5);
 
           for (let i = 0; i < 10; i++) {
@@ -438,7 +516,6 @@ class scene2 extends Phaser.Scene {
             raio.setIgnoreGravity(true);
             raio.setFixedRotation();
             raio.setFrictionAir(0);
-            // 👇 1. ELE NASCE COM UM TIPO INOFENSIVO PARA A FÍSICA
             raio.tipo = 'laser_carregando';
 
             raio.play("laser_anim", true);
@@ -464,7 +541,7 @@ class scene2 extends Phaser.Scene {
 
           inimigo.escudoSprite = this.add.sprite(inimigo.x, inimigo.y, "escudoboss").setScale(1.3).setDepth(11);
           inimigo.escudoSprite.play("escudo_anim", true);
-          
+
           this.time.addEvent({
             delay: 600,
             repeat: 6,
@@ -478,11 +555,11 @@ class scene2 extends Phaser.Scene {
                 b.setIgnoreGravity(true);
                 b.setFrictionAir(0);
                 b.tipo = 'enemyBullet';
-                
+
                 let rad = Phaser.Math.DegToRad(ang);
                 let speed = 360 / 60;
                 b.setVelocity(Math.cos(rad) * speed, Math.sin(rad) * speed);
-                
+
                 b.setAngle(ang);
                 b.setDepth(5);
                 b.dano = 1;
@@ -491,7 +568,6 @@ class scene2 extends Phaser.Scene {
             }
           });
 
-          // Escudo agora dura 4.5s para garantir que desativa antes do próximo ataque
           this.time.delayedCall(4500, () => {
             if (inimigo.active && !inimigo.isDead) {
               inimigo.isInvulnerable = false;
@@ -499,7 +575,7 @@ class scene2 extends Phaser.Scene {
                 inimigo.escudoSprite.destroy();
                 inimigo.escudoSprite = null;
               }
-              inimigo.paralisado = false; 
+              inimigo.paralisado = false;
             }
           });
 
@@ -515,11 +591,11 @@ class scene2 extends Phaser.Scene {
               bala.setIgnoreGravity(true);
               bala.setFrictionAir(0);
               bala.tipo = 'enemyBullet';
-              
+
               let rad = Phaser.Math.DegToRad(angulo);
               let speed = 400 / 60;
               bala.setVelocity(Math.cos(rad) * speed, Math.sin(rad) * speed);
-              
+
               bala.setAngle(angulo);
               bala.setDepth(5);
               bala.dano = 1;
@@ -536,7 +612,7 @@ class scene2 extends Phaser.Scene {
                 bala.setIgnoreGravity(true);
                 bala.setFrictionAir(0);
                 bala.tipo = 'enemyBullet';
-                
+
                 bala.setVelocityX(-480 / 60);
                 bala.setAngle(180);
                 bala.setDepth(5);
@@ -546,7 +622,6 @@ class scene2 extends Phaser.Scene {
             }
           }
           else if (sorteioAtaque === 5) {
-            // NOVO: Agora o Boss atira balas em conjunto com os meteoros para mostrar que atacou!
             for (let i = 0; i < 4; i++) {
               this.time.delayedCall(i * 300, () => {
                 this.spawnAsteroide();
@@ -571,13 +646,13 @@ class scene2 extends Phaser.Scene {
               bala.setCircle(10);
               bala.setSensor(true);
               bala.setIgnoreGravity(true);
-              bala.setFrictionAir(0); 
+              bala.setFrictionAir(0);
               bala.tipo = 'enemyBullet';
-              
+
               let rad = Phaser.Math.DegToRad(angulo);
               let speed = 300 / 60;
               bala.setVelocity(Math.cos(rad) * speed, Math.sin(rad) * speed);
-              
+
               bala.setAngle(angulo);
               bala.setDepth(5);
               bala.dano = 1;
@@ -587,7 +662,7 @@ class scene2 extends Phaser.Scene {
 
           this.time.delayedCall(500, () => {
             if (inimigo.active && !inimigo.isDead) {
-              inimigo.paralisado = false; 
+              inimigo.paralisado = false;
             }
           });
         }
@@ -598,22 +673,28 @@ class scene2 extends Phaser.Scene {
       let vX = velTiroComum / 60;
 
       if (inimigo.indexInimigo === 2) {
-        let b1 = this.matter.add.sprite(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
+        // Ajustamos o Y de cada tiro para nascerem separados (asa superior, centro e asa inferior)
+        // Assim eles espalham de forma limpa sem nunca se cruzarem na saída!
+
+        // Tiro 1: Centro
+        let b1 = this.matter.add.sprite(inimigo.x - 70, inimigo.y, "tiroinimigoforte");
         b1.setRectangle(35, 10); b1.setSensor(true); b1.setIgnoreGravity(true); b1.setFrictionAir(0); b1.tipo = 'enemyBullet';
         b1.setVelocity(vX, 0); b1.setAngle(180); b1.setDepth(5); b1.dano = 1;
         this.enemyBullets.add(b1);
 
-        let b2 = this.matter.add.sprite(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
+        // Tiro 2: Asa de Cima (subtraímos 30 píxeis no Y)
+        let b2 = this.matter.add.sprite(inimigo.x - 70, inimigo.y - 30, "tiroinimigoforte");
         b2.setRectangle(35, 10); b2.setSensor(true); b2.setIgnoreGravity(true); b2.setFrictionAir(0); b2.tipo = 'enemyBullet';
         b2.setVelocity(vX, -110 / 60); b2.setRotation(Math.atan2(-110, velTiroComum)); b2.setDepth(5); b2.dano = 1;
         this.enemyBullets.add(b2);
 
-        let b3 = this.matter.add.sprite(inimigo.x - 50, inimigo.y, "tiroinimigoforte");
+        // Tiro 3: Asa de Baixo (somamos 30 píxeis no Y)
+        let b3 = this.matter.add.sprite(inimigo.x - 70, inimigo.y + 30, "tiroinimigoforte");
         b3.setRectangle(35, 10); b3.setSensor(true); b3.setIgnoreGravity(true); b3.setFrictionAir(0); b3.tipo = 'enemyBullet';
         b3.setVelocity(vX, 110 / 60); b3.setRotation(Math.atan2(110, velTiroComum)); b3.setDepth(5); b3.dano = 1;
         this.enemyBullets.add(b3);
       } else {
-        let bala = this.matter.add.sprite(inimigo.x - 50, inimigo.y, "tiroinimigo");
+        let bala = this.matter.add.sprite(inimigo.x - 70, inimigo.y, "tiroinimigo");
         bala.setRectangle(35, 10); bala.setSensor(true); bala.setIgnoreGravity(true); bala.setFrictionAir(0); bala.tipo = 'enemyBullet';
         bala.setVelocityX(vX);
         bala.setAngle(180);
@@ -624,7 +705,6 @@ class scene2 extends Phaser.Scene {
     }
   }
 
-  
   atingirInimigo(tiro, inimigo) {
     if (!tiro.active || !inimigo.active || inimigo.isDead) return;
 
@@ -667,12 +747,12 @@ class scene2 extends Phaser.Scene {
         });
 
       } else {
-        inimigo.setVisible(false);
         if (inimigo.body) this.matter.world.remove(inimigo.body);
-        let explosao = this.add.sprite(inimigo.x, inimigo.y, "explosao").setDepth(11);
-        explosao.play("explosao_anim");
-        explosao.on("animationcomplete", () => {
-          explosao.destroy();
+
+        let keyInimigo = "naveinimiga" + (inimigo.indexInimigo + 1);
+        inimigo.play(keyInimigo + "_destruido");
+
+        inimigo.on("animationcomplete", () => {
           inimigo.destroy();
         });
 
@@ -735,4 +815,4 @@ class scene2 extends Phaser.Scene {
   }
 }
 
-export default scene2;  
+export default scene2;
