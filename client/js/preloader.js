@@ -111,10 +111,17 @@ class preloader extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
+
     this.load.spritesheet("invisibleH", "invisibleH.png", {
       frameWidth: 16,
       frameHeight: 300,
     });
+
+    this.load.spritesheet("painelLuz", "painelLuz.png", {
+      frameWidth: 96,
+      frameHeight: 64,
+    });
+    
     this.load.spritesheet("plataform", "plataform.png", {
       frameWidth: 64,
       frameHeight: 8,

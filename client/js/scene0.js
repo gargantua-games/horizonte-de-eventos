@@ -23,7 +23,7 @@ class scene0 extends Phaser.Scene {
     this.life = 6;
     this.canTakeDamage = true;
     this.enemyGravity = false;
-    this.doorOpen = 3;
+    this.doorOpen = 4;
     this.bullet = true;
     this.platform12Interval = null;
     this.platform15Interval = null;
@@ -237,6 +237,13 @@ class scene0 extends Phaser.Scene {
       key: "close-door",
       frames: this.anims.generateFrameNumbers("door", { start: 7, end: 0 }),
       frameRate: 7,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "acionandoLuz",
+      frames: this.anims.generateFrameNumbers("painelLuz", { start: 0, end: 15 }),
+      frameRate: 10,
       repeat: 0,
     });
 
@@ -899,7 +906,7 @@ class scene0 extends Phaser.Scene {
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
 
-    this.invisible3 = this.physics.add.sprite(540, 300, "invisible");
+    this.invisible3 = this.physics.add.sprite(540, 300, "painelLuz");
     this.invisible3
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
@@ -1036,7 +1043,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1399,6 +1406,7 @@ class scene0 extends Phaser.Scene {
           this.player.anims.play("idleLeftJP", true);
         }
         this.door23.anims.play("open-door", true);
+        this.light23.setColor(0x90ee90);
         this.door23.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
             this.player
@@ -1445,6 +1453,7 @@ class scene0 extends Phaser.Scene {
           this.player.anims.play("idleLeftJP", true);
         }
         this.door24.anims.play("open-door", true);
+        this.light24.setColor(0x90ee90);
         this.door24.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
             this.energy = false;
