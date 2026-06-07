@@ -6,12 +6,12 @@ var config = {
     gamepad: true,
   },
   parent: "game-container",
-  physics: {
-    default: 'Arcade',
-    matter: {
-        gravity: { y: 900 },
-        debug: false 
-    }
+  physics:{
+    default: "arcade",
+    arcade: {
+      gravity: { x: 0, y: 900 },
+      debug: true,
+    } 
   },
   scale: {
     mode: Phaser.Scale.FIT,
