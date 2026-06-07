@@ -62,10 +62,12 @@ class scene1 extends Phaser.Scene {
     this.physics.world.gravity.y = 0;
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound
-      .add("trilhasonora", { loop: true, volume: 0.2 })
-      .play();
+      .add("trilhasonora", { loop: true, volume: 0.2 });
+    this.trilhasonora.play();
+      
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
-    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 1 });
+    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 2 });
+    this.batimentocardiaco = this.sound.add("batimentocardiaco", { loop: true, volume: 1 });
 
     //adiciona o espaço ao fundo
     this.space = this.add.image("space1");
@@ -1724,6 +1726,7 @@ if (this.inimigosaliens) {
   }
 
   teletransporte() {
+    
     if (this.fase4) {
       this.porta.anims.play("portaabrindo", true);
       this.time.delayedCall(1000, () => {
@@ -1731,11 +1734,15 @@ if (this.inimigosaliens) {
         this.outShip = true;
         this.positionP2 = true;
         this.porta.anims.play("portafechando", true);
+        this.trilhasonora.pause();
+        this.respiracao.play();
+        this.batimentocardiaco.play();
       });
     }
   }
 
   teletransporte2() {
+    
     //if (this.antenasconsertadas === 3)
     {
       this.porta2.anims.play("portaabrindo", true);
@@ -1748,6 +1755,9 @@ if (this.inimigosaliens) {
         this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
         this.outShip = false;
         this.porta2.anims.play("portafechando", true);
+        this.trilhasonora.play();
+        this.respiracao.pause();
+        this.batimentocardiaco.pause();
       });
     }
   }
