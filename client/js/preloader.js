@@ -169,10 +169,10 @@ class preloader extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32,
     });
-    // this.load.spritesheet("bigboss", "InvisibleSprite.png", {
-    //   frameWidth: 25,
-    //   frameHeight: 25,
-    // });
+     this.load.spritesheet("bigboss", "InvisibleSprite.png", {
+       frameWidth: 25,
+       frameHeight: 25,
+     });
 
     // Projéteis e Efeitos
     this.load.spritesheet("bulletP1", "laserBullet.png", {
