@@ -2,10 +2,10 @@ class scene2 extends Phaser.Scene {
   constructor() {
     super({key: "scene2",
       physics: {
-        default: "matter", // Força esta cena a usar o Matter
+        default: "matter", 
         matter: {
-          gravity: { x: 0, y: 0 }, // Sem gravidade para a nave
-          debug: true // Para você ver as hitboxes rodando
+          gravity: { x: 0, y: 0 },
+          debug: true 
         }
       }
     });

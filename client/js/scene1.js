@@ -7,7 +7,7 @@ class scene1 extends Phaser.Scene {
     this.doorOpen = 0;
     this.fase4 = true;
     this.fase5 = false;
-    this.vida = 3;
+    this.vida = 300;
     this.invulnerable = false;
     this.positionP2 = false;
     this.puzzleAberto = false;
@@ -1283,7 +1283,7 @@ class scene1 extends Phaser.Scene {
 
   update(time, delta) {
     this.GameOver();
-    this.liberarIa();
+    //this.liberarIa();
     this.cannon.setAngle(this.angleCannon);
 
     if (this.doorOpen === 1) {
@@ -1353,16 +1353,17 @@ class scene1 extends Phaser.Scene {
       }
     }
 
-    if (this.puzzleAberto) {
+    /*if (this.puzzleAberto) {
       if (this.playerroxo) {
         this.playerroxo.setVelocity(0, 0);
         this.playerroxo.anims.play("idlecostas", true);
+        this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
       }
       if (this.passos && this.passos.isPlaying) {
         this.passos.stop();
       }
       return;
-    }
+    }*/
 
     if (!this.outShip) {
       this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
@@ -1409,6 +1410,7 @@ class scene1 extends Phaser.Scene {
     if (this.puzzleAberto) {
       if (this.playerroxo) {
         this.playerroxo.setVelocity(0, 0);
+        this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
       }
       if (this.passos && this.passos.isPlaying) {
         this.passos.stop();

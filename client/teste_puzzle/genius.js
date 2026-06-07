@@ -13,7 +13,7 @@ export default class Genius extends Phaser.Scene {
     this.jogadaAtual = 0;
     this.podeJogar = false;
     this.rodada = 0;
-    this.maxRodadas = 8;
+    this.maxRodadas = 4;
   }
 
   create() {
@@ -71,6 +71,18 @@ export default class Genius extends Phaser.Scene {
 
     // Fundo escuro do terminal
     this.add.rectangle(640, 360, 1280, 720, 0x111111);
+
+    this.input.keyboard.on("keydown-ESC", () => {
+      console.log("Jogador cancelou o minigame Genius.");
+      
+      // Retoma a cena de origem caso ela tenha sido pausada (comum em minigames)
+      if (this.cenaOrigem) {
+        this.scene.resume(this.cenaOrigem);
+      }
+      
+      // Fecha a cena do minigame
+      this.scene.stop();
+    });
 
     this.textoStatus = this.add
       .text(640, 100, "MEMORIZE A SEQUÊNCIA", {
