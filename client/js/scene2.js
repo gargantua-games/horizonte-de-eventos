@@ -554,7 +554,8 @@ class scene2 extends Phaser.Scene {
                 b.setSensor(true);
                 b.setIgnoreGravity(true);
                 b.setFrictionAir(0);
-                b.tipo = 'enemyBullet';
+                b.tipo = 'enemyBullet'; 
+                this.enemyBullets.add(b);
 
                 let rad = Phaser.Math.DegToRad(ang);
                 let speed = 360 / 60;
