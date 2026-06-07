@@ -7,9 +7,9 @@ var config = {
   },
   parent: "game-container",
   physics: {
-    default: 'matter',
+    default: 'Arcade',
     matter: {
-        gravity: { y: 0 },
+        gravity: { y: 900 },
         debug: false 
     }
   },

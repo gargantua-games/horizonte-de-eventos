@@ -1,6 +1,7 @@
 class scene2 extends Phaser.Scene {
   constructor() {
     super("scene2");
+   
   }
 
   init(data) {
@@ -44,6 +45,7 @@ class scene2 extends Phaser.Scene {
   }
 
   create() {
+    this.physics = this.matter;
     this.matter.world.setBounds(0, 0, 2000, 800);
     this.cameras.main.setBounds(0, 0, 2000, 800);
 
