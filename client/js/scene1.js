@@ -58,6 +58,8 @@ class scene1 extends Phaser.Scene {
   }
 
   create() {
+
+    this.physics.world.gravity.y = 0;
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound
       .add("trilhasonora", { loop: true, volume: 0.2 })
@@ -439,16 +441,16 @@ class scene1 extends Phaser.Scene {
     //adicionar porta
     this.porta = this.physics.add.sprite(638, 719, "porta", 0);
     //this.porta.setAngle(180);
-    this.porta.body.allowGravity = false;
+    this.porta 
 
     //adicionar segunda porta
     this.porta2 = this.physics.add.sprite(55, 1573, "porta", 0);
-    this.porta2.body.allowGravity = false;
+    this.porta2 
     this.porta2.setAngle(90);
     this.porta2.setSize(32, 128);
 
     this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
-    this.avisoconsole.body.allowGravity = false;
+    this.avisoconsole 
     this.avisoconsole.setVisible(false);
 
     this.delayedCall = this.time.delayedCall(14000, () => {
@@ -457,13 +459,13 @@ class scene1 extends Phaser.Scene {
     });
 
     this.laserP1 = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: true,
     });
 
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -530,11 +532,11 @@ class scene1 extends Phaser.Scene {
     //console do meio
     this.consolelongo = this.physics.add.sprite(645, 350, "consolelongo");
     this.consolelongo.body.setSize(323, 25).setOffset(0, 27);
-    this.consolelongo.body.allowGravity = false;
+    this.consolelongo 
     this.consolelongo.setImmovable(true);
 
     this.consolemedio = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -554,73 +556,73 @@ class scene1 extends Phaser.Scene {
     //console_s da esquerda cima
     this.consoles = this.physics.add.sprite(382, 258, "consoles");
     this.consoles.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles.body.allowGravity = false;
+    this.consoles 
     this.consoles.setImmovable(true);
 
     //console_w da esuqerda cima, com bigboss 1
     this.consolew = this.physics.add.sprite(446, 268, "consolew");
     this.consolew.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew.body.allowGravity = false;
+    this.consolew 
     this.consolew.setImmovable(true);
 
     //console_s da esquerda meio
     this.consoles2 = this.physics.add.sprite(310, 418, "consoles");
     this.consoles2.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles2.body.allowGravity = false;
+    this.consoles2 
     this.consoles2.setImmovable(true);
 
     //console_w da esuqerda meio, com bigboss 2
     this.consolew2 = this.physics.add.sprite(385, 429, "consolew");
     this.consolew2.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew2.body.allowGravity = false;
+    this.consolew2 
     this.consolew2.setImmovable(true);
 
     //console_s da esquerda baixo
     this.consoles3 = this.physics.add.sprite(278, 580, "consoles");
     this.consoles3.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles3.body.allowGravity = false;
+    this.consoles3 
     this.consoles3.setImmovable(true);
 
     //console_w da esuqerda baixo, com bigboss 3
     this.consolew3 = this.physics.add.sprite(350, 587, "consolew");
     this.consolew3.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew3.body.allowGravity = false;
+    this.consolew3 
     this.consolew3.setImmovable(true);
 
     //console_s da direita cima
     this.consoles4 = this.physics.add.sprite(863, 261, "consoles");
     this.consoles4.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles4.body.allowGravity = false;
+    this.consoles4 
     this.consoles4.setImmovable(true);
 
     //console_w da direita cima, com bigboss 6
     this.consolew4 = this.physics.add.sprite(930, 273, "consolew");
     this.consolew4.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew4.body.allowGravity = false;
+    this.consolew4 
     this.consolew4.setImmovable(true);
 
     //console_s da direita meio
     this.consoles5 = this.physics.add.sprite(915, 423, "consoles");
     this.consoles5.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles5.body.allowGravity = false;
+    this.consoles5 
     this.consoles5.setImmovable(true);
 
     //console_w da direita meio, com bigboss 5
     this.consolew5 = this.physics.add.sprite(989, 434, "consolew");
     this.consolew5.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew5.body.allowGravity = false;
+    this.consolew5 
     this.consolew5.setImmovable(true);
 
     //console_s da direita baixo
     this.consoles6 = this.physics.add.sprite(950, 580, "consoles");
     this.consoles6.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles6.body.allowGravity = false;
+    this.consoles6 
     this.consoles6.setImmovable(true);
 
     //console_w da direita baixo, com bigboss 4
     this.consolew6 = this.physics.add.sprite(1022, 590, "consolew");
     this.consolew6.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew6.body.allowGravity = false;
+    this.consolew6 
     this.consolew6.setImmovable(true);
 
     this.cannon = this.add.sprite(656, 1712, "cannon");
@@ -631,7 +633,7 @@ class scene1 extends Phaser.Scene {
 
     //exterior da nave antenas
     this.antenas = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -661,7 +663,7 @@ class scene1 extends Phaser.Scene {
 
     //telescopios exterior
     this.telescopios = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -672,7 +674,6 @@ class scene1 extends Phaser.Scene {
 
     //osciloscopios exterior
     this.osciloscopios = this.physics.add.group({
-      allowGravity: false,
       immovable: true,
       pipeline: "Light2D",
     });
@@ -682,43 +683,20 @@ class scene1 extends Phaser.Scene {
     this.osciloscopios.create(980, 1560, "osciloscopio").body.setSize(35, 17);
 
     this.limiteporta = this.physics.add.sprite(638, 750, "bigboss");
-    this.limiteporta.body.allowGravity = false;
     this.limiteporta.setSize(128, 32);
     this.limiteporta.setImmovable(true);
 
     this.limitenorte = this.physics.add.sprite(670, 1317, "bigboss"); //662, 1347 667 1460
-    this.limitenorte.body.allowGravity = false;
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
 
-    /*this.limitesul = this.physics.add.sprite(670, 1735, "bigboss"); //662, 1347 667 1460
-    this.limitesul.body.allowGravity = false;
-    this.limitesul.setImmovable(true);
-    this.limitesul.setSize(1280, 17);
-
-    this.limiteoeste = this.physics.add.sprite(27, 1502, "bigboss"); //662, 1347 667 1460
-    this.limiteoeste.body.allowGravity = false;
-    this.limiteoeste.setImmovable(true);
-    this.limiteoeste.setSize(17, 448);
-
-    this.limiteleste = this.physics.add.sprite(1315, 1502, "bigboss"); //662, 1347 667 1460
-    this.limiteleste.body.allowGravity = false;
-    this.limiteleste.setImmovable(true);
-    this.limiteleste.setSize(17, 448);
-
-    this.limites = this.physics.add.sprite(670, 1347, "bigboss"); //662, 1347 667 1460
-    this.limites.body.allowGravity = false;
-    this.limites.setImmovable(true);
-    this.limites.setSize(1280, 768);*/
 
     //faisca na antena
     this.faisca1 = this.physics.add.sprite(175, 1546, "faisca");
     this.faisca1.anims.play("faiscando");
-    this.faisca1.body.allowGravity = false;
     this.faisca1.setScale(2);
 
     this.antena1 = this.physics.add.sprite(175, 1546, "NewPiskel");
-    this.antena1.body.allowGravity = false;
     this.antena1.body.setSize(20, 30);
     this.antena1.setOffset(27, 0);
     this.antena1.setScale(-1, 1);
@@ -727,34 +705,47 @@ class scene1 extends Phaser.Scene {
     //faísca na segunda antena
     this.faisca2 = this.physics.add.sprite(820, 1420, "faisca");
     this.faisca2.anims.play("faiscando");
-    this.faisca2.body.allowGravity = false;
     this.faisca2.setScale(2);
 
     this.antena2 = this.physics.add.sprite(820, 1420, "NewPiskel");
-    this.antena2.body.allowGravity = false;
     this.antena2.body.setSize(20, 30);
     this.antena2.setOffset(10, 0);
     this.antena2.setImmovable(true);
 
     //faisca no telescopio
-    this.faisca3 = this.physics.add.sprite(1107, 1490, "faisca");
+    this.faisca3 = this.add.sprite(1107, 1490, "faisca");
     this.faisca3.anims.play("faiscando")
       .setScale(2)
-      .setVisible(false)
-    .body.allowGravity = false;
+      .setVisible(false);
+
+    this.anims.create({
+      key: "chipIdle",
+      frames: this.anims.generateFrameNumbers("iaChip", {
+        start: 0,
+        end: 2,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+    
+
+    this.iaChip = this.physics.add.sprite(1107, 1490, "iaChip");
+    this.iaChip.anims.play("chipIdle")
+      
+    this.iaChip.disableBody(true, true);
+    
 
     this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
-    this.telescopio3.body.allowGravity = false;
     this.telescopio3.body.setSize(20, 20);
     this.telescopio3.setImmovable(true);
 
     this.faisca4 = this.physics.add.sprite(433, 1468, "faisca");
     this.faisca4.anims.play("faiscando");
-    this.faisca4.body.allowGravity = false;
+    this.faisca4 
     this.faisca4.setScale(2);
 
     this.antena4 = this.physics.add.sprite(433, 1468, "NewPiskel");
-    this.antena4.body.allowGravity = false;
+    this.antena4 
     this.antena4.body.setSize(20, 30);
     this.antena4.setOffset(10, 0);
     this.antena4.setImmovable(true);
@@ -770,11 +761,11 @@ class scene1 extends Phaser.Scene {
       "bigboss",
     );
     this.caixa.body.setSize(36, 55);
-    this.caixa.body.allowGravity = false;
+    this.caixa 
     this.caixa.body.immovable = true;
 
     this.platforms = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: true,
     });
 
@@ -801,19 +792,19 @@ class scene1 extends Phaser.Scene {
     this.platforms
       .create(220, 3365 - 1184, "plataform")
       .setScrollFactor(0.99, 1)
-      .setPipeline("Light2D").body.allowGravity = false;
+      .setPipeline("Light2D") 
 
     this.platform12 = this.physics.add.sprite(361, 2233, "plataform");
     this.platform12
       .setImmovable(true)
       .setScrollFactor(0.99, 1)
-      .setPipeline("Light2D").body.allowGravity = false;
+      .setPipeline("Light2D") 
 
     this.platform15 = this.physics.add.sprite(976, 2183, "plataform");
     this.platform15
       .setImmovable(true)
       .setScrollFactor(0.99, 1)
-      .setPipeline("Light2D").body.allowGravity = false;
+      .setPipeline("Light2D") 
 
     this.player2 = this.add.sprite(113, 2340, "player");
 
@@ -922,12 +913,18 @@ class scene1 extends Phaser.Scene {
           onComplete: () => {
             if (this.faisca3) {
               this.faisca3.setVisible(false);
+              this.iaChip.enableBody(true, (this.playerroxo.x + 35), this.playerroxo.y, true, true)
             }
             this.puzzleAberto = false;
           },
         });
       }
     });
+
+    this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
+      this.iaChip.disableBody(true, true);
+      this.collectIa = true;
+    })
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
       if (!this.puzzleAberto && this.faisca2.visible) {
@@ -1027,7 +1024,7 @@ class scene1 extends Phaser.Scene {
     }
 
     this.inimigosaliens = this.physics.add.group({
-      allowGravity: false,
+      
       immovable: false,
       pipeline: "Light2D",
     });
@@ -1087,7 +1084,7 @@ class scene1 extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setScale(1.5)
-      .setPipeline("Light2D").body.allowGravity = false;
+      .setPipeline("Light2D") 
 
     const textoInicial =
       "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujos desafios você deve resolver";
@@ -1124,7 +1121,7 @@ class scene1 extends Phaser.Scene {
     });
 
     this.time.addEvent({
-      delay: 2000, // Tempo em milissegundos (2000ms = 2 segundos)
+      delay: 200000000, // Tempo em milissegundos (2000ms = 2 segundos)
       callback: this.spawnAlienAleatorio, // Nome da função que vai rodar (SEM parênteses no final)
       callbackScope: this, // Mantém o escopo da cena correto
       loop: true, // Faz o relógio repetir para sempre
