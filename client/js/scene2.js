@@ -428,13 +428,17 @@ class scene2 extends Phaser.Scene {
             raio.setIgnoreGravity(true);
             raio.setFixedRotation();
             raio.setFrictionAir(0);
-            raio.tipo = 'enemyBullet';
-            
+            // 👇 1. ELE NASCE COM UM TIPO INOFENSIVO PARA A FÍSICA
+            raio.tipo = 'laser_carregando';
+
             raio.play("laser_anim", true);
             raio.dano = 3;
             raio.setDepth(5);
             this.enemyBullets.add(raio);
-        
+            this.time.delayedCall(200, () => {
+              if (raio.active) raio.tipo = 'enemyBullet';
+            });
+
             this.time.delayedCall(2000, () => {
               if (raio.active) raio.destroy();
               if (inimigo.active && !inimigo.isDead) {
