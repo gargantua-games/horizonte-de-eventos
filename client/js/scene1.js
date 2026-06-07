@@ -444,15 +444,16 @@ class scene1 extends Phaser.Scene {
 
 
     //adicionar porta
-    this.porta = this.physics.add.sprite(638, 719, "porta", 0);
-    //this.porta.setAngle(180);
-    this.porta 
+    this.porta = this.physics.add.sprite(1200, 640, "porta", 0);
+    this.porta.setAngle(90)
+     .setSize(32, 128);
 
     //adicionar segunda porta
     this.porta2 = this.physics.add.sprite(55, 1573, "porta", 0);
-    this.porta2 
-    this.porta2.setAngle(90);
-    this.porta2.setSize(32, 128);
+    this.porta2.setAngle(90)
+      .setSize(32, 128);
+    
+     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
     this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
     this.avisoconsole 
