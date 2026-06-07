@@ -62,6 +62,18 @@ export default class sudoku extends Phaser.Scene {
       }
     });
 
+     this.input.keyboard.on("keydown-ESC", () => {
+      console.log("Jogador cancelou o minigame Genius.");
+      
+      // Retoma a cena de origem caso ela tenha sido pausada (comum em minigames)
+      if (this.cenaOrigem) {
+        this.scene.resume(this.cenaOrigem);
+      }
+      
+      // Fecha a cena do minigame
+      this.scene.stop();
+    });
+
     //this.AmbientLight = this.add.rectangle(530, 360, 700, 720, 0x111111);
 
     this.add

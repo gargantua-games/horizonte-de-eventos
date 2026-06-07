@@ -11,6 +11,7 @@ class scene1 extends Phaser.Scene {
     this.invulnerable = false;
     this.positionP2 = false;
     this.puzzleAberto = false;
+    this.listaMinigames = ["genius", "helldivers", "quebraCabeca", "termo", "sudoku"];
     this.portaOverlapTime = 0;
     this.porta2OverlapTime = 0;
     this.portalTeleported = false;
@@ -34,15 +35,15 @@ class scene1 extends Phaser.Scene {
 
     GameOver() {
     if (this.gameOver) {
-      console.log("game Over:" + this.gameOver);
-      console.log("life" + this.vida);
+      
       return;
     }
-
-    console.log("game Over:" + this.gameOver);
+    
+    console.log("antenas" + this.antenasconsertadas);
+    //console.log("game Over:" + this.gameOver);
 
     if (this.vida > 0) {
-      console.log("life" + this.vida);
+      //console.log("life" + this.vida);
       return;
     }
 
@@ -738,7 +739,8 @@ class scene1 extends Phaser.Scene {
     //faisca no telescopio
     this.faisca3 = this.physics.add.sprite(1107, 1490, "faisca");
     this.faisca3.anims.play("faiscando")
-    .setScale(2)
+      .setScale(2)
+      .setVisible(false)
     .body.allowGravity = false;
 
     this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
@@ -1283,7 +1285,7 @@ class scene1 extends Phaser.Scene {
 
   update(time, delta) {
     this.GameOver();
-    //this.liberarIa();
+    this.puzzleAberto = this.verificarMinigamesAtivos();
     this.cannon.setAngle(this.angleCannon);
 
     if (this.doorOpen === 1) {
@@ -1418,6 +1420,8 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
+
+  
     const cursores = this.input.keyboard.createCursorKeys();
     const qe = this.input.keyboard.addKeys("E, Q");
 
@@ -1610,6 +1614,14 @@ class scene1 extends Phaser.Scene {
     }
   } // fim update
 
+    verificarMinigamesAtivos() {
+      for (let i = 0; i < this.listaMinigames.length; i++) {
+        if (this.scene.isActive(this.listaMinigames[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
   // Método de spawn dentro da sua scene1.js
   spawnAlienAleatorio() {
     if (!this.positionP2) {
@@ -1662,6 +1674,15 @@ class scene1 extends Phaser.Scene {
     // Teletransporta playerroxo, destrói inimigos e bloqueia spawn por 1 segundo
     this.playerroxo.setPosition(111, 1573)
     .anims.play("idlefrente", true);
+
+    if (this.puzzleAberto) {
+      console.log("O Alien pegou o player! Fechando o puzzle ativo...");
+
+      // 2. O "truque" está aqui: um loop que manda fechar TODOS da lista
+      this.listaMinigames.forEach(minigame => {
+        this.scene.stop(minigame); // O Phaser só vai fechar o que estiver aberto de fato
+      });
+    }
    
 if (this.inimigosaliens) {
       // Cria uma cópia da lista de aliens vivos para não bugar enquanto deleta

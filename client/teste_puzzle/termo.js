@@ -107,6 +107,18 @@ export default class termo extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+      this.input.keyboard.on("keydown-ESC", () => {
+      console.log("Jogador cancelou o minigame Genius.");
+      
+      // Retoma a cena de origem caso ela tenha sido pausada (comum em minigames)
+      if (this.cenaOrigem) {
+        this.scene.resume(this.cenaOrigem);
+      }
+      
+      // Fecha a cena do minigame
+      this.scene.stop();
+    });
+
     this.grelhaQuadrados = [];
     this.grelhaTextos = [];
 

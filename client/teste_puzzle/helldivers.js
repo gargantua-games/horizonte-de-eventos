@@ -96,6 +96,18 @@ export default class helldivers extends Phaser.Scene {
     // Fundo estilo Terminal Militar (Preto/Verde Escuro)
     this.add.rectangle(400, 300, 800, 600, 0x050b08);
 
+        this.input.keyboard.on("keydown-ESC", () => {
+      console.log("Jogador cancelou o minigame Genius.");
+      
+      // Retoma a cena de origem caso ela tenha sido pausada (comum em minigames)
+      if (this.cenaOrigem) {
+        this.scene.resume(this.cenaOrigem);
+      }
+      
+      // Fecha a cena do minigame
+      this.scene.stop();
+    });
+
     // Moldura Amarela Neon
     let moldura = this.add.graphics();
     moldura.lineStyle(4, 0x19ba04, 0.8);
