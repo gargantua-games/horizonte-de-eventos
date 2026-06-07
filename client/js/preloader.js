@@ -191,21 +191,25 @@ class preloader extends Phaser.Scene {
     this.load.image("tiroinimigomegapotente", "tiros/tiroinimigomegapotente.png");
 
     // ADICIONA AS NOVIDADES AQUI:
-    
-    this.load.spritesheet("boss", "naves/boss.png", { frameWidth: 128, frameHeight: 128 });
-    // Substitui LARGURA e ALTURA pelos valores reais de um único frame do teu escudo (ex: 64, 64)
-    this.load.spritesheet("escudoboss", "/escudoboss.png", { frameWidth: 128, frameHeight: 128 });
+  
 
+    // --- ENTRADAS NOVAS / MODIFICADAS DE NAVES ---
+    this.load.spritesheet("boss", "naves/boss.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("escudoboss", "/escudoboss.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("meteoro", "assets-usados/asteroideumex.png", { frameWidth: 96, frameHeight: 96 });
     this.load.spritesheet("explosao", "assets-usados/explosion.png", { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet("feixelaser", "/tiros/feixelaser.png", { frameWidth: 256, frameHeight: 64 });
-    this.load.image("nave-1", "naves/nave-1.png");
-    this.load.image("nave-2", "naves/nave-2.png");
-    this.load.image("nave-3", "naves/nave-3.png");
-    this.load.image("nave-4", "naves/nave-4.png");
-    this.load.image("nave-5", "naves/nave-5.png");
-    this.load.image("naveet", "naves/naveet.png");
 
+    this.load.spritesheet("nave-1", "naves/nave-1.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("nave-2", "naves/nave-2.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("nave-3", "naves/nave-3.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("nave-4", "naves/nave-4.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("nave-5", "naves/nave-5.png", { frameWidth: 128, frameHeight: 128 });
+
+    this.load.spritesheet("naveinimiga1", "naves/naveinimiga1.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("naveinimiga2", "naves/naveinimiga2.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("naveinimiga3", "naves/naveinimiga3.png", { frameWidth: 128, frameHeight: 128 });
+    
     // UI e Fontes
 
     this.load.spritesheet("vidasroxas", "vidasroxas.png", {
