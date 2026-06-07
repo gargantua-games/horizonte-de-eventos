@@ -272,7 +272,7 @@ class scene1 extends Phaser.Scene {
         start: 66,
         end: 73,
       }),
-      frameRate: 2,
+      frameRate: 11,
       repeat: -1,
     });
 
@@ -282,7 +282,7 @@ class scene1 extends Phaser.Scene {
         start: 74,
         end: 81,
       }),
-      frameRate: 2,
+      frameRate: 11,
       repeat: -1,
     });
 
@@ -292,7 +292,7 @@ class scene1 extends Phaser.Scene {
         start: 82,
         end: 89,
       }),
-      frameRate: 2,
+      frameRate: 11,
       repeat: -1,
     });
 
@@ -922,8 +922,8 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
-      this.iaChip.disableBody(true, true);
-      this.collectIa = true;
+      
+      this.playerIa();
     })
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
@@ -1221,8 +1221,9 @@ class scene1 extends Phaser.Scene {
   }
    
   playerIa() {
-    this.playerIcon.anims.play("playerIconVerde")
+    this.iaChip.disableBody(true, true);
     this.collectIa = true;
+    this.playerIcon.anims.play("playerIconVerde")
     }
   
     createSemicircleLifeBar() {
@@ -1524,6 +1525,9 @@ class scene1 extends Phaser.Scene {
         }
       }
     } else if (this.collectIa) {
+
+     // this.playerIcon.anims.play("playerIconVerde")
+
       if (horizontal > 0.1) {
         this.playerroxo.anims.play("andardireitaverde", true);
       } else if (horizontal < -0.1) {
@@ -1531,7 +1535,7 @@ class scene1 extends Phaser.Scene {
       } else if (vertical > 0.1) {
         this.playerroxo.anims.play("andarfrenteverde", true); // assumindo que "andarfrente" é para baixo
       } else if (vertical < -0.1) {
-        this.playerroxo.anims.play("andarcostasverde", true);
+        this.playerroxo.anims.play("andarcostas", true);
       } else {
         // Idle baseado na última direção
         if (this.playerroxo.anims.currentAnim) {
@@ -1542,8 +1546,8 @@ class scene1 extends Phaser.Scene {
             this.playerroxo.anims.play("idleesquerdaverde", true);
           } else if (currentKey === "andarfrenteverde") {
             this.playerroxo.anims.play("idlefrenteverde", true);
-          } else if (currentKey === "andarcostasverde") {
-            this.playerroxo.anims.play("idlecostasverde", true);
+          } else if (currentKey === "andarcostas") {
+            this.playerroxo.anims.play("idlecostas", true);
           }
         }
       }
