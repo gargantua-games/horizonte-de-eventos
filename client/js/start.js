@@ -153,7 +153,7 @@ class start extends Phaser.Scene {
       //this.scene.start("scene1");
       this.webrtcGetMic();
       this.scene.stop("start");
-      this.scene.start("iniciov", { startScene: "scene1" });
+      this.scene.start("preloader", { startScene: "inicioroxo" });
     }
 
     if (reloadPressed) {

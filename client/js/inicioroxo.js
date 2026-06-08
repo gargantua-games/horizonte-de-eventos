@@ -52,7 +52,10 @@ class inicioroxo extends Phaser.Scene {
        delay: 200,
      });
 
-
+     this.delayedCall = this.time.delayedCall(14000, () => {
+       this.scene.stop("inicioroxo");
+       this.scene.start("scene1");
+     });
   }
 
   update() {}
