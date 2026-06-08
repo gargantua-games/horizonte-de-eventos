@@ -11,7 +11,13 @@ class scene1 extends Phaser.Scene {
     this.invulnerable = false;
     this.positionP2 = false;
     this.puzzleAberto = false;
-    this.listaMinigames = ["genius", "helldivers", "quebraCabeca", "termo", "sudoku"];
+    this.listaMinigames = [
+      "genius",
+      "helldivers",
+      "quebraCabeca",
+      "termo",
+      "sudoku",
+    ];
     this.portaOverlapTime = 0;
     this.porta2OverlapTime = 0;
     this.portalTeleported = false;
@@ -30,7 +36,10 @@ class scene1 extends Phaser.Scene {
     this.bancoMinigames = [
       { id: "genius", aparicoes: 0 },
       { id: "helldivers", aparicoes: 0 },
-    ]
+    ];
+
+    this.inFinalDoorP1 = false;
+    this.inFinalDoorP2 = false;
     //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
@@ -38,12 +47,11 @@ class scene1 extends Phaser.Scene {
     this.webrtcMakeCall();
   }
 
-    GameOver() {
+  GameOver() {
     if (this.gameOver) {
-      
       return;
     }
-    
+
     console.log("antenas" + this.antenasconsertadas);
 
     if (this.vida > 0) {
@@ -57,20 +65,23 @@ class scene1 extends Phaser.Scene {
 
     this.scene.stop("scene1");
     this.scene.start("gameover1");
-
   }
 
   create() {
-
     this.physics.world.gravity.y = 0;
     //adiciona trilha sonora e efeitos sonoros
-    this.trilhasonora = this.sound
-      .add("trilhasonora", { loop: true, volume: 0.2 });
+    this.trilhasonora = this.sound.add("trilhasonora", {
+      loop: true,
+      volume: 0.2,
+    });
     this.trilhasonora.play();
-      
+
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
     this.respiracao = this.sound.add("respiracao", { loop: true, volume: 2 });
-    this.batimentocardiaco = this.sound.add("batimentocardiaco", { loop: true, volume: 1 });
+    this.batimentocardiaco = this.sound.add("batimentocardiaco", {
+      loop: true,
+      volume: 1,
+    });
 
     //adiciona o espaço ao fundo
     this.space = this.add.image("space1");
@@ -159,7 +170,6 @@ class scene1 extends Phaser.Scene {
       frameRate: 2,
       repeat: -1,
     });
-
 
     this.anims.create({
       key: "idlecostas",
@@ -362,7 +372,6 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
-
     //anim porta
     this.anims.create({
       key: "portaabrindo",
@@ -442,21 +451,18 @@ class scene1 extends Phaser.Scene {
 
     this.createSemicircleLifeBar();
 
-
     //adicionar porta
     this.porta = this.physics.add.sprite(1200, 640, "porta", 0);
-    this.porta.setAngle(90)
-     .setSize(32, 128);
+    this.porta.setAngle(90).setSize(32, 128);
 
     //adicionar segunda porta
     this.porta2 = this.physics.add.sprite(55, 1573, "porta", 0);
-    this.porta2.setAngle(90)
-      .setSize(32, 128);
-    
-     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
+    this.porta2.setAngle(90).setSize(32, 128);
+
+    this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
     this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
-    this.avisoconsole 
+    this.avisoconsole;
     this.avisoconsole.setVisible(false);
 
     this.delayedCall = this.time.delayedCall(14000, () => {
@@ -465,13 +471,11 @@ class scene1 extends Phaser.Scene {
     });
 
     this.laserP1 = this.physics.add.group({
-      
       immovable: true,
     });
 
     //faz um grupo para os bigbosses
     this.bigboss = this.physics.add.group({
-      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -538,11 +542,10 @@ class scene1 extends Phaser.Scene {
     //console do meio
     this.consolelongo = this.physics.add.sprite(645, 350, "consolelongo");
     this.consolelongo.body.setSize(323, 25).setOffset(0, 27);
-    this.consolelongo 
+    this.consolelongo;
     this.consolelongo.setImmovable(true);
 
     this.consolemedio = this.physics.add.group({
-      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -562,73 +565,73 @@ class scene1 extends Phaser.Scene {
     //console_s da esquerda cima
     this.consoles = this.physics.add.sprite(382, 258, "consoles");
     this.consoles.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles 
+    this.consoles;
     this.consoles.setImmovable(true);
 
     //console_w da esuqerda cima, com bigboss 1
     this.consolew = this.physics.add.sprite(446, 268, "consolew");
     this.consolew.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew 
+    this.consolew;
     this.consolew.setImmovable(true);
 
     //console_s da esquerda meio
     this.consoles2 = this.physics.add.sprite(310, 418, "consoles");
     this.consoles2.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles2 
+    this.consoles2;
     this.consoles2.setImmovable(true);
 
     //console_w da esuqerda meio, com bigboss 2
     this.consolew2 = this.physics.add.sprite(385, 429, "consolew");
     this.consolew2.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew2 
+    this.consolew2;
     this.consolew2.setImmovable(true);
 
     //console_s da esquerda baixo
     this.consoles3 = this.physics.add.sprite(278, 580, "consoles");
     this.consoles3.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles3 
+    this.consoles3;
     this.consoles3.setImmovable(true);
 
     //console_w da esuqerda baixo, com bigboss 3
     this.consolew3 = this.physics.add.sprite(350, 587, "consolew");
     this.consolew3.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew3 
+    this.consolew3;
     this.consolew3.setImmovable(true);
 
     //console_s da direita cima
     this.consoles4 = this.physics.add.sprite(863, 261, "consoles");
     this.consoles4.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles4 
+    this.consoles4;
     this.consoles4.setImmovable(true);
 
     //console_w da direita cima, com bigboss 6
     this.consolew4 = this.physics.add.sprite(930, 273, "consolew");
     this.consolew4.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew4 
+    this.consolew4;
     this.consolew4.setImmovable(true);
 
     //console_s da direita meio
     this.consoles5 = this.physics.add.sprite(915, 423, "consoles");
     this.consoles5.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles5 
+    this.consoles5;
     this.consoles5.setImmovable(true);
 
     //console_w da direita meio, com bigboss 5
     this.consolew5 = this.physics.add.sprite(989, 434, "consolew");
     this.consolew5.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew5 
+    this.consolew5;
     this.consolew5.setImmovable(true);
 
     //console_s da direita baixo
     this.consoles6 = this.physics.add.sprite(950, 580, "consoles");
     this.consoles6.body.setSize(102, 25).setOffset(0, 27);
-    this.consoles6 
+    this.consoles6;
     this.consoles6.setImmovable(true);
 
     //console_w da direita baixo, com bigboss 4
     this.consolew6 = this.physics.add.sprite(1022, 590, "consolew");
     this.consolew6.body.setSize(47, 17).setOffset(15, 20);
-    this.consolew6 
+    this.consolew6;
     this.consolew6.setImmovable(true);
 
     this.cannon = this.add.sprite(656, 1712, "cannon");
@@ -639,7 +642,6 @@ class scene1 extends Phaser.Scene {
 
     //exterior da nave antenas
     this.antenas = this.physics.add.group({
-      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -669,7 +671,6 @@ class scene1 extends Phaser.Scene {
 
     //telescopios exterior
     this.telescopios = this.physics.add.group({
-      
       immovable: true,
       pipeline: "Light2D",
     });
@@ -696,7 +697,6 @@ class scene1 extends Phaser.Scene {
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
 
-
     //faisca na antena
     this.faisca1 = this.physics.add.sprite(175, 1546, "faisca");
     this.faisca1.anims.play("faiscando");
@@ -720,9 +720,7 @@ class scene1 extends Phaser.Scene {
 
     //faisca no telescopio
     this.faisca3 = this.add.sprite(1107, 1490, "faisca");
-    this.faisca3.anims.play("faiscando")
-      .setScale(2)
-      .setVisible(false);
+    this.faisca3.anims.play("faiscando").setScale(2).setVisible(false);
 
     this.anims.create({
       key: "chipIdle",
@@ -733,13 +731,11 @@ class scene1 extends Phaser.Scene {
       frameRate: 2,
       repeat: -1,
     });
-    
 
     this.iaChip = this.physics.add.sprite(1107, 1490, "iaChip");
-    this.iaChip.anims.play("chipIdle")
-      
+    this.iaChip.anims.play("chipIdle");
+
     this.iaChip.disableBody(true, true);
-    
 
     this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
     this.telescopio3.body.setSize(20, 20);
@@ -747,19 +743,21 @@ class scene1 extends Phaser.Scene {
 
     this.faisca4 = this.physics.add.sprite(433, 1468, "faisca");
     this.faisca4.anims.play("faiscando");
-    this.faisca4 
+    this.faisca4;
     this.faisca4.setScale(2);
 
     this.antena4 = this.physics.add.sprite(433, 1468, "NewPiskel");
-    this.antena4 
+    this.antena4;
     this.antena4.body.setSize(20, 30);
     this.antena4.setOffset(10, 0);
     this.antena4.setImmovable(true);
 
     //adiciona o player roxo
     this.playerroxo = this.physics.add.sprite(640, 448, "playerroxo"); //640,448 interior //650, 1640 exterior //spawn
-    this.playerroxo.anims.play("idlecostas", true).body.setSize(25, 10).setOffset(19, 47)
-    .allowGravity = false;
+    this.playerroxo.anims
+      .play("idlecostas", true)
+      .body.setSize(25, 10)
+      .setOffset(19, 47).allowGravity = false;
 
     this.caixa = this.physics.add.sprite(
       this.playerroxo.x,
@@ -767,11 +765,10 @@ class scene1 extends Phaser.Scene {
       "bigboss",
     );
     this.caixa.body.setSize(36, 55);
-    this.caixa 
+    this.caixa;
     this.caixa.body.immovable = true;
 
     this.platforms = this.physics.add.group({
-      
       immovable: true,
     });
 
@@ -798,19 +795,19 @@ class scene1 extends Phaser.Scene {
     this.platforms
       .create(220, 3365 - 1184, "plataform")
       .setScrollFactor(0.99, 1)
-      .setPipeline("Light2D") 
+      .setPipeline("Light2D");
 
     this.platform12 = this.physics.add.sprite(361, 2233, "plataform");
     this.platform12
       .setImmovable(true)
       .setScrollFactor(0.99, 1)
-      .setPipeline("Light2D") 
+      .setPipeline("Light2D");
 
     this.platform15 = this.physics.add.sprite(976, 2183, "plataform");
     this.platform15
       .setImmovable(true)
       .setScrollFactor(0.99, 1)
-      .setPipeline("Light2D") 
+      .setPipeline("Light2D");
 
     this.player2 = this.add.sprite(113, 2340, "player");
 
@@ -888,62 +885,62 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
       if (!this.puzzleAberto && this.faisca1.visible) {
-      
-      this.abrirMinigameAleatorio(() => {
-      if (this.faisca1) {
-        this.faisca1.setVisible(false);
+        this.abrirMinigameAleatorio(() => {
+          if (this.faisca1) {
+            this.faisca1.setVisible(false);
+          }
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+        });
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
     });
-
-  }
-});
 
     this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
       if (!this.puzzleAberto && this.faisca3.visible) {
-         this.abrirMinigameAleatorio(() => {
-      if (this.faisca3) {
-        this.faisca3.setVisible(false);
-        this.iaChip.enableBody(true, (this.playerroxo.x + 35), this.playerroxo.y, true, true)
+        this.abrirMinigameAleatorio(() => {
+          if (this.faisca3) {
+            this.faisca3.setVisible(false);
+            this.iaChip.enableBody(
+              true,
+              this.playerroxo.x + 35,
+              this.playerroxo.y,
+              true,
+              true,
+            );
+          }
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+        });
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
     });
 
-  }
-});
-   
     this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
-      
       this.playerIa();
-    })
+    });
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
       if (!this.puzzleAberto && this.faisca2.visible) {
-         this.abrirMinigameAleatorio(() => {
-      if (this.faisca2) {
-        this.faisca2.setVisible(false);
+        this.abrirMinigameAleatorio(() => {
+          if (this.faisca2) {
+            this.faisca2.setVisible(false);
+          }
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+        });
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
     });
-
-  }
-});
 
     this.physics.add.collider(this.playerroxo, this.antena4, () => {
       if (!this.puzzleAberto && this.faisca4.visible) {
-         this.abrirMinigameAleatorio(() => {
-      if (this.faisca4) {
-        this.faisca4.setVisible(false);
+        this.abrirMinigameAleatorio(() => {
+          if (this.faisca4) {
+            this.faisca4.setVisible(false);
+          }
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+        });
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
     });
-
-  }
-});
 
     const destroyLaser = (laser, limit) => {
       if (laser && laser.disableBody) {
@@ -1000,27 +997,18 @@ class scene1 extends Phaser.Scene {
     this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
 
     this.physics.add.overlap(this.playerroxo, this.portaFinal, () => {
-      if (this.doorOpen >= 5) {
+      if (this.doorOpen >= 0 && this.inFinalDoorP1) {
         this.inFinalDoorP2 = true;
-        this.game.socket.emit("faseFinal", this.game.room, {
-          inFinalDoorP2: this.inFinalDoorP2,
-        });
-        
         this.portaFinal.anims.play("portaabrindo", true);
-        
-        this.portafinal.once("animationcomplete", (anim, frame) => {
-          if (anim.key === "open-door") {
-           
-            if (this.inFinalDoorP1 && this.inFinalDoorP2) {
-            
-              this.scene.stop("scene1");
-              this.scene.start("scene2");
 
-            }
+        this.portaFinal.once("animationcomplete", (anim, frame) => {
+          if (anim.key === "portaabrindo") {
+            this.portaFinal.disableBody(true);
+            this.portaFinal.setFrame("8");
           }
-        })
+        });
       }
-    })
+    });
 
     if (this.estoutrabalhando === false) {
       this.physics.add.collider(this.playerroxo, this.limitenorte);
@@ -1030,7 +1018,6 @@ class scene1 extends Phaser.Scene {
     }
 
     this.inimigosaliens = this.physics.add.group({
-      
       immovable: false,
       pipeline: "Light2D",
     });
@@ -1090,7 +1077,7 @@ class scene1 extends Phaser.Scene {
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setScale(1.5)
-      .setPipeline("Light2D") 
+      .setPipeline("Light2D");
 
     const textoInicial =
       "Sua função é ajudar o seu colega,\nabrindo as portas para que ele possa passar.\nAparecerá um sinal sobre o computador\ncujos desafios você deve resolver";
@@ -1137,52 +1124,52 @@ class scene1 extends Phaser.Scene {
     const pIconY = 96;
     const pIconSize = 64;
 
-    this.playerIcon = this.add.sprite(pIconX, pIconY, "playersIcon")
+    this.playerIcon = this.add
+      .sprite(pIconX, pIconY, "playersIcon")
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(9)
       .anims.play("playerIcon", true)
       .setScale(1.5);
-      // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
+    // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
     let imagem = this.playerIcon;
-    
-      
-      // 2. Cria um objeto gráfico que servirá de molde (o círculo)
+
+    // 2. Cria um objeto gráfico que servirá de molde (o círculo)
     let molde = this.make.graphics();
-        
-   // molde.setOrigin(0, 0);
-      molde.setScrollFactor(0)
-      molde.setDepth(9);
-      
-      // Define a cor de preenchimento (a cor não importa, pois ficará invisível)
-       molde.fillStyle(0xffffff); 
-      
-      // Desenha o círculo na mesma posição da imagem (x: 400, y: 300) e define o raio (ex: 100 pixels)
-      // Dica: O raio idealmente deve ser a metade da largura/altura da sua imagem
-        molde.fillCircle(pIconX + 21, pIconY + 14, 32)//.setOrigin(0, 0).setScrollFactor(0); 
 
-        // 3. Cria a máscara geométrica a partir do círculo
-        let mascara = molde.createGeometryMask();
+    // molde.setOrigin(0, 0);
+    molde.setScrollFactor(0);
+    molde.setDepth(9);
 
-        // 4. Aplica a máscara na imagem
-        imagem.setMask(mascara);
+    // Define a cor de preenchimento (a cor não importa, pois ficará invisível)
+    molde.fillStyle(0xffffff);
 
-       this.lifeBarBgGraphics = this.make
-        .graphics({
-          x: 223,
-          y: 113,
-          add: true,
-        })
-        .setScrollFactor(0)
-        .setDepth(8);
-    
-        this.lifeBarBgGraphics.fillStyle(0x000000, 1);
-        this.lifeBarBgGraphics.fillCircle(0, 0, 36);
-    
-      this.game.socket.on("faseFinal", (state) => {
-      this.inFinalDoorP1 = state.inFinalDoorP1;
+    // Desenha o círculo na mesma posição da imagem (x: 400, y: 300) e define o raio (ex: 100 pixels)
+    // Dica: O raio idealmente deve ser a metade da largura/altura da sua imagem
+    molde.fillCircle(pIconX + 21, pIconY + 14, 32); //.setOrigin(0, 0).setScrollFactor(0);
+
+    // 3. Cria a máscara geométrica a partir do círculo
+    let mascara = molde.createGeometryMask();
+
+    // 4. Aplica a máscara na imagem
+    imagem.setMask(mascara);
+
+    this.lifeBarBgGraphics = this.make
+      .graphics({
+        x: 223,
+        y: 113,
+        add: true,
       })
-    
+      .setScrollFactor(0)
+      .setDepth(8);
+
+    this.lifeBarBgGraphics.fillStyle(0x000000, 1);
+    this.lifeBarBgGraphics.fillCircle(0, 0, 36);
+
+    this.game.socket.on("scene0", (state) => {
+      this.inFinalDoorP1 = state.inFinalDoorP1;
+    });
+
     this.game.socket.on("GameOver", (state) => {
       this.gameOver = state.gameOver;
     });
@@ -1219,9 +1206,8 @@ class scene1 extends Phaser.Scene {
       }
     });
   }
- 
-  liberarIa() {
 
+  liberarIa() {
     if (this.antenasconsertadas != 3) {
       console.log("ia não disponivel");
       this.faisca3.setVisible(false);
@@ -1231,64 +1217,64 @@ class scene1 extends Phaser.Scene {
     console.log("ia disponivel");
     this.faisca3.setVisible(true);
   }
-   
+
   playerIa() {
     this.iaChip.disableBody(true, true);
     this.collectIa = true;
-    this.playerIcon.anims.play("playerIconVerde")
-    }
-
- abrirMinigameAleatorio(callbackSucesso) {
-// 1. A SUA IDEIA: Conta quantos minigames estão abertos neste exato segundo
-  let minigamesAbertos = 0;
-  this.bancoMinigames.forEach(m => {
-    if (this.scene.isActive(m.id)) {
-      minigamesAbertos++;
-    }
-  });
-
-  // 2. A TRAVA SUPREMA: 
-  // Se tiver 1 minigame aberto OU se o jogo estiver no bloqueio temporário, CANCELA!
-  if (minigamesAbertos >= 1 || this.bloqueioColisao) {
-    return; 
+    this.playerIcon.anims.play("playerIconVerde");
   }
 
-  // 3. ATIVA O BLOQUEIO DE TEMPO IMEDIATAMENTE
-  this.bloqueioColisao = true;
+  abrirMinigameAleatorio(callbackSucesso) {
+    // 1. A SUA IDEIA: Conta quantos minigames estão abertos neste exato segundo
+    let minigamesAbertos = 0;
+    this.bancoMinigames.forEach((m) => {
+      if (this.scene.isActive(m.id)) {
+        minigamesAbertos++;
+      }
+    });
 
-  // Desativa o bloqueio após 1 segundo (tempo mais que suficiente pro Phaser processar a abertura)
-  this.time.delayedCall(1000, () => {
-    this.bloqueioColisao = false;
-  });
+    // 2. A TRAVA SUPREMA:
+    // Se tiver 1 minigame aberto OU se o jogo estiver no bloqueio temporário, CANCELA!
+    if (minigamesAbertos >= 1 || this.bloqueioColisao) {
+      return;
+    }
 
-  // Mantém a sua variável que trava o player
-  this.puzzleAberto = true;
+    // 3. ATIVA O BLOQUEIO DE TEMPO IMEDIATAMENTE
+    this.bloqueioColisao = true;
 
-  // --- RESTO DO CÓDIGO DO SORTEIO NORMAL ---
-  let minigamesDisponiveis = this.bancoMinigames.filter(m => m.aparicoes < 2);
+    // Desativa o bloqueio após 1 segundo (tempo mais que suficiente pro Phaser processar a abertura)
+    this.time.delayedCall(1000, () => {
+      this.bloqueioColisao = false;
+    });
 
-  if (minigamesDisponiveis.length === 0) {
-    this.bancoMinigames.forEach(m => m.aparicoes = 0);
-    minigamesDisponiveis = this.bancoMinigames;
+    // Mantém a sua variável que trava o player
+    this.puzzleAberto = true;
+
+    // --- RESTO DO CÓDIGO DO SORTEIO NORMAL ---
+    let minigamesDisponiveis = this.bancoMinigames.filter(
+      (m) => m.aparicoes < 2,
+    );
+
+    if (minigamesDisponiveis.length === 0) {
+      this.bancoMinigames.forEach((m) => (m.aparicoes = 0));
+      minigamesDisponiveis = this.bancoMinigames;
+    }
+
+    let minigameEscolhido = Phaser.Utils.Array.GetRandom(minigamesDisponiveis);
+    minigameEscolhido.aparicoes++;
+
+    this.scene.launch(minigameEscolhido.id, {
+      cenaOrigem: this.scene.key,
+      onComplete: callbackSucesso,
+    });
   }
 
-  let minigameEscolhido = Phaser.Utils.Array.GetRandom(minigamesDisponiveis);
-  minigameEscolhido.aparicoes++;
-
-  this.scene.launch(minigameEscolhido.id, {
-    cenaOrigem: this.scene.key,
-    onComplete: callbackSucesso 
-  });
-}
-  
-    createSemicircleLifeBar() {
+  createSemicircleLifeBar() {
     // Posição da barra de vida segmentada
     const x = 223;
     const y = 113;
     const radius = 30;
     const bgRadius = radius + 6;
-
-
 
     this.lifeBarGraphics = this.make
       .graphics({
@@ -1316,8 +1302,7 @@ class scene1 extends Phaser.Scene {
 
     this.lifeBarGraphics.clear();
 
-    const activeColor = 0x9200B6;
-      
+    const activeColor = 0x9200b6;
 
     for (let i = 0; i < segmentCount; i++) {
       const startAngle = Phaser.Math.DegToRad(
@@ -1341,27 +1326,43 @@ class scene1 extends Phaser.Scene {
     this.puzzleAberto = this.verificarMinigamesAtivos();
     this.cannon.setAngle(this.angleCannon);
 
-    if (this.puzzleAberto) {
-    let minigamesRodando = [];
+    console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
 
-    // 1. Checa quais minigames estão abertos AGORA e anota o nome deles
-    this.bancoMinigames.forEach(m => {
-      if (this.scene.isActive(m.id)) {
-        minigamesRodando.push(m.id);
-      }
-    });
+    if (this.inFinalDoorP2) {
+      this.game.socket.emit("scene1", this.game.room, {
+        inFinalDoorP2: this.inFinalDoorP2,
+      });
 
-    // 2. Se a lista tiver mais de 1 minigame aberto... TEMOS UM PROBLEMA!
-    if (minigamesRodando.length > 1) {
-      // 3. Deixa o primeiro em paz (índice 0), e fecha todos os outros!
-      for (let i = 1; i < minigamesRodando.length; i++) {
-        console.log("Failsafe ativado! Fechando o minigame intruso: " + minigamesRodando[i]);
-        
-        // Manda o Phaser parar e destruir a cena extra na mesma hora
-        this.scene.stop(minigamesRodando[i]); 
+      if (this.inFinalDoorP1) {
+        this.scene.stop("scene1");
+        this.scene.start("scene2");
       }
     }
-  }
+
+    if (this.puzzleAberto) {
+      let minigamesRodando = [];
+
+      // 1. Checa quais minigames estão abertos AGORA e anota o nome deles
+      this.bancoMinigames.forEach((m) => {
+        if (this.scene.isActive(m.id)) {
+          minigamesRodando.push(m.id);
+        }
+      });
+
+      // 2. Se a lista tiver mais de 1 minigame aberto... TEMOS UM PROBLEMA!
+      if (minigamesRodando.length > 1) {
+        // 3. Deixa o primeiro em paz (índice 0), e fecha todos os outros!
+        for (let i = 1; i < minigamesRodando.length; i++) {
+          console.log(
+            "Failsafe ativado! Fechando o minigame intruso: " +
+              minigamesRodando[i],
+          );
+
+          // Manda o Phaser parar e destruir a cena extra na mesma hora
+          this.scene.stop(minigamesRodando[i]);
+        }
+      }
+    }
 
     if (this.doorOpen === 1) {
       this.avisoconsole.setPosition(843, 222);
@@ -1487,48 +1488,44 @@ class scene1 extends Phaser.Scene {
     if (this.puzzleAberto) {
       if (this.playerroxo) {
         this.playerroxo.setVelocity(0, 0);
-        if(!this.collectIa){
-        // Idle baseado na última direção
-        if (this.playerroxo.anims.currentAnim) {
-          const currentKey = this.playerroxo.anims.currentAnim.key;
-          if (currentKey === "andardireita") {
-            this.playerroxo.anims.play("idledireita", true);
-          } else if (currentKey === "andaresquerda") {
-            this.playerroxo.anims.play("idleesquerda", true);
-          } else if (currentKey === "andarfrente") {
-            this.playerroxo.anims.play("idlefrente", true);
-          } else if (currentKey === "andarcostas") {
-            this.playerroxo.anims.play("idlecostas", true);
+        if (!this.collectIa) {
+          // Idle baseado na última direção
+          if (this.playerroxo.anims.currentAnim) {
+            const currentKey = this.playerroxo.anims.currentAnim.key;
+            if (currentKey === "andardireita") {
+              this.playerroxo.anims.play("idledireita", true);
+            } else if (currentKey === "andaresquerda") {
+              this.playerroxo.anims.play("idleesquerda", true);
+            } else if (currentKey === "andarfrente") {
+              this.playerroxo.anims.play("idlefrente", true);
+            } else if (currentKey === "andarcostas") {
+              this.playerroxo.anims.play("idlecostas", true);
+            }
+          }
+        } else if (this.collectIa) {
+          // Idle baseado na última direção
+          if (this.playerroxo.anims.currentAnim) {
+            const currentKey = this.playerroxo.anims.currentAnim.key;
+            if (currentKey === "andardireitaverde") {
+              this.playerroxo.anims.play("idledireitaverde", true);
+            } else if (currentKey === "andaresquerdaverde") {
+              this.playerroxo.anims.play("idleesquerdaverde", true);
+            } else if (currentKey === "andarfrenteverde") {
+              this.playerroxo.anims.play("idlefrenteverde", true);
+            } else if (currentKey === "andarcostas") {
+              this.playerroxo.anims.play("idlecostas", true);
+            }
           }
         }
-      }
-     else if (this.collectIa) {
-        // Idle baseado na última direção
-        if (this.playerroxo.anims.currentAnim) {
-          const currentKey = this.playerroxo.anims.currentAnim.key;
-          if (currentKey === "andardireitaverde") {
-            this.playerroxo.anims.play("idledireitaverde", true);
-          } else if (currentKey === "andaresquerdaverde") {
-            this.playerroxo.anims.play("idleesquerdaverde", true);
-          } else if (currentKey === "andarfrenteverde") {
-            this.playerroxo.anims.play("idlefrenteverde", true);
-          } else if (currentKey === "andarcostas") {
-            this.playerroxo.anims.play("idlecostas", true);
-          }
-        }
-      }
-  
       }
 
-      this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
+      this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y);
       if (this.passos && this.passos.isPlaying) {
         this.passos.stop();
       }
       return;
     }
 
-
-  
     const cursores = this.input.keyboard.createCursorKeys();
     const qe = this.input.keyboard.addKeys("E, Q");
 
@@ -1613,7 +1610,7 @@ class scene1 extends Phaser.Scene {
     } else {
       if (this.passos.isPlaying) this.passos.stop();
     }
-    if (!this.collectIa){
+    if (!this.collectIa) {
       if (horizontal > 0.1) {
         this.playerroxo.anims.play("andardireita", true);
       } else if (horizontal < -0.1) {
@@ -1638,8 +1635,7 @@ class scene1 extends Phaser.Scene {
         }
       }
     } else if (this.collectIa) {
-
-     // this.playerIcon.anims.play("playerIconVerde")
+      // this.playerIcon.anims.play("playerIconVerde")
 
       if (horizontal > 0.1) {
         this.playerroxo.anims.play("andardireitaverde", true);
@@ -1664,7 +1660,7 @@ class scene1 extends Phaser.Scene {
           }
         }
       }
-  }
+    }
 
     // Movimento dos inimigos aliens
     if (this.inimigosaliens) {
@@ -1690,7 +1686,7 @@ class scene1 extends Phaser.Scene {
           enemy.lastDirection = "down";
         }
 
-      if (distance > 0) {
+        if (distance > 0) {
           if (Math.abs(dx) > Math.abs(dy)) {
             enemy.anims.play("enemyWalk", true);
             enemy.setFlipX(dx > 0);
@@ -1715,8 +1711,8 @@ class scene1 extends Phaser.Scene {
           id: alien.getData("id"),
           x: alien.x,
           y: alien.y,
-         // vx: alien.body.velocity.x,
-         // vy: alien.body.velocity.y,
+          // vx: alien.body.velocity.x,
+          // vy: alien.body.velocity.y,
           flipX: alien.flipX, // Lado para onde está olhando
           anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null, // Animação atual
         });
@@ -1727,14 +1723,14 @@ class scene1 extends Phaser.Scene {
     }
   } // fim update
 
-    verificarMinigamesAtivos() {
-      for (let i = 0; i < this.listaMinigames.length; i++) {
-        if (this.scene.isActive(this.listaMinigames[i])) {
-          return true;
-        }
+  verificarMinigamesAtivos() {
+    for (let i = 0; i < this.listaMinigames.length; i++) {
+      if (this.scene.isActive(this.listaMinigames[i])) {
+        return true;
       }
-      return false;
     }
+    return false;
+  }
   // Método de spawn dentro da sua scene1.js
   spawnAlienAleatorio() {
     if (!this.positionP2) {
@@ -1785,37 +1781,36 @@ class scene1 extends Phaser.Scene {
     this.updateSemicircleLifeBar();
 
     // Teletransporta playerroxo, destrói inimigos e bloqueia spawn por 1 segundo
-    this.playerroxo.setPosition(111, 1573)
-    .anims.play("idlefrente", true);
+    this.playerroxo.setPosition(111, 1573).anims.play("idlefrente", true);
 
     if (this.puzzleAberto) {
       console.log("O Alien pegou o player! Fechando o puzzle ativo...");
 
       // 2. O "truque" está aqui: um loop que manda fechar TODOS da lista
-      this.listaMinigames.forEach(minigame => {
+      this.listaMinigames.forEach((minigame) => {
         this.scene.stop(minigame); // O Phaser só vai fechar o que estiver aberto de fato
       });
     }
-   
-if (this.inimigosaliens) {
-      // Cria uma cópia da lista de aliens vivos para não bugar enquanto deleta
-      let aliensVivos = this.inimigosaliens.getChildren().slice(); 
 
-      aliensVivos.forEach(alien => {
+    if (this.inimigosaliens) {
+      // Cria uma cópia da lista de aliens vivos para não bugar enquanto deleta
+      let aliensVivos = this.inimigosaliens.getChildren().slice();
+
+      aliensVivos.forEach((alien) => {
         let idAlien = alien.getData("id");
-        
+
         if (idAlien) {
           // Usa o MESMO socket do laser para avisar a scene0 para destruir este ID
           this.game.socket.emit("destruir-alien", idAlien);
         }
-        
+
         // Destrói o alien localmente
         alien.destroy();
       });
     }
     this.enemySpawnBlocked = true;
     this.time.delayedCall(1000, () => {
-    this.enemySpawnBlocked = false;
+      this.enemySpawnBlocked = false;
     });
 
     // Efeito de piscada do playerroxo (300ms visível/invisível, 1000ms total)
@@ -1831,7 +1826,6 @@ if (this.inimigosaliens) {
     this.time.delayedCall(900, () => this.playerroxo.setVisible(false));
     this.time.delayedCall(1000, () => this.playerroxo.setVisible(true));
 
-
     // Reativa colisão e invencibilidade após 1 segundo
     this.time.delayedCall(1000, () => {
       this.invulnerable = false;
@@ -1840,7 +1834,6 @@ if (this.inimigosaliens) {
   }
 
   teletransporte() {
-    
     if (this.fase4) {
       this.porta.anims.play("portaabrindo", true);
       this.time.delayedCall(1000, () => {
@@ -1856,7 +1849,6 @@ if (this.inimigosaliens) {
   }
 
   teletransporte2() {
-    
     //if (this.antenasconsertadas === 3)
     {
       this.porta2.anims.play("portaabrindo", true);
