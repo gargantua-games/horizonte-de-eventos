@@ -12,6 +12,8 @@ const io = new Server(httpServer, {
   },
 });
 
+let salasProntas = {};
+
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
@@ -34,6 +36,33 @@ io.on("connection", (socket) => {
     console.log(`Changing scene to ${scene} in room ${room}`);
     socket.to(room).emit("change-scene", scene);
   });
+
+ socket.on("player-ready-scene2", (room) => {
+  console.log(`[Server] Jogador ${socket.id} enviou READY para a sala: ${room}`);
+
+   if (!room) return;
+   
+   socket.join(room);
+
+  // Se a sala não existir no objeto, cria um novo conjunto de IDs
+  if (!salasProntas[room]) {
+    salasProntas[room] = new Set();
+  }
+
+  // Adiciona o ID do socket atual na lista da sala
+  salasProntas[room].add(socket.id);
+
+  console.log(`[Server] Sala ${room} tem ${salasProntas[room].size} jogador(es) pronto(s).`);
+
+  // Quando houver 2 conexões distintas prontas na mesma sala
+  if (salasProntas[room].size === 2) {
+    console.log(`[Server] ==> Sala ${room} COMPLETA! Enviando 'start-match' para os dois.`);
+    io.to(room).emit("start-match");
+    
+    // Limpa a lista da sala para permitir que eles reiniciem se quiserem
+    salasProntas[room].clear(); 
+  }
+});
 
   socket.on("scene0", (room, state) => {
     if (room) {
@@ -74,21 +103,30 @@ io.on("connection", (socket) => {
     }
     });
 
-  socket.on("faseFinalP1", (room, state) => {
-    if (room) {
-      socket.to(room).emit("faseFinalP1", state);
-    } else {
-      socket.broadcast.emit("faseFinalP1");
-    }
-    });
+ socket.on("move-ship", (data) => {
+  socket.to(data.room).emit("ship-moved", data);
+});
 
-  socket.on("faseFinalP2", (room, state) => {
-    if (room) {
-      socket.to(room).emit("faseFinalP2", state);
-    } else {
-      socket.broadcast.emit("faseFinalP2");
-    }
-  });
+socket.on("shoot", (room) => {
+  socket.to(room).emit("ship-shot");
+});
+
+// Sincronização de Inimigos e Asteroides (NOVOS)
+socket.on("spawn-asteroid", (data) => {
+  socket.to(data.room).emit("spawn-asteroid", data);
+});
+
+socket.on("spawn-enemy", (data) => {
+  socket.to(data.room).emit("spawn-enemy", data);
+});
+
+socket.on("enemy-shoot", (data) => { 
+  socket.broadcast.emit("enemy-shoot", data); 
+});
+
+socket.on("boss-attack", (data) => {
+  socket.to(data.room).emit("boss-attack", data);
+});
   
   socket.on("scene2", (room, state) => {
     if (room) {

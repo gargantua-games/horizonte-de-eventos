@@ -17,6 +17,7 @@ class scene2 extends Phaser.Scene {
 
    /* this.isP1 = data.souP1; 
     this.game.isP1 = data.souP1;*/
+    this.localRole = data.role;
     
     this.engrenagem = data.engrenagem !== undefined ? Phaser.Math.Clamp(data.engrenagem, 0, 4) : 0;
 
@@ -59,13 +60,6 @@ class scene2 extends Phaser.Scene {
 
   create() {
     this.physics = this.matter;
-    //this.isP1 = this.game.isP1;
-    // Apenas um log para você testar no console do navegador se deu certo:
-    if (this.isP1) {
-        console.log("Eu sou o Jogador 1 (Piloto). Eu controlo o movimento!");
-    } else {
-        console.log("Eu sou o Jogador 2 (Atirador). Eu controlo os tiros!");
-    }
 
     this.matter.world.setBounds(0, 0, 2000, 800);
     this.cameras.main.setBounds(0, 0, 2000, 800);
@@ -169,8 +163,37 @@ class scene2 extends Phaser.Scene {
 
     this.nextFire = 0;
     this.enemyIndex = 0;
+    this.jogoIniciado = false;
 
+// --- BLINDAGEM E DEBUG DA SINCRONIZAÇÃO ---
+console.log("[Phaser] Minha sala atual guardada é:", this.game.room);
+
+// 1. Primeiro preparamos o ouvido para escutar o servidor
+//this.game.socket.off("start-match"); // Remove ouvintes antigos se a cena reiniciar
+this.game.socket.on("start-match", () => {
+  console.log("[Phaser] RECEBIDO: 'start-match' do servidor! Liberando o jogo...");
+  this.jogoIniciado = true;
+  
+  // O Piloto inicia os loops de inimigos
+  if (this.localRole === "pilot") {
+    console.log("[Phaser] Sou o Piloto, iniciando spawns...");
     this.spawnNextEnemy();
+    this.asteroidTimerEvent = this.time.addEvent({ 
+        delay: this.frequenciaAsteroides, 
+        loop: true, 
+        callback: this.spawnAsteroide, 
+        callbackScope: this 
+    });
+  }
+});
+
+// 2. Só depois de preparar o ouvido, enviamos o aviso para o servidor
+if (this.game.room) {
+  console.log("[Phaser] ENVIANDO: 'player-ready-scene2' para a sala", this.game.room);
+  this.game.socket.emit("player-ready-scene2", this.game.room);
+} else {
+  console.error("[Phaser] ERRO CRÍTICO: 'this.game.room' está vazio/undefined! A sincronização vai falhar.");
+}
 
     this.matter.world.on('collisionstart', (event) => {
       event.pairs.forEach(pair => {
@@ -206,21 +229,44 @@ class scene2 extends Phaser.Scene {
       botaoVisual.on('pointerdown', () => this.scene.restart({ engrenagem: btnConfig.valor }));
     });
 
-    this.asteroidTimerEvent = this.time.addEvent({ delay: this.frequenciaAsteroides, loop: true, callback: this.spawnAsteroide, callbackScope: this });
+    //this.asteroidTimerEvent = this.time.addEvent({ delay: this.frequenciaAsteroides, loop: true, callback: this.spawnAsteroide, callbackScope: this });
   
-   // if (this.isP1) {
-    this.game.socket.on("p2-atirou", () => {
-        this.dispararTiro(); // P1 cria a bala na tela dele
+  if (this.localRole === "shooter") {
+    this.game.socket.on("ship-moved", (shipData) => {
+      this.nave.x = shipData.x;
+      this.nave.y = shipData.y;
     });
-  //}else {
-      // O Atirador (P2) fica ouvindo o Piloto (P1) para atualizar a posição da nave na tela dele
-      this.game.socket.on("nave-moveu", (dados) => {
-        if (this.nave && this.nave.active) {
-          this.nave.y = dados.y;
-          this.nave.setVelocityY(dados.velY);
-        }
-      });
-   // }
+
+   this.game.socket.on("spawn-asteroid", (data) => {
+      this.spawnAsteroide(null, data); 
+    });
+
+    this.game.socket.on("spawn-enemy", (data) => {
+      this.spawnNextEnemy(data);
+    });
+
+    this.game.socket.on("enemy-shoot", (idUnico) => {
+      let inimigo = this.enemies.getChildren().find(e => e.idUnico === idUnico);
+      if (inimigo) this.atirarInimigo(inimigo, true);
+    });
+
+    this.game.socket.on("boss-attack", (data) => {
+      let boss = this.enemies.getChildren().find(e => e.idUnico === data.id);
+      if (boss) this.atirarInimigo(boss, data.ataque); // Força o ataque que o piloto sorteou
+    });
+
+   /* this.game.socket.on("destroy-entity", (id) => {
+       this.destruirEntidadeRemota(id); // Para quando o piloto avisar que algo morreu
+    });*/
+
+  }
+
+  // Lógica de Ambos: Os dois precisam escutar quando um tiro é disparado
+  // para instanciar o laser na tela ao mesmo tempo
+  this.game.socket.on("ship-shot", () => {
+    this.dispararTiro(); // Sua função que cria o tiro na tela
+  });
+
     this.game.socket.on("scene2", state => {
       if (state.engrenagens) {
         this.engrenagem = state.engrenagens
@@ -234,68 +280,62 @@ class scene2 extends Phaser.Scene {
 
   update(time, delta) {
     this.space.tilePositionX += this.velocidadeFundo;
+    if (!this.jogoIniciado) return;
     if (this.playerIsDead) return;
 
-    // =========================================================
-    // JOGADOR 1: PILOTO (Move a nave verticalmente)
-    // =========================================================
-    //if (this.isP1) {
-const pad = (this.input.gamepad && this.input.gamepad.total > 0)
-        ? this.input.gamepad.getPad(0)
-        : null;
+  const pad = (this.input.gamepad && this.input.gamepad.total > 0)
+    ? this.input.gamepad.getPad(0)
+    : null;
+
+    // 1. Lógica do PILOTO (Lê o gamepad e move)
+  if (this.localRole === "pilot") {
+    // ... (Seu código de ler o gamepad e mover a nave: this.ship.setVelocity(...))
         
     let vertical = 0;
     
-    // Se o pad existir e tiver eixos, pega o valor do eixo Y (geralmente index 1)
-    if (pad && pad.axes && pad.axes[1]) {
-        vertical = pad.axes[1].value; // No Phaser padrão usa-se .value e não .getValue()
+    
+    if (pad && pad.axes.length > 0) {
+        vertical = pad.axes[1].getValue ? pad.axes[1].getValue() : pad.axes[1].value; 
     }
         
-      //if (pad) { vertical = pad.leftStick.y; }
-
-      if (vertical > 1) {
-        this.nave.setVelocityY(this.statusNave.velocidade);
-      } else if (vertical < -1) {
-        this.nave.setVelocityY(-this.statusNave.velocidade);
-      } else {
-        this.nave.setVelocityY(0);
-      }
-      this.nave.setVelocityX(0); // Trava movimento horizontal
-
-      // Envia posição atualizada para o P2
-      this.game.socket.emit("mover-nave-fase2", {
+    // --- CORREÇÃO DO MOVIMENTO SUAVE ---
+    // Usamos o Math.abs para verificar a deadzone tanto para cima como para baixo
+    if (Math.abs(vertical) > 0.1) {
+      
+      this.nave.setVelocityY((vertical * this.statusNave.velocidade) / 60);
+    } else { 
+      // Soltou o controle ou está na deadzone
+      this.nave.setVelocityY(0);
+    }
+      this.nave.setVelocityX(0);
+    // Se a nave se moveu, avisa o servidor para atualizar a tela do atirador
+    if (this.nave.body.velocity.x !== 0 || this.nave.body.velocity.y !== 0) {
+      this.game.socket.emit("move-ship", {
         room: this.game.room,
-        y: this.nave.y,
-        velY: this.nave.body.velocity.y
+        x: this.nave.x,
+        y: this.nave.y
       });
-   // }
+    }
+  }
 
-    // =========================================================
-    // JOGADOR 2: ATIRADOR (Verifica input e cadência)
-    // =========================================================
-   // if (!this.isP1) {
-     // const pad = this.input.gamepad && this.input.gamepad.total > 0 ? this.input.gamepad.getPad(0) : null;
-        
-      if (!this.teclaEspaco) {
+  // 2. Lógica do ATIRADOR (Lê o botão de atirar)
+  if (this.localRole === "shooter") {
+    // ... (Seu código de detectar o input de tiro, ex: Phaser.Input.Keyboard.JustDown(spacebar))
+    if (!this.teclaEspaco) {
         this.teclaEspaco = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       }
 
       let tentouAtirar = Phaser.Input.Keyboard.JustDown(this.teclaEspaco) || (pad && pad.buttons[0].pressed);
 
-      // O SEU IF DE CADÊNCIA VAI AQUI:
       if (tentouAtirar && time > this.nextFire) {
         this.nextFire = time + this.statusNave.cadencia;
 
         this.dispararTiro(); // P2 cria a bala na tela dele localmente
+        this.game.socket.emit("shoot", this.game.room);
+      }    
+  }
 
-        // Avisa o servidor para fazer o P1 disparar também
-        this.game.socket.emit("atirar-fase2", { room: this.game.room });
-      }
-   // }
 
-    // =========================================================
-    // LÓGICA GLOBAL (Roda nos dois computadores igualmente)
-    // =========================================================
     
     // Suas limpezas de tela originais:
     this.playerBullets.getChildren().forEach((b) => { if (b.x > 1150) b.destroy(); });
@@ -392,7 +432,7 @@ const pad = (this.input.gamepad && this.input.gamepad.total > 0)
     }
   }
 
-  spawnAsteroide(customY) {
+  /*spawnAsteroide(customY) {
     if (this.playerIsDead) return;
 
     let yFinal = typeof customY === 'number' ? customY : Phaser.Math.Between(50, 750);
@@ -418,8 +458,64 @@ const pad = (this.input.gamepad && this.input.gamepad.total > 0)
     asteroide.setAngularVelocity(Phaser.Math.FloatBetween(-0.04, 0.04));
 
     this.asteroides.add(asteroide);
-  }
+  }*/
+spawnAsteroide(customY, remoteData = null) {
+    if (this.playerIsDead) return;
 
+    // Se for o atirador e não recebeu dados do socket, bloqueia a criação aleatória
+    if (this.localRole === "shooter" && !remoteData) return;
+
+    let yFinal, escala, angulo, velX, angVel, astID;
+
+    if (remoteData) {
+      // ATIRADOR: Copia exatamente os valores que o Piloto mandou
+      yFinal = remoteData.y;
+      escala = remoteData.escala;
+      angulo = remoteData.angulo;
+      velX = remoteData.velX;
+      angVel = remoteData.angVel;
+      astID = remoteData.id;
+    } else {
+      // PILOTO: Sorteia os valores e avisa o servidor
+      yFinal = typeof customY === 'number' ? customY : Phaser.Math.Between(50, 750);
+      escala = Phaser.Math.FloatBetween(1.2, 1.8);
+      angulo = Phaser.Math.Between(0, 360);
+      
+      let velBase = this.enemyIndex === 4 ? -450 : -280;
+      velBase = velBase * this.velModAsteroides;
+      velX = Phaser.Math.Between(velBase - 100, velBase + 50) / 60;
+      angVel = Phaser.Math.FloatBetween(-0.04, 0.04);
+      
+      // Gera ID único
+      if (!this.entidadeIdCount) this.entidadeIdCount = 0;
+      astID = "ast_" + this.entidadeIdCount++;
+
+      this.game.socket.emit("spawn-asteroid", {
+        room: this.game.room, y: yFinal, escala: escala, angulo: angulo, velX: velX, angVel: angVel, id: astID
+      });
+    }
+
+    // A partir daqui, ambos criam o objeto com os mesmos valores
+    let asteroide = this.matter.add.sprite(1100, yFinal, "meteoro");
+    asteroide.setCircle(14 * escala);
+    asteroide.setScale(escala);
+    asteroide.setSensor(true);
+    asteroide.setIgnoreGravity(true);
+    asteroide.setFrictionAir(0);
+    asteroide.tipo = 'asteroide';
+    asteroide.idUnico = astID; // Salva o ID para sabermos quem é quem
+
+    asteroide.setFrame(0);
+    asteroide.setAngle(angulo);
+    asteroide.hp = Math.round(4 * this.modAmbiente);
+    asteroide.setDepth(6);
+
+    asteroide.setVelocityX(velX);
+    asteroide.setAngularVelocity(angVel);
+
+    this.asteroides.add(asteroide);
+  }
+  
   atingirAsteroide(tiro, asteroide) {
     if (!tiro.active || !asteroide.active || !asteroide.body) return;
     asteroide.hp -= tiro.dano;
@@ -438,7 +534,113 @@ const pad = (this.input.gamepad && this.input.gamepad.total > 0)
     }
   }
 
-  spawnNextEnemy() {
+  spawnNextEnemy(remoteData = null) {
+    // Atirador não spawna sozinho pelo timer/chamada direta
+    if (this.localRole === "shooter" && !remoteData) return;
+
+    let eID;
+    if (remoteData) {
+      eID = remoteData.id;
+      this.enemyIndex = remoteData.enemyIndex;
+    } else {
+      if (!this.entidadeIdCount) this.entidadeIdCount = 0;
+      eID = "ene_" + this.entidadeIdCount++;
+      this.game.socket.emit("spawn-enemy", { room: this.game.room, id: eID, enemyIndex: this.enemyIndex });
+    }
+
+    const spawnX = 700;
+    const spawnY = 400;
+    let e;
+
+    // ... [MANTENHA TODO O SEU CÓDIGO DO MEIO EXATAMENTE COMO ESTÁ (os IFs de status, caixa de colisão, hp, boss, etc)] ...
+    if (this.enemyIndex < 3) {
+      let keyInimigo = "naveinimiga" + (this.enemyIndex + 1);
+      e = this.matter.add.sprite(spawnX, spawnY, keyInimigo);
+
+      // 1. Define a escala visual primeiro
+      let enemyScale = (this.enemyIndex === 2) ? 1.0 : 2.0;
+      e.setScale(enemyScale);
+
+      // 2. MODIFICA AQUI AS COLISÕES DOS INIMIGOS COMUNS (UMA POR UMA)
+      let eWidth, eHeight;
+      switch (this.enemyIndex) {
+        case 0: // Nave Inimiga 1
+          eWidth = 70;   // Largura da colisão em píxeis
+          eHeight = 70;  // Altura da colisão em píxeis
+          break;
+        case 1: // Nave Inimiga 2
+          eWidth = 75;
+          eHeight = 75;
+          break;
+        case 2: // Nave Inimiga 3
+          eWidth = 75;
+          eHeight = 80;
+          break;
+      }
+      e.setRectangle(eWidth, eHeight);
+
+      // 3. Roda os inimigos comuns para a Esquerda
+      e.setAngle(-90);
+
+      // ... (restos dos comandos originais dos inimigos comuns)
+      e.setSensor(true);
+      e.setIgnoreGravity(true);
+      e.setFixedRotation();
+      e.tipo = 'enemy';
+      e.setDepth(10);
+      e.play(keyInimigo + "_voando");
+
+      const hpBaseInimigosComuns = [20, 25, 30, 32, 35];
+      e.hp = hpBaseInimigosComuns[this.engrenagem] + (this.enemyIndex * 5);
+      e.isBoss = false;
+
+    } else if (this.enemyIndex === 3) {
+      e = this.matter.add.sprite(spawnX, spawnY, "boss");
+      e.setScale(1.2);
+
+      // 4. MODIFICA AQUI A COLISÃO DO BOSS
+      e.setRectangle(110, 110); // Ajusta a caixa de colisão do Boss
+
+      e.setAngle(-90);
+
+      // CORREÇÃO: Propriedades de física e identificação que faltavam no Boss
+      e.setSensor(true);          // Permite detetar os tiros sem criar barreiras físicas duras
+      e.setIgnoreGravity(true);   // Ignora qualquer gravidade do mundo
+      e.setFixedRotation();       // Impede o Boss de girar se colidir com algo
+      e.tipo = 'enemy';
+
+      e.play("boss_voando");
+      e.setDepth(10);
+
+      const hpBaseBoss = [150, 250, 350, 500, 650];
+      e.hp = hpBaseBoss[this.engrenagem];
+
+      e.isBoss = true;
+      e.isInvulnerable = false;
+      e.escudoSprite = null;
+
+      this.bossText.setVisible(true);
+      this.velocidadeFundo = 8;
+    } else {
+
+      return;
+    }
+
+    e.maxHp = e.hp;
+    e.barraVida = this.add.graphics();
+    e.isDead = false;
+    e.indexInimigo = this.enemyIndex;
+    e.idUnico = eID; // NOVA LINHA: Salva o ID no inimigo
+
+    this.enemies.add(e);
+    this.configurarMovimentoInimigo(e);
+    
+    // Incrementa apenas se for o Piloto, para manter a contagem certa (o atirador pega do remoteData)
+    if (this.localRole === "pilot") {
+      this.enemyIndex++;
+    }
+  }
+  /*spawnNextEnemy() {
     const spawnX = 700;
     const spawnY = 400;
     let e;
@@ -523,7 +725,7 @@ const pad = (this.input.gamepad && this.input.gamepad.total > 0)
     this.enemies.add(e);
     this.configurarMovimentoInimigo(e);
     this.enemyIndex++;
-  }
+  }*/
 
   configurarMovimentoInimigo(inimigo) {
     if (inimigo.isBoss) {
@@ -546,26 +748,41 @@ const pad = (this.input.gamepad && this.input.gamepad.total > 0)
       });
     }
 
-    inimigo.shootTimer = this.time.addEvent({
+    if (this.localRole === "pilot") {
+      inimigo.shootTimer = this.time.addEvent({
+        delay: inimigo.isBoss ? 6000 : (1300 / this.modAmbiente),
+        loop: true,
+        callback: () => this.atirarInimigo(inimigo)
+      });
+    }
+
+    /*inimigo.shootTimer = this.time.addEvent({
       delay: inimigo.isBoss ? 6000 : (1300 / this.modAmbiente),
       loop: true,
       callback: () => this.atirarInimigo(inimigo)
-    });
+    });*/
   }
 
-  atirarInimigo(inimigo) {
+  atirarInimigo(inimigo, ataqueForcado = null) {
     if (!inimigo || !inimigo.active || inimigo.isDead || this.playerIsDead) return;
 
     if (inimigo.isBoss) {
-      let sorteioAtaque = Phaser.Math.Between(1, 6);
-
-      if (sorteioAtaque === 4 && inimigo.isInvulnerable) {
-        sorteioAtaque = 2;
+      // --- INÍCIO DA MODIFICAÇÃO DO BOSS ---
+      let sorteioAtaque;
+      
+      // Se veio um ataque pelo socket, usa ele. Se não (Piloto), sorteia e emite.
+      if (ataqueForcado) {
+        sorteioAtaque = ataqueForcado;
+      } else {
+        sorteioAtaque = Phaser.Math.Between(1, 6);
+        if (sorteioAtaque === 4 && inimigo.isInvulnerable) {
+          sorteioAtaque = 2;
+        }
+        this.game.socket.emit("boss-attack", { room: this.game.room, id: inimigo.idUnico, ataque: sorteioAtaque });
       }
 
       inimigo.paralisado = true;
       inimigo.setVelocityY(0);
-
       inimigo.play("boss_preparando");
 
       this.time.delayedCall(800, () => {
@@ -750,6 +967,10 @@ const pad = (this.input.gamepad && this.input.gamepad.total > 0)
       });
     }
     else {
+      if (!ataqueForcado && this.localRole === "pilot") {
+        this.game.socket.emit("enemy-shoot", inimigo.idUnico);
+      }
+
       let velTiroComum = -290 * (this.modAmbiente >= 1 ? this.modAmbiente : 0.8);
       let vX = velTiroComum / 60;
 

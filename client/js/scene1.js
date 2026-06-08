@@ -1334,8 +1334,10 @@ class scene1 extends Phaser.Scene {
       });
 
       if (this.inFinalDoorP1) {
+        
+        this.game.socket.removeAllListeners();
         this.scene.stop("scene1");
-        this.scene.start("scene2");
+        this.scene.start("scene2", { role: "shooter" });
       }
     }
 

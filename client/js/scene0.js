@@ -1074,7 +1074,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -2065,10 +2065,13 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
              inFinalDoorP1: this.inFinalDoorP1,  
     });
 
-    if (this.inFinalDoorP2) {
-            
-              this.scene.stop("scene0");
-              this.scene.start("scene2");
+      if (this.inFinalDoorP2) {
+        this.physics.pause();
+        this.physics.world.shutdown();
+      
+        this.game.socket.removeAllListeners();
+        this.scene.stop("scene0");
+        this.scene.start("scene2", { role: "pilot" });
 
           }
        
