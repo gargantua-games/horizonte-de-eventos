@@ -12,7 +12,12 @@ class scene2 extends Phaser.Scene {
     });
   }
 
+
   init(data) {
+
+   /* this.isP1 = data.souP1; 
+    this.game.isP1 = data.souP1;*/
+    
     this.engrenagem = data.engrenagem !== undefined ? Phaser.Math.Clamp(data.engrenagem, 0, 4) : 0;
 
     this.atributosNave = [
@@ -54,6 +59,14 @@ class scene2 extends Phaser.Scene {
 
   create() {
     this.physics = this.matter;
+    //this.isP1 = this.game.isP1;
+    // Apenas um log para você testar no console do navegador se deu certo:
+    if (this.isP1) {
+        console.log("Eu sou o Jogador 1 (Piloto). Eu controlo o movimento!");
+    } else {
+        console.log("Eu sou o Jogador 2 (Atirador). Eu controlo os tiros!");
+    }
+
     this.matter.world.setBounds(0, 0, 2000, 800);
     this.cameras.main.setBounds(0, 0, 2000, 800);
 
@@ -194,42 +207,97 @@ class scene2 extends Phaser.Scene {
     });
 
     this.asteroidTimerEvent = this.time.addEvent({ delay: this.frequenciaAsteroides, loop: true, callback: this.spawnAsteroide, callbackScope: this });
+  
+   // if (this.isP1) {
+    this.game.socket.on("p2-atirou", () => {
+        this.dispararTiro(); // P1 cria a bala na tela dele
+    });
+  //}else {
+      // O Atirador (P2) fica ouvindo o Piloto (P1) para atualizar a posição da nave na tela dele
+      this.game.socket.on("nave-moveu", (dados) => {
+        if (this.nave && this.nave.active) {
+          this.nave.y = dados.y;
+          this.nave.setVelocityY(dados.velY);
+        }
+      });
+   // }
+    this.game.socket.on("scene2", state => {
+      if (state.engrenagens) {
+        this.engrenagem = state.engrenagens
+      }
+        
+    })
+
+    
+
   }
 
   update(time, delta) {
     this.space.tilePositionX += this.velocidadeFundo;
-
     if (this.playerIsDead) return;
 
-    this.nave.x = 100;
-    this.nave.setVelocityX(0);
-    this.nave.y = Phaser.Math.Clamp(this.nave.y, 40, 760);
-
-    if (this.cursors.up.isDown) {
-      this.nave.setVelocityY(-this.statusNave.velocidade / 60);
-    } else if (this.cursors.down.isDown) {
-      this.nave.setVelocityY(this.statusNave.velocidade / 60);
-    } else {
-      this.nave.setVelocityY(0);
+    // =========================================================
+    // JOGADOR 1: PILOTO (Move a nave verticalmente)
+    // =========================================================
+    //if (this.isP1) {
+const pad = (this.input.gamepad && this.input.gamepad.total > 0)
+        ? this.input.gamepad.getPad(0)
+        : null;
+        
+    let vertical = 0;
+    
+    // Se o pad existir e tiver eixos, pega o valor do eixo Y (geralmente index 1)
+    if (pad && pad.axes && pad.axes[1]) {
+        vertical = pad.axes[1].value; // No Phaser padrão usa-se .value e não .getValue()
     }
+        
+      //if (pad) { vertical = pad.leftStick.y; }
 
-    const ratoClicado = this.input.activePointer.isDown;
-    if ((this.spaceKey.isDown || ratoClicado) && time > this.nextFire) {
-      // ATUALIZADO: Ajustado para x + 70 para o tiro nascer perfeitamente na ponta da nave maior
-      let tiro = this.matter.add.sprite(this.nave.x + 70, this.nave.y, this.spriteTiroJogador);
-      tiro.setRectangle(35, 10);
-      tiro.setSensor(true);
-      tiro.setIgnoreGravity(true);
-      tiro.setFrictionAir(0);
-      tiro.tipo = 'playerBullet';
-      tiro.setVelocityX(this.statusNave.velTiro / 60);
-      tiro.dano = this.statusNave.dano;
-      tiro.setDepth(5);
+      if (vertical > 1) {
+        this.nave.setVelocityY(this.statusNave.velocidade);
+      } else if (vertical < -1) {
+        this.nave.setVelocityY(-this.statusNave.velocidade);
+      } else {
+        this.nave.setVelocityY(0);
+      }
+      this.nave.setVelocityX(0); // Trava movimento horizontal
 
-      this.playerBullets.add(tiro);
-      this.nextFire = time + this.statusNave.cadencia;
-    }
+      // Envia posição atualizada para o P2
+      this.game.socket.emit("mover-nave-fase2", {
+        room: this.game.room,
+        y: this.nave.y,
+        velY: this.nave.body.velocity.y
+      });
+   // }
 
+    // =========================================================
+    // JOGADOR 2: ATIRADOR (Verifica input e cadência)
+    // =========================================================
+   // if (!this.isP1) {
+     // const pad = this.input.gamepad && this.input.gamepad.total > 0 ? this.input.gamepad.getPad(0) : null;
+        
+      if (!this.teclaEspaco) {
+        this.teclaEspaco = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+      }
+
+      let tentouAtirar = Phaser.Input.Keyboard.JustDown(this.teclaEspaco) || (pad && pad.buttons[0].pressed);
+
+      // O SEU IF DE CADÊNCIA VAI AQUI:
+      if (tentouAtirar && time > this.nextFire) {
+        this.nextFire = time + this.statusNave.cadencia;
+
+        this.dispararTiro(); // P2 cria a bala na tela dele localmente
+
+        // Avisa o servidor para fazer o P1 disparar também
+        this.game.socket.emit("atirar-fase2", { room: this.game.room });
+      }
+   // }
+
+    // =========================================================
+    // LÓGICA GLOBAL (Roda nos dois computadores igualmente)
+    // =========================================================
+    
+    // Suas limpezas de tela originais:
     this.playerBullets.getChildren().forEach((b) => { if (b.x > 1150) b.destroy(); });
     this.enemyBullets.getChildren().forEach((b) => {
       if (b.texture && b.texture.key === "feixelaser") return;
@@ -237,9 +305,9 @@ class scene2 extends Phaser.Scene {
     });
     this.asteroides.getChildren().forEach((a) => { if (a.x < -100 && a.body) a.destroy(); });
 
+    // Sua lógica de IA dos inimigos e desenho das barras de vida:
     this.enemies.getChildren().forEach((e) => {
       if (e.active && !e.isDead && e.barraVida) {
-
         if (e.isBoss && !e.paralisado && this.nave) {
           let speedBoss = 110 / 60;
           if (e.y < this.nave.y - 15) {
@@ -250,37 +318,49 @@ class scene2 extends Phaser.Scene {
             e.setVelocityY(0);
           }
         }
-
+      
         e.barraVida.clear();
 
         if (e.isBoss) {
           if (e.escudoSprite && e.escudoSprite.active) {
             e.escudoSprite.setPosition(e.x, e.y);
           }
-
           this.graphicsBarraBoss.clear();
           this.graphicsBarraBoss.fillStyle(0x333333, 1).fillRect(150, 45, 500, 20);
-
           let corBorda = e.isInvulnerable ? 0x00aaff : 0xff0000;
           this.graphicsBarraBoss.lineStyle(2, corBorda, 1).strokeRect(150, 45, 500, 20);
-
           const percentagemBoss = Math.max(0, e.hp / e.maxHp);
           this.graphicsBarraBoss.fillStyle(0xff0000, 1).fillRect(150, 45, 500 * percentagemBoss, 20);
         } else {
           const larguraBarra = 50;
           const alturaBarra = 6;
           const posX = e.x - larguraBarra / 2;
-          const posY = e.y - 55; // Ajustado ligeiramente para cima devido ao novo tamanho da nave
-
+          const posY = e.y - 55;
           e.barraVida.fillStyle(0x333333, 1).fillRect(posX, posY, larguraBarra, alturaBarra);
           const percentagem = Math.max(0, e.hp / e.maxHp);
           e.barraVida.fillStyle(0xff0000, 1).fillRect(posX, posY, larguraBarra * percentagem, alturaBarra);
         }
       }
     });
+  
+}
 
-    this.statusText.setText(`Inimigos Derrotados: ${Math.max(0, this.enemyIndex - 1)}/4`);
-  }
+  dispararTiro() {
+  // Evita criar tiros se a nave já foi destruída
+  if (!this.nave || !this.nave.active) return;
+
+  let tiro = this.matter.add.sprite(this.nave.x + 70, this.nave.y, this.spriteTiroJogador);
+  tiro.setRectangle(35, 10);
+  tiro.setSensor(true);
+  tiro.setIgnoreGravity(true);
+  tiro.setFrictionAir(0);
+  tiro.tipo = 'playerBullet';
+  tiro.setVelocityX(this.statusNave.velTiro / 60);
+  tiro.dano = this.statusNave.dano;
+  tiro.setDepth(5);
+
+  this.playerBullets.add(tiro);
+}
 
   processarColisao(objA, objB) {
     let tipos = [objA.tipo, objB.tipo];
