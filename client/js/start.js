@@ -162,7 +162,7 @@ class start extends Phaser.Scene {
       //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");
-      this.scene.start("preloader", { startScene: "scene0" });
+      this.scene.start("preloader", { startScene: "iniciov" });
       //this.padStartTriggered = true;
     } 
         if (qer.R.isDown) {
