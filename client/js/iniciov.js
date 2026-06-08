@@ -29,18 +29,28 @@ class iniciov extends Phaser.Scene {
       (this.scale.height - displayHeight) / 2,
     );
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
+     bg.setAlpha(0);
 
 
     this.text1 = this.add.text(
       322,
-      90,
-      "A nave em que você trabalha como engenheiro está sob ataque. Por sorte, seu colega na sala de controle consegue te ajudar em seu caminho para as naves de fuga. Mas seja rápido, sua nave se aproxima do horizonte de eventos de um buraco negro!",
+      110,
+      "A nave em que você trabalha como\nengenheiro está sob ataque. Por sorte,\nseu colega na sala de controle consegue te\najudar em seu caminho para as naves\nde fuga.Mas seja rápido, sua nave se\naproxima do horizonte de eventos de\num buraco negro!",
       {
         fontFamily: "sarpanchregular",
         fontSize: "20px",
         fill: "#63ff8a",
       },
     );
+    this.text1.setAlpha(0);
+
+    this.tweens.add({
+      targets: [bg, this.text1],
+      alpha: 1,
+      duration: 1200,
+      ease: "Linear",
+      delay: 200,
+    });
 
   }
 
