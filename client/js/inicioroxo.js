@@ -29,18 +29,29 @@ class inicioroxo extends Phaser.Scene {
       (this.scale.height - displayHeight) / 2,
     );
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
+    bg.setAlpha(0);
 
 
     this.text1 = this.add.text(
       322,
-      90,
-      "Quando a nave em que trabalhava ficou sob\nataque, você estava na sala de controle.\nAgora, sua função é abrir as portas\nremotamente para que seu colega possa coletar\ncartões de segurança que lhes darão acesso a uma nave de fuga.\nE para piorar, sua nave está se aproximando\ndo horizonte de eventos de um buraco negro!",
+      110,
+      "Quando a nave em que trabalhava ficou sob\nataque, você estava na sala de controle.\nAgora, sua função é abrir as portas\nremotamente para que seu colega possa\ncoletar cartões de segurança que lhes darão\nacesso a uma nave de fuga.\nE para piorar, sua nave está se aproximando\ndo horizonte de eventos de um buraco negro!",
       {
         fontFamily: "sarpanchregular",
-        fontSize: "20px",
+        fontSize: "19px",
         fill: "#63ff8a",
       },
     );
+    this.text1.setAlpha(0);
+
+     this.tweens.add({
+       targets: [bg, this.text1],
+       alpha: 1,
+       duration: 1200,
+       ease: "Linear",
+       delay: 200,
+     });
+
 
   }
 
