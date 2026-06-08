@@ -828,17 +828,7 @@ class scene1 extends Phaser.Scene {
         }
       }
     });
-    /*this.doorOpen = 4;
-      try {
-        this.game.socket.emit("scene1", this.game.room, {
-          doorOpen: {
-            key: this.doorOpen,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
-    });*/
+
     this.physics.add.collider(this.playerroxo, this.consoles);
 
     this.physics.add.collider(this.playerroxo, this.consoles2);
@@ -1009,9 +999,28 @@ class scene1 extends Phaser.Scene {
     this.physics.add.overlap(this.playerroxo, this.porta, null, null, this);
     this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
 
-    /*this.physics.add.overlap(this.playerroxo, this.porta, () => {
-      this.doorOpen += 1;
-      });*/
+    this.physics.add.overlap(this.playerroxo, this.portaFinal, () => {
+      if (this.doorOpen >= 5) {
+        this.inFinalDoorP2 = true;
+        this.game.socket.emit("faseFinal", this.game.room, {
+          inFinalDoorP2: this.inFinalDoorP2,
+        });
+        
+        this.portaFinal.anims.play("portaabrindo", true);
+        
+        this.portafinal.once("animationcomplete", (anim, frame) => {
+          if (anim.key === "open-door") {
+           
+            if (this.inFinalDoorP1 && this.inFinalDoorP2) {
+            
+              this.scene.stop("scene1");
+              this.scene.start("scene2");
+
+            }
+          }
+        })
+      }
+    })
 
     if (this.estoutrabalhando === false) {
       this.physics.add.collider(this.playerroxo, this.limitenorte);
@@ -1170,7 +1179,10 @@ class scene1 extends Phaser.Scene {
         this.lifeBarBgGraphics.fillStyle(0x000000, 1);
         this.lifeBarBgGraphics.fillCircle(0, 0, 36);
     
-    // this.uI = this.add.container(0, 0);
+      this.game.socket.on("faseFinal", (state) => {
+      this.inFinalDoorP1 = state.inFinalDoorP1;
+      })
+    
     this.game.socket.on("GameOver", (state) => {
       this.gameOver = state.gameOver;
     });

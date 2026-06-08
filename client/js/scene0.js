@@ -37,8 +37,10 @@ class scene0 extends Phaser.Scene {
     this.doubleInterecting = true;
     this.comunication = true;
     this.gameOver = false;
-    this.painelJaAcionado = false;
+    this.painelJaAcionado = 0;
     this.esperandoInteracao = 0;
+    this.inFinalDoorP1 = false;
+    this.inFinalDoorP2 = false;
   }
 
   init() {
@@ -918,9 +920,11 @@ class scene0 extends Phaser.Scene {
     this.painelO2 = this.physics.add.sprite(1231, 3351, "painelO2");
     this.painelO2
       .setImmovable(true)
+      .setScale(0.3)
+      .setScrollFactor(0.9, 1)
       .setPipeline("Light2D").body.allowGravity = false;
     
-    this.bigPainelO2 = this.add.sprite(340, 3396, "painelO2");
+    this.bigPainelO2 = this.add.sprite(1080, 3396, "painelO2");
     this.bigPainelO2.setScale(4).setDepth(999).setVisible(false);
 
     this.invisible3 = this.physics.add.sprite(540, 300, "invisible");
@@ -956,6 +960,16 @@ class scene0 extends Phaser.Scene {
           .setPosition(92, 3532)
           .setVelocity(0, 0)
           .anims.play("idleRightJP");
+        
+        this.painelJaAcionado = 0;
+        this.esperandoInteracao = 0;
+        if (this.bigPainelLuz.visible) {
+          this.bigPainelLuz.setVisible(false);
+        }
+
+        if (this.bigPainelO2.visible) {
+          this.bigPainelO2.setVisible(false);
+        }
 
         this.o2 = 100;
         this.o2Text.setText("Oxigênio: " + this.o2 + "%");
@@ -968,7 +982,7 @@ class scene0 extends Phaser.Scene {
           this.collectEng5 = false;
         }
 
-        this.o2 = 100;
+  
         this.platMoviment = false
         this.stopPlatformMovement();
         this.life -= 1;
@@ -1209,8 +1223,8 @@ class scene0 extends Phaser.Scene {
     });
 
 this.physics.add.overlap(this.player, this.painelLuz, () => {
-  if (this.painelJaAcionado) return;
-  this.painelJaAcionado = true;
+  if (this.painelJaAcionado === 1) return;
+  this.painelJaAcionado = 1;
 
   this.painelLuz.disableBody(true, false);
   this.bigPainelLuz.setVisible(true);
@@ -1221,8 +1235,8 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
 });
 
    this.physics.add.overlap(this.player, this.painelO2, () => {
-  if (this.painelJaAcionado) return;
-  this.painelJaAcionado = true;
+  if (this.painelJaAcionado === 2) return;
+  this.painelJaAcionado = 2;
 
   this.painelO2.disableBody(true, false);
   this.bigPainelO2.setVisible(true);
@@ -1516,6 +1530,39 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
       }
     });
 
+    this.physics.add.overlap(this.player, this.door25, () => {
+      if (this.doorOpen >= 5) {
+        setTimeout(() => {
+          this.movingP1 = false;
+        }, 200);
+        this.player.setVelocity(0, 100);
+        if (this.direction) {
+          this.player.anims.play("idleRightJP", true);
+        } else if (!this.direction) {
+          this.player.anims.play("idleLeftJP", true);
+        }
+        this.inFinalDoorP1 = true;
+        this.game.socket.emit("faseFinal", this.game.room, {
+             engrenagens: this.score,
+             inFinalDoorP1: this.inFinalDoorP1,  
+        });
+        
+        this.door25.anims.play("open-door", true);
+        this.light25.setColor(0x90ee90);
+        this.door25.once("animationcomplete", (anim, frame) => {
+          if (anim.key === "open-door") {
+           
+            if (this.inFinalDoorP1 && this.inFinalDoorP2) {
+            
+              this.scene.stop("scene0");
+              this.scene.start("scene2");
+
+          }
+          }
+        });
+      }
+    });
+
     this.layerPiso.setCollisionByProperty({ collides: true });
 
     // Texto de posição do player atualizado a cada segundo
@@ -1718,7 +1765,11 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
           this.engrenagemIcon,
           ])
           
-        this.uI.setScrollFactor(0, 0);
+    this.uI.setScrollFactor(0, 0);
+    
+    this.game.socket.on("faseFinal", (state) => {
+      this.inFinalDoorP2 = state.inFinalDoorP2;
+    })
 
     this.game.socket.on("GameOver", (state) => {
       this.gameOver = state.gameOver;

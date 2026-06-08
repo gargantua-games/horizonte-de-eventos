@@ -71,6 +71,10 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("GameOver");
     });
 
+   socket.on("faseFinal", (room, state) => {
+     socket.broadcast.emit("faseFinal");
+    });
+
   socket.on("scene2", (room, state) => {
     if (room) {
       socket.to(room).emit("scene2", state);
