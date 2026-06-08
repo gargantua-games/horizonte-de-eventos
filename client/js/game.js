@@ -7,6 +7,7 @@ import preloader from "./preloader.js";
 import gameover1 from "./gameover1.js";
 import gameover2 from "./gameover2.js";
 import inicioroxo from "./inicioroxo.js";
+import iniciov from "./iniciov.js"
 import termo from "../teste_puzzle/termo.js";
 import quebraCabeca from "../teste_puzzle/quebraCabeca.js";
 import tetravex from "../teste_puzzle/tetravex.js";
@@ -28,6 +29,7 @@ class Game extends Phaser.Game {
     this.scene.add("gameover1", gameover1);
     this.scene.add("gameover2", gameover2);
     this.scene.add("inicioroxo", inicioroxo);
+    this.scene.add("iniciov", iniciov);
     this.scene.add("termo", termo);
     this.scene.add("quebraCabeca", quebraCabeca);
     this.scene.add("tetravex", tetravex);
