@@ -997,14 +997,14 @@ class scene1 extends Phaser.Scene {
     this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
 
     this.physics.add.overlap(this.playerroxo, this.portaFinal, () => {
-      if (this.doorOpen >= 0 && this.inFinalDoorP1) {
+      if (this.doorOpen >= 5 && this.inFinalDoorP1) {
         this.inFinalDoorP2 = true;
         this.portaFinal.anims.play("portaabrindo", true);
 
         this.portaFinal.once("animationcomplete", (anim, frame) => {
           if (anim.key === "portaabrindo") {
             this.portaFinal.disableBody(true);
-            this.portaFinal.setFrame("8");
+            this.portaFinal.setFrame("7");
           }
         });
       }
@@ -1334,7 +1334,7 @@ class scene1 extends Phaser.Scene {
       });
 
       if (this.inFinalDoorP1) {
-        
+
         this.game.socket.removeAllListeners();
         this.scene.stop("scene1");
         this.scene.start("scene2", { role: "shooter" });

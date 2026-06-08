@@ -23,7 +23,7 @@ class scene0 extends Phaser.Scene {
     this.life = 6;
     this.canTakeDamage = true;
     this.enemyGravity = false;
-    this.doorOpen = 4;
+    this.doorOpen = 0;
     this.bullet = true;
     this.platform12Interval = null;
     this.platform15Interval = null;
@@ -1531,7 +1531,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
     });
 
     this.physics.add.overlap(this.player, this.door25, () => {
-      if (this.doorOpen >= 4) {
+      if (this.doorOpen >= 5) {
         setTimeout(() => {
           this.movingP1 = false;
         }, 200);
@@ -1551,7 +1551,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
         this.door25.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
             this.door25.disableBody(true);
-            this.door25.setFrame("8");
+            this.door25.setFrame("7");
            
             
           }
