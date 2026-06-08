@@ -248,6 +248,13 @@ class scene0 extends Phaser.Scene {
       frameRate: 10,
       repeat: 0,
     });
+    
+    this.anims.create({
+      key: "acionandoO2",
+      frames: this.anims.generateFrameNumbers("painelO2", { start: 0, end: 10 }),
+      frameRate: 10,
+      repeat: 0,
+    });
 
     this.anims.create({
       key: "walk-leftJp",
@@ -898,7 +905,7 @@ class scene0 extends Phaser.Scene {
 
     this.invisibleH2 = this.physics.add.sprite(475, 870, "invisibleH");
     this.invisibleH2
-      .setImmovable(true)
+      .setImmovable(true)    
       .setPipeline("Light2D")
       .setScale(0.5).body.allowGravity = false;
 
@@ -908,10 +915,13 @@ class scene0 extends Phaser.Scene {
       .setPipeline("Light2D")
       .setScale(0.5).body.allowGravity = false;
 
-    this.invisible2 = this.physics.add.sprite(1231, 3351, "invisible");
-    this.invisible2
+    this.painelO2 = this.physics.add.sprite(1231, 3351, "painelO2");
+    this.painelO2
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
+    
+    this.bigPainelO2 = this.add.sprite(340, 3396, "painelO2");
+    this.bigPainelO2.setScale(4).setDepth(999).setVisible(false);
 
     this.invisible3 = this.physics.add.sprite(540, 300, "invisible");
     this.invisible3
@@ -1210,12 +1220,17 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
   this.esperandoInteracao = 1;
 });
 
-    this.physics.add.overlap(this.player, this.invisible2, () => {
-      this.invisible2.disableBody(true, true);
-      this.energy = true;
-      this.o2Ship = true;
-      this.lamp.setIntensity(0);
-    });
+   this.physics.add.overlap(this.player, this.painelO2, () => {
+  if (this.painelJaAcionado) return;
+  this.painelJaAcionado = true;
+
+  this.painelO2.disableBody(true, false);
+  this.bigPainelO2.setVisible(true);
+
+  this.movingP1 = false;
+  this.player.setVelocity(0);
+  this.esperandoInteracao = 2;
+});
 
     this.physics.add.overlap(this.player, this.invisibleH, () => {
       this.invisibleH.disableBody(true, true);
@@ -2159,6 +2174,23 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
         this.bigPainelLuz.setVisible(false);
         this.platMoviment = true;
         this.startPlatformMovement();
+        this.movingP1 = true;
+      }
+    });
+     }
+    
+     if (this.esperandoInteracao === 2 && interectPressed) {
+    
+    this.esperandoInteracao = 0; 
+
+    this.bigPainelO2.anims.play("acionandoO2", true);
+    
+    this.bigPainelO2.once("animationcomplete", (anim, frame) => {
+      if (anim.key === "acionandoO2") {
+        this.bigPainelO2.setVisible(false);
+        this.energy = true;
+        this.o2Ship = true;
+        this.lamp.setIntensity(0);
         this.movingP1 = true;
       }
     });
