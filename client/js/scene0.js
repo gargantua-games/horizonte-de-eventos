@@ -1531,7 +1531,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
     });
 
     this.physics.add.overlap(this.player, this.door25, () => {
-      if (this.doorOpen >= 5) {
+      if (this.doorOpen >= 4) {
         setTimeout(() => {
           this.movingP1 = false;
         }, 200);
@@ -1541,23 +1541,19 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
         } else if (!this.direction) {
           this.player.anims.play("idleLeftJP", true);
         }
+
         this.inFinalDoorP1 = true;
-        this.game.socket.emit("faseFinal", this.game.room, {
-             engrenagens: this.score,
-             inFinalDoorP1: this.inFinalDoorP1,  
-        });
+        
         
         this.door25.anims.play("open-door", true);
         this.light25.setColor(0x90ee90);
+        
         this.door25.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
+            this.door25.disableBody(true);
+            this.door25.setFrame("8");
            
-            if (this.inFinalDoorP1 && this.inFinalDoorP2) {
             
-              this.scene.stop("scene0");
-              this.scene.start("scene2");
-
-          }
           }
         });
       }
@@ -1767,7 +1763,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
           
     this.uI.setScrollFactor(0, 0);
     
-    this.game.socket.on("faseFinal", (state) => {
+    this.game.socket.on("scene1", (state) => {
       this.inFinalDoorP2 = state.inFinalDoorP2;
     })
 
@@ -2060,6 +2056,24 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
     this.cannon.setAngle(this.angleCannon);
     this.GameOver();
 
+    console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
+
+    if (this.inFinalDoorP1) {
+
+    this.game.socket.emit("scene0", this.game.room, {
+             engrenagens: this.score,
+             inFinalDoorP1: this.inFinalDoorP1,  
+    });
+
+    if (this.inFinalDoorP2) {
+            
+              this.scene.stop("scene0");
+              this.scene.start("scene2");
+
+          }
+       
+    }
+
     if (this.fase5) {
       try {
         this.game.socket.emit("scene0", this.game.room, {
@@ -2179,7 +2193,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
         if (!button) return;
         const pressed =
           !!button.pressed || (button.value && button.value > 0.1);
-        if (pressed) {
+        /*if (pressed) {
           // tenta identificar por nome comum, senão mostra índice e valor
           const nameMap = {
             0: "A / Botão 0",
@@ -2204,7 +2218,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
           console.log(
             `Gamepad: ${name} (índice ${idx}) pressionado, value=${button.value}`,
           );
-        }
+        }*/
       });
     }
 

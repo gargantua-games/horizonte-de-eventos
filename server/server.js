@@ -53,7 +53,6 @@ io.on("connection", (socket) => {
 
   // Escuta quando a scene1 avisa que um alien deve nascer
     socket.on('alien-spawnado-scene1', (dadosAlien) => {
-        // Envia para os outros jogadores criarem o mesmo alien na scene0 deles
         socket.broadcast.emit('criar-alien-scene0', dadosAlien);
     });
   
@@ -67,14 +66,30 @@ io.on("connection", (socket) => {
         socket.broadcast.emit('atualizar-movimento-aliens', pacoteAliens);
     });
 
-   socket.on("GameOver", (room, state) => {
-        socket.broadcast.emit("GameOver");
+  socket.on("GameOver", (room, state) => {
+    if (room) {
+      socket.to(room).emit("GameOver", state);
+    } else {
+      socket.broadcast.emit("GameOver");
+    }
     });
 
-   socket.on("faseFinal", (room, state) => {
-     socket.broadcast.emit("faseFinal");
+  socket.on("faseFinalP1", (room, state) => {
+    if (room) {
+      socket.to(room).emit("faseFinalP1", state);
+    } else {
+      socket.broadcast.emit("faseFinalP1");
+    }
     });
 
+  socket.on("faseFinalP2", (room, state) => {
+    if (room) {
+      socket.to(room).emit("faseFinalP2", state);
+    } else {
+      socket.broadcast.emit("faseFinalP2");
+    }
+  });
+  
   socket.on("scene2", (room, state) => {
     if (room) {
       socket.to(room).emit("scene2", state);
