@@ -6,7 +6,7 @@ class scene1 extends Phaser.Scene {
     this.estoutrabalhando = false;
     this.doorOpen = 0;
     this.fase4 = true;
-    this.fase5 = false;
+    this.fase5 = true;
     this.vida = 300;
     this.invulnerable = false;
     this.positionP2 = false;
@@ -1372,7 +1372,7 @@ class scene1 extends Phaser.Scene {
     } else if (this.doorOpen === 4) {
       this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(640, 505);
-    }
+    } else {this.avisoconsole.setVisible(false)}
 
     //if (this.fase4) {
 
@@ -1457,7 +1457,7 @@ class scene1 extends Phaser.Scene {
       //.startFollow(this.playerroxo, true, .1, .1);
     }
 
-    const portaOverlap = this.physics.overlap(this.playerroxo, this.porta);
+    const portaOverlap = this.physics.overlap(this.caixa, this.porta);
     const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
     if (portaOverlap && !this.portalTeleported) {
@@ -1588,16 +1588,20 @@ class scene1 extends Phaser.Scene {
       if (qe.E.isDown) {
         this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
         this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+        this.lights.setAmbientColor(0x202020);
 
         this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
       } else if (qe.Q.isDown) {
-        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
+      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
         this.cameras.main.setBounds(
           24,
           24,
           this.tilemap.widthInPixels - 48,
           708,
         );
+      } else if (qe.E.isUp) {
+        this.lights.setAmbientColor(0xe0f7ff);
+        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
       }
     }
 
@@ -1860,6 +1864,7 @@ if (this.inimigosaliens) {
 
       // Define a porta aberta como 4 no estado local e também envia para o servidor.
       this.abrirPorta(4);
+      this.fase5 = true;
 
       this.time.delayedCall(1000, () => {
         this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
