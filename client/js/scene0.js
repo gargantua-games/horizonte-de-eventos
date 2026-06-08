@@ -37,6 +37,8 @@ class scene0 extends Phaser.Scene {
     this.doubleInterecting = true;
     this.comunication = true;
     this.gameOver = false;
+    this.painelJaAcionado = false;
+    this.esperandoInteracao = 0;
   }
 
   init() {
@@ -885,9 +887,14 @@ class scene0 extends Phaser.Scene {
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D").body.allowGravity = false;
 
-    this.invisible = this.physics.add.sprite(340, 3396, "invisible");
-    this.invisible.setImmovable(true).setPipeline("Light2D").body.allowGravity =
-      false;
+    this.painelLuz = this.physics.add.sprite(340, 3396, "painelLuz");
+    this.painelLuz.setImmovable(true).setScale(0.3)
+      .setPipeline("Light2D")
+      .setScrollFactor(0.9, 1)
+      .body.allowGravity = false;
+    
+    this.bigPainelLuz = this.add.sprite(340, 3396, "painelLuz");
+    this.bigPainelLuz.setScale(4).setDepth(999).setVisible(false);
 
     this.invisibleH2 = this.physics.add.sprite(475, 870, "invisibleH");
     this.invisibleH2
@@ -906,7 +913,7 @@ class scene0 extends Phaser.Scene {
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
 
-    this.invisible3 = this.physics.add.sprite(540, 300, "painelLuz");
+    this.invisible3 = this.physics.add.sprite(540, 300, "invisible");
     this.invisible3
       .setImmovable(true)
       .setPipeline("Light2D").body.allowGravity = false;
@@ -1191,12 +1198,17 @@ class scene0 extends Phaser.Scene {
         .anims.play("jetBag-idle", true).body.allowGravity = false;
     });
 
-    this.physics.add.overlap(this.player, this.invisible, () => {
-      this.invisible.disableBody(true, true);
-      this.platMoviment = true;
-      this.startPlatformMovement();
-      //this.fase5 = false;
-    });
+this.physics.add.overlap(this.player, this.painelLuz, () => {
+  if (this.painelJaAcionado) return;
+  this.painelJaAcionado = true;
+
+  this.painelLuz.disableBody(true, false);
+  this.bigPainelLuz.setVisible(true);
+
+  this.movingP1 = false;
+  this.player.setVelocity(0);
+  this.esperandoInteracao = 1;
+});
 
     this.physics.add.overlap(this.player, this.invisible2, () => {
       this.invisible2.disableBody(true, true);
@@ -1653,7 +1665,7 @@ class scene0 extends Phaser.Scene {
       
       // Desenha o círculo na mesma posição da imagem (x: 400, y: 300) e define o raio (ex: 100 pixels)
       // Dica: O raio idealmente deve ser a metade da largura/altura da sua imagem
-        molde.fillCircle(pIconX + 21, pIconY + 14, 32)//.setOrigin(0, 0).setScrollFactor(0); 
+        molde.fillCircle(pIconX + 23, pIconY + 12, 32)//.setOrigin(0, 0).setScrollFactor(0); 
 
         // 3. Cria a máscara geométrica a partir do círculo
         let mascara = molde.createGeometryMask();
@@ -2032,7 +2044,7 @@ class scene0 extends Phaser.Scene {
     } else if (this.fase5 === true && this.energy === false && !this.platMoviment) {
       this.lights.setAmbientColor(0x000000);
       
-      this.invisible.enableBody(true, 340, 3396, true, true);
+      this.painelLuz.enableBody(true, 340, 3396, true);
       this.platform12.setVelocityX(0).setPosition(340, 3425);
       this.platform15.setVelocityX(0).setPosition(955, 3375);
 
@@ -2042,6 +2054,8 @@ class scene0 extends Phaser.Scene {
 
     this.lamp.x = this.player.x;
     this.lamp.y = this.player.y;
+
+   
 
     if (this.cargaJp <= 0 && this.jetPack) {
       this.cargaJPpercentage = 0;
@@ -2133,6 +2147,22 @@ class scene0 extends Phaser.Scene {
       if (this.comunication)
         this.game.audio.volume = comunicationPressed ? 1 : 0;
     }
+
+     if (this.esperandoInteracao === 1 && interectPressed) {
+    
+    this.esperandoInteracao = 0; 
+
+    this.bigPainelLuz.anims.play("acionandoLuz", true);
+    
+    this.bigPainelLuz.once("animationcomplete", (anim, frame) => {
+      if (anim.key === "acionandoLuz") {
+        this.bigPainelLuz.setVisible(false);
+        this.platMoviment = true;
+        this.startPlatformMovement();
+        this.movingP1 = true;
+      }
+    });
+  }
 
 
     const estaSobreInvisible3 = this.physics.overlap(
