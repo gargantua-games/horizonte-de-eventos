@@ -1767,6 +1767,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
       this.inFinalDoorP2 = state.inFinalDoorP2;
     })
 
+
     this.game.socket.on("GameOver", (state) => {
       this.gameOver = state.gameOver;
     });

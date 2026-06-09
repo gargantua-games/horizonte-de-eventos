@@ -462,7 +462,6 @@ class scene1 extends Phaser.Scene {
     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
     this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
-    this.avisoconsole;
     this.avisoconsole.setVisible(false);
 
     this.delayedCall = this.time.delayedCall(14000, () => {
@@ -849,7 +848,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("helldivers", {
+            this.scene.launch("genius", {
               portaId: 1,
               cenaOrigem: "scene1",
             });
@@ -862,7 +861,7 @@ class scene1 extends Phaser.Scene {
         if (this.playerroxo.y > 566) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
-            this.scene.launch("termo", {
+            this.scene.launch("quebraCabeca", {
               portaId: 3,
               cenaOrigem: "scene1",
             });
@@ -1114,7 +1113,7 @@ class scene1 extends Phaser.Scene {
     });
 
     this.time.addEvent({
-      delay: 200000000, // Tempo em milissegundos (2000ms = 2 segundos)
+      delay: 2000, // Tempo em milissegundos (2000ms = 2 segundos)
       callback: this.spawnAlienAleatorio, // Nome da função que vai rodar (SEM parênteses no final)
       callbackScope: this, // Mantém o escopo da cena correto
       loop: true, // Faz o relógio repetir para sempre
@@ -1334,7 +1333,6 @@ class scene1 extends Phaser.Scene {
       });
 
       if (this.inFinalDoorP1) {
-
         this.game.socket.removeAllListeners();
         this.scene.stop("scene1");
         this.scene.start("scene2", { role: "shooter" });
@@ -1367,15 +1365,19 @@ class scene1 extends Phaser.Scene {
     }
 
     if (this.doorOpen === 1) {
+      this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(843, 222);
     } else if (this.doorOpen === 2) {
+      this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(933, 550);
     } else if (this.doorOpen === 3) {
       this.avisoconsole.setVisible(false);
     } else if (this.doorOpen === 4) {
       this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(640, 505);
-    } else {this.avisoconsole.setVisible(false)}
+    } else {
+      this.avisoconsole.setVisible(false);
+    }
 
     //if (this.fase4) {
 
@@ -1591,7 +1593,7 @@ class scene1 extends Phaser.Scene {
 
         this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
       } else if (qe.Q.isDown) {
-      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
+        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
         this.cameras.main.setBounds(
           24,
           24,
@@ -1600,7 +1602,8 @@ class scene1 extends Phaser.Scene {
         );
       } else if (qe.E.isUp) {
         this.lights.setAmbientColor(0xe0f7ff);
-        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
+        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom =
+          1.5;
       }
     }
 
@@ -1871,6 +1874,7 @@ class scene1 extends Phaser.Scene {
     }
   }
 
+  
   abrirPorta(idPorta) {
     try {
       // Define o estado da porta com base no id fornecido
