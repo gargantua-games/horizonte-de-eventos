@@ -44,18 +44,29 @@ class inicioroxo extends Phaser.Scene {
     );
     this.text1.setAlpha(0);
 
-     this.tweens.add({
-       targets: [bg, this.text1],
-       alpha: 1,
-       duration: 1200,
-       ease: "Linear",
-       delay: 200,
-     });
+    this.tweens.add({
+      targets: [bg, this.text1],
+      alpha: 1,
+      duration: 1200,
+      ease: "Linear",
+      delay: 200,
+    });
 
-     this.delayedCall = this.time.delayedCall(14000, () => {
-       this.scene.stop("inicioroxo");
-       this.scene.start("scene1");
-     });
+    this.delayedCall = this.time.delayedCall(13000, () => {
+      this.tweens.add({
+        targets: [bg, this.text1],
+        alpha: 0,
+        duration: 1200,
+        ease: "Linear",
+        delay: 200,
+      });
+    });
+     
+    this.delayedCall = this.time.delayedCall(15000, () => {
+      this.scene.stop("inicioroxo");
+      this.scene.start("scene1");
+    });
+
   }
 
   update() {}
