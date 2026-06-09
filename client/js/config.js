@@ -10,7 +10,7 @@ var config = {
     default: "arcade",
     arcade: {
       gravity: { x: 0, y: 900 },
-      debug: true,
+      debug: false,
     } 
   },
   scale: {
