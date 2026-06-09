@@ -784,8 +784,19 @@ class scene1 extends Phaser.Scene {
       .setPipeline("Light2D");
 
     this.platform54 = this.platforms //mais da direita
-      .create(1222, 3375 - 1184, "plataform")
+      .create(1222, 2191, "plataform")
       .setScrollFactor(0.99, 1)
+      .setPipeline("Light2D");
+
+    this.porta3 = this.physics.add
+      .sprite(1215, 2337, "door")
+      .setPipeline("Light2D");
+
+    this.painelLuz = this.physics.add.sprite(350, 2230, "painelLuz").setScale(0.3).setPipeline("Light2D");
+
+    this.painelO2 = this.physics.add
+      .sprite(1222, 2178, "painelO2")
+      .setScale(0.3)
       .setPipeline("Light2D");
 
     this.platforms //esquerda do primeiro interagier, acima
@@ -1580,7 +1591,7 @@ class scene1 extends Phaser.Scene {
     if (this.fase5) {
       if (qe.E.isDown) {
         this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
-        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 0.7;
         this.lights.setAmbientColor(0x202020);
 
         this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
