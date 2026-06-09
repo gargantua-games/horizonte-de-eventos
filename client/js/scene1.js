@@ -462,13 +462,9 @@ class scene1 extends Phaser.Scene {
 
     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
-    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
-    this.avisoconsole.setVisible(false);
-
-    this.delayedCall = this.time.delayedCall(14000, () => {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.anims.play("avisopiscando");
-    });
+   this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
+   this.avisoconsole.anims.play("avisopiscando");
+    
 
     this.laserP1 = this.physics.add.group({
       immovable: true,
@@ -1372,7 +1368,10 @@ class scene1 extends Phaser.Scene {
       }
     }
 
-    if (this.doorOpen === 1) {
+    if (this.doorOpen === 0) {
+      this.avisoconsole.setVisible(true);
+      this.avisoconsole.setPosition(913, 388);
+    } else if (this.doorOpen === 1) {
       this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(843, 222);
     } else if (this.doorOpen === 2) {
@@ -1380,7 +1379,7 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.setPosition(933, 550);
     } else if (this.doorOpen === 3) {
       this.avisoconsole.setVisible(false);
-    } else if (this.doorOpen === 4) {
+    } else if (this.doorOpen === 5) {
       this.avisoconsole.setVisible(true);
       this.avisoconsole.setPosition(640, 505);
     } else {
