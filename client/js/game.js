@@ -14,6 +14,7 @@ import tetravex from "../teste_puzzle/tetravex.js";
 import sudoku from "../teste_puzzle/sudoku.js";
 import genius from "../teste_puzzle/genius.js";
 import helldivers from "../teste_puzzle/helldivers.js";
+import creditos from "./creditos.js";
 
 class Game extends Phaser.Game {
   constructor() {
@@ -36,6 +37,7 @@ class Game extends Phaser.Game {
     this.scene.add("sudoku", sudoku);
     this.scene.add("genius", genius);
     this.scene.add("helldivers", helldivers);
+    this.scene.add("creditos", creditos);
     this.scene.start("start");
 
     this.audio = document.querySelector("audio");
