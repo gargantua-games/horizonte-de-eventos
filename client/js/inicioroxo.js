@@ -52,7 +52,7 @@ class inicioroxo extends Phaser.Scene {
       delay: 200,
     });
 
-    this.delayedCall = this.time.delayedCall(13000, () => {
+    this.delayedCall = this.time.delayedCall(100, () => { //13000
       this.tweens.add({
         targets: [bg, this.text1],
         alpha: 0,
@@ -62,7 +62,7 @@ class inicioroxo extends Phaser.Scene {
       });
     });
      
-    this.delayedCall = this.time.delayedCall(15000, () => {
+    this.delayedCall = this.time.delayedCall(100, () => { //15000
       this.scene.stop("inicioroxo");
       this.scene.start("scene1");
     });

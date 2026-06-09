@@ -121,6 +121,15 @@ class scene0 extends Phaser.Scene {
 
     let comunicationPressed = false;
 
+    // === ADICIONE ESTE TRECHO NO MÉTODO create() ===
+    this.wasd = this.input.keyboard.addKeys({
+      up: Phaser.Input.Keyboard.KeyCodes.W,
+      down: Phaser.Input.Keyboard.KeyCodes.S,
+      left: Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+    });
+    // ===============================================
+
     this.passos = this.sound.add("passos", { loop: true, volume: 2 });
     this.trilhasonora = this.sound
       .add("trilhasonora", { loop: true, volume: 0.08 })
@@ -128,9 +137,8 @@ class scene0 extends Phaser.Scene {
 
     this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
-    this.space = this.add.image( 500, 3890, "space");
+    this.space = this.add.image(500, 3890, "space");
     this.space.setPipeline("Light2D");
-   
 
     this.anims.create({
       key: "bigIaIdle",
@@ -247,14 +255,20 @@ class scene0 extends Phaser.Scene {
 
     this.anims.create({
       key: "acionandoLuz",
-      frames: this.anims.generateFrameNumbers("painelLuz", { start: 0, end: 15 }),
+      frames: this.anims.generateFrameNumbers("painelLuz", {
+        start: 0,
+        end: 15,
+      }),
       frameRate: 10,
       repeat: 0,
     });
-    
+
     this.anims.create({
       key: "acionandoO2",
-      frames: this.anims.generateFrameNumbers("painelO2", { start: 0, end: 10 }),
+      frames: this.anims.generateFrameNumbers("painelO2", {
+        start: 0,
+        end: 10,
+      }),
       frameRate: 10,
       repeat: 0,
     });
@@ -583,66 +597,65 @@ class scene0 extends Phaser.Scene {
       repeat: -1,
     });
 
-     this.anims.create({
-       key: "idleesquerdaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 60,
-         end: 61,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "idleesquerdaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 60,
+        end: 61,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
 
-     this.anims.create({
-       key: "idlefrenteverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 62,
-         end: 63,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "idlefrenteverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 62,
+        end: 63,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
 
-     this.anims.create({
-       key: "idledireitaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 64,
-         end: 65,
-       }),
-       frameRate: 2,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "idledireitaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 64,
+        end: 65,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
 
-     this.anims.create({
-       key: "andaresquerdaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 66,
-         end: 73,
-       }),
-       frameRate: 11,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "andaresquerdaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 66,
+        end: 73,
+      }),
+      frameRate: 11,
+      repeat: -1,
+    });
 
-     this.anims.create({
-       key: "andarfrenteverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 74,
-         end: 81,
-       }),
-       frameRate: 11,
-       repeat: -1,
-     });
+    this.anims.create({
+      key: "andarfrenteverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 74,
+        end: 81,
+      }),
+      frameRate: 11,
+      repeat: -1,
+    });
 
-     this.anims.create({
-       key: "andardireitaverde",
-       frames: this.anims.generateFrameNumbers("playerroxo", {
-         start: 82,
-         end: 89,
-       }),
-       frameRate: 11,
-       repeat: -1,
-     });
-
+    this.anims.create({
+      key: "andardireitaverde",
+      frames: this.anims.generateFrameNumbers("playerroxo", {
+        start: 82,
+        end: 89,
+      }),
+      frameRate: 11,
+      repeat: -1,
+    });
 
     this.laser = this.physics.add.group({
       allowGravity: false,
@@ -969,17 +982,18 @@ class scene0 extends Phaser.Scene {
       .setPipeline("Light2D").body.allowGravity = false;
 
     this.painelLuz = this.physics.add.sprite(340, 3396, "painelLuz");
-    this.painelLuz.setImmovable(true).setScale(0.3)
+    this.painelLuz
+      .setImmovable(true)
+      .setScale(0.3)
       .setPipeline("Light2D")
-      .setScrollFactor(0.9, 1)
-      .body.allowGravity = false;
-    
+      .setScrollFactor(0.9, 1).body.allowGravity = false;
+
     this.bigPainelLuz = this.add.sprite(340, 3396, "painelLuz");
     this.bigPainelLuz.setScale(4).setDepth(999).setVisible(false);
 
     this.invisibleH2 = this.physics.add.sprite(475, 870, "invisibleH");
     this.invisibleH2
-      .setImmovable(true)    
+      .setImmovable(true)
       .setPipeline("Light2D")
       .setScale(0.5).body.allowGravity = false;
 
@@ -995,7 +1009,7 @@ class scene0 extends Phaser.Scene {
       .setScale(0.3)
       .setScrollFactor(0.9, 1)
       .setPipeline("Light2D").body.allowGravity = false;
-    
+
     this.bigPainelO2 = this.add.sprite(1080, 3396, "painelO2");
     this.bigPainelO2.setScale(4).setDepth(999).setVisible(false);
 
@@ -1032,7 +1046,7 @@ class scene0 extends Phaser.Scene {
           .setPosition(92, 3532)
           .setVelocity(0, 0)
           .anims.play("idleRightJP");
-        
+
         this.painelJaAcionado = 0;
         this.esperandoInteracao = 0;
         if (this.bigPainelLuz.visible) {
@@ -1054,11 +1068,9 @@ class scene0 extends Phaser.Scene {
           this.collectEng5 = false;
         }
 
-  
-        this.platMoviment = false
+        this.platMoviment = false;
         this.stopPlatformMovement();
         this.life -= 1;
-        
       }
     }, 500);
 
@@ -1206,8 +1218,8 @@ class scene0 extends Phaser.Scene {
     this.turretP1 = this.add.sprite(656, 4337, "turret");
     this.turretP1.setPipeline("Light2D");
 
-   this.inimigosaliens = this.add.group({
-     // allowGravity: false,
+    this.inimigosaliens = this.add.group({
+      // allowGravity: false,
       immovable: false,
       pipeline: "Light2D",
     });
@@ -1294,29 +1306,29 @@ class scene0 extends Phaser.Scene {
         .anims.play("jetBag-idle", true).body.allowGravity = false;
     });
 
-this.physics.add.overlap(this.player, this.painelLuz, () => {
-  if (this.painelJaAcionado === 1) return;
-  this.painelJaAcionado = 1;
+    this.physics.add.overlap(this.player, this.painelLuz, () => {
+      if (this.painelJaAcionado === 1) return;
+      this.painelJaAcionado = 1;
 
-  this.painelLuz.disableBody(true, false);
-  this.bigPainelLuz.setVisible(true);
+      this.painelLuz.disableBody(true, false);
+      this.bigPainelLuz.setVisible(true);
 
-  this.movingP1 = false;
-  this.player.setVelocity(0);
-  this.esperandoInteracao = 1;
-});
+      this.movingP1 = false;
+      this.player.setVelocity(0);
+      this.esperandoInteracao = 1;
+    });
 
-   this.physics.add.overlap(this.player, this.painelO2, () => {
-  if (this.painelJaAcionado === 2) return;
-  this.painelJaAcionado = 2;
+    this.physics.add.overlap(this.player, this.painelO2, () => {
+      if (this.painelJaAcionado === 2) return;
+      this.painelJaAcionado = 2;
 
-  this.painelO2.disableBody(true, false);
-  this.bigPainelO2.setVisible(true);
+      this.painelO2.disableBody(true, false);
+      this.bigPainelO2.setVisible(true);
 
-  this.movingP1 = false;
-  this.player.setVelocity(0);
-  this.esperandoInteracao = 2;
-});
+      this.movingP1 = false;
+      this.player.setVelocity(0);
+      this.esperandoInteracao = 2;
+    });
 
     this.physics.add.overlap(this.player, this.invisibleH, () => {
       this.invisibleH.disableBody(true, true);
@@ -1486,7 +1498,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
           this.movingP1 = false;
         }, 200);
         this.player.setVelocity(0, 100);
-         if (this.direction) {
+        if (this.direction) {
           this.player.anims.play("idleRightJP", true);
         } else if (!this.direction) {
           this.player.anims.play("idleLeftJP", true);
@@ -1647,17 +1659,14 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
         }
 
         this.inFinalDoorP1 = true;
-        
-        
+
         this.door25.anims.play("open-door", true);
         this.light25.setColor(0x90ee90);
-        
+
         this.door25.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
             this.door25.disableBody(true);
             this.door25.setFrame("7");
-           
-            
           }
         });
       }
@@ -1775,7 +1784,7 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
       .setVisible(false);
 
     this.scoreText = this.add
-      .text(133, 130,  this.score + "/4", {
+      .text(133, 130, this.score + "/4", {
         fontSize: "18px",
         fontFamily: "sarpanch",
         fill: "#ffffff",
@@ -1804,86 +1813,85 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
       frameRate: 2,
       repeat: -1,
     });
-    
-      this.playerIcon = this.add.sprite(pIconX, pIconY, "playersIcon")
+
+    this.playerIcon = this.add
+      .sprite(pIconX, pIconY, "playersIcon")
       .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(9)
       .anims.play("playersIconIdle", true)
       .setScale(1.5);
-      // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
+    // 1. Adiciona a imagem na tela (posição x: 400, y: 300)
     let imagem = this.playerIcon;
-    
-      
-      // 2. Cria um objeto gráfico que servirá de molde (o círculo)
+
+    // 2. Cria um objeto gráfico que servirá de molde (o círculo)
     let molde = this.make.graphics();
-        
-   // molde.setOrigin(0, 0);
-      molde.setScrollFactor(0)
-      molde.setDepth(9);
-      
-      // Define a cor de preenchimento (a cor não importa, pois ficará invisível)
-       molde.fillStyle(0xffffff); 
-      
-      // Desenha o círculo na mesma posição da imagem (x: 400, y: 300) e define o raio (ex: 100 pixels)
-      // Dica: O raio idealmente deve ser a metade da largura/altura da sua imagem
-        molde.fillCircle(pIconX + 23, pIconY + 12, 32)//.setOrigin(0, 0).setScrollFactor(0); 
 
-        // 3. Cria a máscara geométrica a partir do círculo
-        let mascara = molde.createGeometryMask();
+    // molde.setOrigin(0, 0);
+    molde.setScrollFactor(0);
+    molde.setDepth(9);
 
-        // 4. Aplica a máscara na imagem
-        imagem.setMask(mascara);
-        
-        this.lifeBarBgGraphics = this.make
-        .graphics({
-          x: 130,
-          y: 80,
-          add: true,
-        })
-        .setScrollFactor(0)
-        .setDepth(8);
-    
-        this.lifeBarBgGraphics.fillStyle(0x000000, 1);
-        this.lifeBarBgGraphics.fillCircle(0, 0, 36);
-    
-        this.uI = this.add.container(0, 0);
+    // Define a cor de preenchimento (a cor não importa, pois ficará invisível)
+    molde.fillStyle(0xffffff);
 
-        this.uI.add([
-          this.cargaBar,      
-          this.cargaBarBackground,
-          this.cargaBarBorder,
-          this.cargaJpText,
-          this.o2Bar,
-          this.o2BarBackground,
-          this.o2BarBorder,
-          this.o2Text,
-          this.lifeBarBgGraphics,
-          this.lifeBarGraphics,
-          this.playerIcon,
-          this.scoreText,      
-          this.engrenagemIcon,
-          ])
-          
+    // Desenha o círculo na mesma posição da imagem (x: 400, y: 300) e define o raio (ex: 100 pixels)
+    // Dica: O raio idealmente deve ser a metade da largura/altura da sua imagem
+    molde.fillCircle(pIconX + 23, pIconY + 12, 32); //.setOrigin(0, 0).setScrollFactor(0);
+
+    // 3. Cria a máscara geométrica a partir do círculo
+    let mascara = molde.createGeometryMask();
+
+    // 4. Aplica a máscara na imagem
+    imagem.setMask(mascara);
+
+    this.lifeBarBgGraphics = this.make
+      .graphics({
+        x: 130,
+        y: 80,
+        add: true,
+      })
+      .setScrollFactor(0)
+      .setDepth(8);
+
+    this.lifeBarBgGraphics.fillStyle(0x000000, 1);
+    this.lifeBarBgGraphics.fillCircle(0, 0, 36);
+
+    this.uI = this.add.container(0, 0);
+
+    this.uI.add([
+      this.cargaBar,
+      this.cargaBarBackground,
+      this.cargaBarBorder,
+      this.cargaJpText,
+      this.o2Bar,
+      this.o2BarBackground,
+      this.o2BarBorder,
+      this.o2Text,
+      this.lifeBarBgGraphics,
+      this.lifeBarGraphics,
+      this.playerIcon,
+      this.scoreText,
+      this.engrenagemIcon,
+    ]);
+
     this.uI.setScrollFactor(0, 0);
-    
+
     this.game.socket.on("scene1", (state) => {
       this.inFinalDoorP2 = state.inFinalDoorP2;
-    })
-
+    });
 
     this.game.socket.on("GameOver", (state) => {
       this.gameOver = state.gameOver;
     });
-        
-        const jkl = this.input.keyboard.addKeys("J,K,L");
 
-        this.game.socket.on("scene1", (state) => {
-          if (state.doorOpen) {
+    const jkl = this.input.keyboard.addKeys("J,K,L");
+
+    this.game.socket.on("scene1", (state) => {
+      if (state.doorOpen) {
         if (Object.prototype.hasOwnProperty.call(state, "doorOpen")) {
           this.doorOpen = state.doorOpen.key;
         }
-      }//Ana Vitória
+      } //Ana Vitória
 
       if (state.jkl) {
         const jklState = state.jkl || { J: false, L: false, K: false };
@@ -1916,62 +1924,60 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
         this.player2.anims.play(state.playerroxo.animation, true);
       }
-        });
-    this.game.socket.on('criar-alien-scene0', (dadosAlien) => {
+    });
+    this.game.socket.on("criar-alien-scene0", (dadosAlien) => {
       console.log("Scene0 recebeu o sinal do alien!", dadosAlien);
-        let alien = this.inimigosaliens.create(dadosAlien.x, (dadosAlien.y + 2624), dadosAlien.tipo);
-        alien.setData('id', dadosAlien.id);
-
-      
-       
-      
+      let alien = this.inimigosaliens.create(
+        dadosAlien.x,
+        dadosAlien.y + 2624,
+        dadosAlien.tipo,
+      );
+      alien.setData("id", dadosAlien.id);
     });
 
     this.game.socket.on("limpar-todos-aliens", () => {
       console.log("sinal recebido");
-        if (this.inimigosaliens) {
-            // Limpa todos os monstros da Scene0 instantaneamente!
-            this.inimigosaliens.clear(true, true);
-            console.log("💥 Todos os aliens foram limpos da Scene0 em sincronia!");
-        }
-     });
+      if (this.inimigosaliens) {
+        // Limpa todos os monstros da Scene0 instantaneamente!
+        this.inimigosaliens.clear(true, true);
+        console.log("💥 Todos os aliens foram limpos da Scene0 em sincronia!");
+      }
+    });
 
-    this.game.socket.on('destruir-alien', (idRecebido) => {
-    if (this.inimigosaliens) {
-        this.inimigosaliens.getChildren().forEach(alien => {
-            // Procura qual dos aliens na tela tem o ID deletado
-            if (alien.getData('id') === idRecebido) {
-                alien.destroy();
-                console.log("Alien " + idRecebido + " destruído em sincronia!");
-            }
+    this.game.socket.on("destruir-alien", (idRecebido) => {
+      if (this.inimigosaliens) {
+        this.inimigosaliens.getChildren().forEach((alien) => {
+          // Procura qual dos aliens na tela tem o ID deletado
+          if (alien.getData("id") === idRecebido) {
+            alien.destroy();
+            console.log("Alien " + idRecebido + " destruído em sincronia!");
+          }
         });
-    }
+      }
     });
 
 
     
     this.game.socket.on('atualizar-movimento-aliens', (pacoteAliens) => {
-      if (!this.inimigosaliens) return;
-      console.log("Posições de inimigos recebidas...");
+    if (!this.inimigosaliens) return;
 
-    pacoteAliens.forEach(dados => {
-        this.inimigosaliens.getChildren().forEach(alien => {
-            // Se encontrar o alien correspondente pelo ID
-            if (alien.getData('id') === dados.id) {
-                // Sincroniza Posição e Velocidade
-                alien.x = dados.x;
-                alien.y = dados.y + 2624; // Mantendo o seu ajuste de offset do mapa da scene0
-                alien.setFlipX(dados.flipX);
+      pacoteAliens.forEach((dados) => {
+        this.inimigosaliens.getChildren().forEach((alien) => {
+          // Se encontrar o alien correspondente pelo ID
+          if (alien.getData("id") === dados.id) {
+            // Sincroniza Posição e Velocidade
+            alien.x = dados.x;
+            alien.y = dados.y + 2624; // Mantendo o seu ajuste de offset do mapa da scene0
+            alien.setFlipX(dados.flipX);
 
-                // Sincroniza a Animação ("enemyWalk", etc.)
-                if (dados.anim) {
-                    alien.anims.play(dados.anim, true);
-                }
+            // Sincroniza a Animação ("enemyWalk", etc.)
+            if (dados.anim) {
+              alien.anims.play(dados.anim, true);
             }
+          }
         });
+      });
     });
-});
-
   }
 
   typeIaText(text, speed = 50, onComplete = null) {
@@ -2165,22 +2171,19 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
     console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
 
     if (this.inFinalDoorP1) {
-
-    this.game.socket.emit("scene0", this.game.room, {
-             engrenagens: this.score,
-             inFinalDoorP1: this.inFinalDoorP1,  
-    });
+      this.game.socket.emit("scene0", this.game.room, {
+        engrenagens: this.score,
+        inFinalDoorP1: this.inFinalDoorP1,
+      });
 
       if (this.inFinalDoorP2) {
         this.physics.pause();
         this.physics.world.shutdown();
-      
+
         this.game.socket.removeAllListeners();
         this.scene.stop("scene0");
         this.scene.start("scene2", { role: "pilot" });
-
-          }
-       
+      }
     }
 
     if (this.fase5) {
@@ -2230,21 +2233,26 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
 
     if (this.energy) {
       this.lights.enable().setAmbientColor(0xe0f7ff);
-    } else if (this.fase5 === true && this.energy === false && !this.platMoviment) {
+    } else if (
+      this.fase5 === true &&
+      this.energy === false &&
+      !this.platMoviment
+    ) {
       this.lights.setAmbientColor(0x000000);
-      
+
       this.painelLuz.enableBody(true, 340, 3396, true);
       this.platform12.setVelocityX(0).setPosition(340, 3425);
       this.platform15.setVelocityX(0).setPosition(955, 3375);
-
-    } else if (this.fase5 === true && this.energy === false && this.platMoviment) {
+    } else if (
+      this.fase5 === true &&
+      this.energy === false &&
+      this.platMoviment
+    ) {
       this.lights.setAmbientColor(0x202020);
     }
 
     this.lamp.x = this.player.x;
     this.lamp.y = this.player.y;
-
-   
 
     if (this.cargaJp <= 0 && this.jetPack) {
       this.cargaJPpercentage = 0;
@@ -2331,45 +2339,60 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
       });
     }
 
+    // Movimentação Horizontal (A e D)
+    if (this.wasd.left.isDown) {
+      horizontal = -1;
+    } else if (this.wasd.right.isDown) {
+      horizontal = 1;
+    }
+
+    // Movimentação Vertical
+    if (this.wasd.down.isDown) {
+      vertical = 1;
+    }
+
+    // Pulo / Jetpack (W)
+    if (this.wasd.up.isDown) {
+      jumpPressed = true; // Se o seu jogo usa 'jumpPressed' para pular
+      vertical = -1; // Se o seu jogo usa 'vertical' negativo para subir/voar
+    }
+
     // Controla volume de áudio baseado em comunicationPressed
     if (this.game.audio) {
       if (this.comunication)
         this.game.audio.volume = comunicationPressed ? 1 : 0;
     }
 
-     if (this.esperandoInteracao === 1 && interectPressed) {
-    
-    this.esperandoInteracao = 0; 
+    if (this.esperandoInteracao === 1 && interectPressed) {
+      this.esperandoInteracao = 0;
 
-    this.bigPainelLuz.anims.play("acionandoLuz", true);
-    
-    this.bigPainelLuz.once("animationcomplete", (anim, frame) => {
-      if (anim.key === "acionandoLuz") {
-        this.bigPainelLuz.setVisible(false);
-        this.platMoviment = true;
-        this.startPlatformMovement();
-        this.movingP1 = true;
-      }
-    });
-     }
-    
-     if (this.esperandoInteracao === 2 && interectPressed) {
-    
-    this.esperandoInteracao = 0; 
+      this.bigPainelLuz.anims.play("acionandoLuz", true);
 
-    this.bigPainelO2.anims.play("acionandoO2", true);
-    
-    this.bigPainelO2.once("animationcomplete", (anim, frame) => {
-      if (anim.key === "acionandoO2") {
-        this.bigPainelO2.setVisible(false);
-        this.energy = true;
-        this.o2Ship = true;
-        this.lamp.setIntensity(0);
-        this.movingP1 = true;
-      }
-    });
-  }
+      this.bigPainelLuz.once("animationcomplete", (anim, frame) => {
+        if (anim.key === "acionandoLuz") {
+          this.bigPainelLuz.setVisible(false);
+          this.platMoviment = true;
+          this.startPlatformMovement();
+          this.movingP1 = true;
+        }
+      });
+    }
 
+    if (this.esperandoInteracao === 2 && interectPressed) {
+      this.esperandoInteracao = 0;
+
+      this.bigPainelO2.anims.play("acionandoO2", true);
+
+      this.bigPainelO2.once("animationcomplete", (anim, frame) => {
+        if (anim.key === "acionandoO2") {
+          this.bigPainelO2.setVisible(false);
+          this.energy = true;
+          this.o2Ship = true;
+          this.lamp.setIntensity(0);
+          this.movingP1 = true;
+        }
+      });
+    }
 
     const estaSobreInvisible3 = this.physics.overlap(
       this.player,
@@ -2379,13 +2402,12 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
     if (!estaSobreInvisible3) {
       this.camP2 = true;
     } else if (estaSobreInvisible3) {
-
-    if (interectPressed && this.doubleInterecting) {
-      this.interecting = !this.interecting;
-      this.doubleInterecting = false;
-    } else if (!interectPressed) {
-      this.doubleInterecting = true;
-    }
+      if (interectPressed && this.doubleInterecting) {
+        this.interecting = !this.interecting;
+        this.doubleInterecting = false;
+      } else if (!interectPressed) {
+        this.doubleInterecting = true;
+      }
 
       if (!this.interecting && !this.camP2 && interectPressed) {
         this.movingP1 = true;
