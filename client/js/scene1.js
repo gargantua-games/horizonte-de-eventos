@@ -773,33 +773,33 @@ class scene1 extends Phaser.Scene {
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.platform52 = this.platforms
-      .create(769, 3400 - 1184, "plataform")
+    this.platform52 = this.platforms //primeira da segunda parte
+      .create(773, 2310, "plataform")
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.platform53 = this.platforms
-      .create(841, 3375 - 1184, "plataform")
+    this.platform53 = this.platforms //segunda d segunda parte
+      .create(850, 2215, "plataform")
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.platform54 = this.platforms
-      .create(1230, 3375 - 1184, "plataform")
+    this.platform54 = this.platforms //mais da direita
+      .create(1222, 3375 - 1184, "plataform")
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.platforms
+    this.platforms //esquerda do primeiro interagier, acima
       .create(220, 3365 - 1184, "plataform")
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.platform12 = this.physics.add.sprite(361, 2233, "plataform");
+    this.platform12 = this.physics.add.sprite(350, 2243, "plataform"); //primeiro interagir
     this.platform12
       .setImmovable(true)
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.platform15 = this.physics.add.sprite(976, 2183, "plataform");
+    this.platform15 = this.physics.add.sprite(950, 2183, "plataform");
     this.platform15
       .setImmovable(true)
       .setScrollFactor(0.99, 1)
