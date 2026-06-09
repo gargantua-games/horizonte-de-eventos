@@ -6,6 +6,27 @@ class preloader extends Phaser.Scene {
   init(data) {
     // Recebe a próxima cena (padrão "scene1")
     this.nextScene = (data && data.startScene) || "scene1";
+
+    const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
+    const imageRatio = bg.width / bg.height;
+    const screenRatio = this.scale.width / this.scale.height;
+
+    let displayWidth = this.scale.width;
+    let displayHeight = this.scale.height;
+
+    if (screenRatio > imageRatio) {
+      displayWidth = this.scale.height * imageRatio;
+      displayHeight = this.scale.height;
+    } else {
+      displayWidth = this.scale.width;
+      displayHeight = this.scale.width / imageRatio;
+    }
+
+    bg.setDisplaySize(displayWidth, displayHeight);
+    bg.setPosition(
+      (this.scale.width - displayWidth) / 2,
+      (this.scale.height - displayHeight) / 2,
+    );
   }
 
   preload() {
@@ -18,14 +39,14 @@ class preloader extends Phaser.Scene {
 
     // Desenha o contorno da barra de carregamento centralizada na tela
     progressBox.lineStyle(2, 0x63ff8a, 1);
-    progressBox.strokeRect(340, 200, 400, 30);
+    progressBox.strokeRect(340, 175, 400, 30);
 
     // Evento que atualiza a barra conforme os ficheiros são descarregados
     this.load.on("progress", (value) => {
       progressBar.clear();
       progressBar.fillStyle(0x63ff8a, 1);
       // O preenchimento cresce proporcionalmente de 0 a 396px da esquerda para a direita
-      progressBar.fillRect(342, 202, 396 * value, 26);
+      progressBar.fillRect(342, 177, 396 * value, 26);
     });
 
     this.load.on("complete", () => {
@@ -244,27 +265,6 @@ class preloader extends Phaser.Scene {
   }
 
   create() {
-
-    const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
-    const imageRatio = bg.width / bg.height;
-    const screenRatio = this.scale.width / this.scale.height;
-
-    let displayWidth = this.scale.width;
-    let displayHeight = this.scale.height;
-
-    if (screenRatio > imageRatio) {
-      displayWidth = this.scale.height * imageRatio;
-      displayHeight = this.scale.height;
-    } else {
-      displayWidth = this.scale.width;
-      displayHeight = this.scale.width / imageRatio;
-    }
-
-    bg.setDisplaySize(displayWidth, displayHeight);
-    bg.setPosition(
-      (this.scale.width - displayWidth) / 2,
-      (this.scale.height - displayHeight) / 2,
-    );
 
     this.scene.stop("preloader");
     this.scene.start(this.nextScene);
