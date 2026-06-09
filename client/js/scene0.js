@@ -1951,7 +1951,8 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
 
     
     this.game.socket.on('atualizar-movimento-aliens', (pacoteAliens) => {
-    if (!this.inimigosaliens) return;
+      if (!this.inimigosaliens) return;
+      console.log("Posições de inimigos recebidas...");
 
     pacoteAliens.forEach(dados => {
         this.inimigosaliens.getChildren().forEach(alien => {
