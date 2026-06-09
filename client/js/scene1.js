@@ -69,6 +69,7 @@ class scene1 extends Phaser.Scene {
 
   create() {
     this.physics.world.gravity.y = 0;
+    this.infase = 1;
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
@@ -815,7 +816,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.layerParede);
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
-      if (this.doorOpen === 4) {
+      if (this.doorOpen === 4 && this.infase ===5) {
         if (this.playerroxo.y > 530) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
@@ -830,7 +831,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consoles2);
     this.physics.add.collider(this.playerroxo, this.consoles3);
     this.physics.add.collider(this.playerroxo, this.consoles4, () => {
-      if (this.doorOpen === 1) {
+      if (this.doorOpen === 1 && this.infase === 2) {
         if (this.playerroxo.y > 246) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
@@ -844,7 +845,7 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.consoles5, () => {
-      if (this.doorOpen === 0) {
+      if (this.doorOpen === 0 && this.infase === 1) {
         if (this.playerroxo.y > 415) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
@@ -857,7 +858,7 @@ class scene1 extends Phaser.Scene {
       }
     });
     this.physics.add.collider(this.playerroxo, this.consoles6, () => {
-      if (this.doorOpen === 2) {
+      if (this.doorOpen === 2 && this.infase === 3) {
         if (this.playerroxo.y > 566) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
@@ -1167,7 +1168,14 @@ class scene1 extends Phaser.Scene {
 
     this.game.socket.on("scene0", (state) => {
       this.inFinalDoorP1 = state.inFinalDoorP1;
+      
+      if (state && state.infase !== undefined) {
+        this.infase = Number(state.infase);
+        console.log("Scene 1 capturou a fase da Scene 0: ", this.infase);
+      }
     });
+
+    
 
     this.game.socket.on("GameOver", (state) => {
       this.gameOver = state.gameOver;

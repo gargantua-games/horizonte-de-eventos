@@ -41,6 +41,7 @@ class scene0 extends Phaser.Scene {
     this.esperandoInteracao = 0;
     this.inFinalDoorP1 = false;
     this.inFinalDoorP2 = false;
+    this.infase = 1;
   }
 
   init() {
@@ -571,6 +572,77 @@ class scene0 extends Phaser.Scene {
       frameRate: 12,
       repeat: -1,
     });
+
+    this.anims.create({
+      key: "playerIconVerde",
+      frames: this.anims.generateFrameNumbers("playersIcon", {
+        start: 4,
+        end: 5,
+      }),
+      frameRate: 2,
+      repeat: -1,
+    });
+
+     this.anims.create({
+       key: "idleesquerdaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 60,
+         end: 61,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "idlefrenteverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 62,
+         end: 63,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "idledireitaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 64,
+         end: 65,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "andaresquerdaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 66,
+         end: 73,
+       }),
+       frameRate: 11,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "andarfrenteverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 74,
+         end: 81,
+       }),
+       frameRate: 11,
+       repeat: -1,
+     });
+
+     this.anims.create({
+       key: "andardireitaverde",
+       frames: this.anims.generateFrameNumbers("playerroxo", {
+         start: 82,
+         end: 89,
+       }),
+       frameRate: 11,
+       repeat: -1,
+     });
+
 
     this.laser = this.physics.add.group({
       allowGravity: false,
@@ -1372,6 +1444,14 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
               .setPosition(108, 1835)
               //.setVelocity(0, 0)
               .anims.play("idleRight");
+            this.infase = 2;
+            try {
+              this.game.socket.emit("scene0", this.game.room, {
+                infase: this.infase,
+              });
+            } catch (e) {
+              console.error("Error updating player:", e);
+            }
             this.direction = true;
             this.enemyGravity = true;
             this.cameras.main.scrollY =
@@ -1420,6 +1500,14 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
               .setPosition(69, 2508)
               .setVelocity(0, 0)
               .anims.play("idleRightJP");
+            this.infase = 3;
+            try {
+              this.game.socket.emit("scene0", this.game.room, {
+                infase: this.infase,
+              });
+            } catch (e) {
+              console.error("Error updating player:", e);
+            }
             this.direction = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 3.8 - 120;
@@ -1459,6 +1547,14 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
             this.fase3 = false;
+            this.infase = 4;
+            try {
+              this.game.socket.emit("scene0", this.game.room, {
+                infase: this.infase,
+              });
+            } catch (e) {
+              console.error("Error updating player:", e);
+            }
             this.cargaJp = 0;
             this.updateCargaBar();
             this.door14.anims.play("close-door", true);
@@ -1514,6 +1610,14 @@ this.physics.add.overlap(this.player, this.painelLuz, () => {
               .setPosition(92, 3532)
               .setVelocity(0, 0)
               .anims.play("idleRightJP");
+            this.infase = 5;
+            try {
+              this.game.socket.emit("scene0", this.game.room, {
+                infase: this.infase,
+              });
+            } catch (e) {
+              console.error("Error updating player:", e);
+            }
             this.direction = true;
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
