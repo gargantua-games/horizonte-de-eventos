@@ -673,7 +673,7 @@ class scene1 extends Phaser.Scene {
     this.consolew6.setImmovable(true);
 
     this.cannon = this.add.sprite(656, (4320 - 2616), "torreta");
-    this.cannon.setPipeline("Light2D").setAngle(180).setDepth(999);
+    this.cannon.setPipeline("Light2D").setAngle(180).setDepth(999).setScale(1.5);
 
     //exterior da nave antenas
     this.antenas = this.physics.add.group({
@@ -977,10 +977,8 @@ class scene1 extends Phaser.Scene {
             this.faisca3.setVisible(false);
           }
            this.isConsertando = false;
-          this.painelfios.setVisible(false);
-          //this.painelfios.anims.stop();
-          this.antenasconsertadas += 1;
-          this.liberarIa();
+           this.painelfios.setVisible(false);
+           this.iaChip.enableBody(true, 1107, (this.playerroxo.y + 64), true, true)
         }
       });
     });
@@ -1042,53 +1040,18 @@ class scene1 extends Phaser.Scene {
     });
 
 
-    const destroyLaser = (laser, limit) => {
-      if (laser && laser.disableBody) {
-        laser.disableBody(true, true);
-      } else if (laser && laser.destroy) {
-        laser.destroy();
-      }
-    };
-
-    this.physics.add.collider(
-      this.laserP1,
-      this.limiteporta,
-      destroyLaser,
-      null,
-      this,
-    );
     this.physics.add.collider(
       this.laserP1,
       this.limitenorte,
-      destroyLaser,
+      this.destroyLaser(),
       null,
       this,
     );
-    this.physics.add.collider(
-      this.laserP1,
-      this.limitesul,
-      destroyLaser,
-      null,
-      this,
-    );
-    this.physics.add.collider(
-      this.laserP1,
-      this.limiteoeste,
-      destroyLaser,
-      null,
-      this,
-    );
-    this.physics.add.collider(
-      this.laserP1,
-      this.limiteleste,
-      destroyLaser,
-      null,
-      this,
-    );
+    
     this.physics.add.collider(
       this.laserP1,
       this.limites,
-      destroyLaser,
+      this.destroyLaser(),
       null,
       this,
     );
@@ -1321,6 +1284,8 @@ class scene1 extends Phaser.Scene {
       }
     });
   }
+
+
 
   liberarIa() {
     if (this.antenasconsertadas === 3) {
@@ -1994,7 +1959,7 @@ class scene1 extends Phaser.Scene {
   teletransporte() {
     if (this.fase4) {
       this.porta.anims.play("portaabrindo", true);
-      this.time.delayedCall(1000, () => {
+      
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
         this.outShip = true;
         this.positionP2 = true;
@@ -2002,29 +1967,29 @@ class scene1 extends Phaser.Scene {
         this.trilhasonora.pause();
         this.respiracao.play();
         this.batimentocardiaco.play();
-      });
     }
   }
 
   teletransporte2() {
-    if (this.antenasconsertadas === 3)
-    {
+    if (this.antenasconsertadas === 3) { 
+    
       this.porta2.anims.play("portaabrindo", true);
-      this.positionP2 = false;
+      
 
       // Define a porta aberta como 4 no estado local e também envia para o servidor.
       this.abrirPorta(4);
-      this.fase5 = true;
-
-      this.time.delayedCall(1000, () => {
-        this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
-        this.outShip = false;
+      //this.fase5 = true;  
+        
+      this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
+      this.positionP2 = false;
+      this.outShip = false;
         this.porta2.anims.play("portafechando", true);
         this.trilhasonora.play();
         this.respiracao.pause();
         this.batimentocardiaco.pause();
-      });
-    }
+      
+    
+  }
   }
 
   
@@ -2098,6 +2063,10 @@ class scene1 extends Phaser.Scene {
     enemy.destroy();
     laser.destroy();
   }
+
+   destroyLaser(laser, limit) {
+     laser.destroy();
+    };
 
   webrtcMakeCall() {
     this.game.localConnection = new RTCPeerConnection(this.game.iceServers);

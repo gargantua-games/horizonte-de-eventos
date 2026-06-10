@@ -1237,6 +1237,10 @@ class scene0 extends Phaser.Scene {
     
     this.cannon.setCollideWorldBounds(true);
 
+    this.limitenorte = this.physics.add.sprite(670, (1317 + 2624), "bigboss"); //662, 1347 667 1460
+    this.limitenorte.setImmovable(true);
+    this.limitenorte.setSize(1280, 17);
+
     this.inimigosaliens = this.add.group({
       immovable: false,
       pipeline: "Light2D",
@@ -1306,19 +1310,10 @@ class scene0 extends Phaser.Scene {
     //inimigo
     this.physics.add.collider(this.inimigo, this.layerPiso);
 
-    this.physics.add.collider(this.laser, this.layerPiso, () => {
-      this.laser.clear(true, true);
-    });
+    this.physics.add.collider(this.laser, this.layerPiso, this.laserFloor, null, this);
+    this.physics.add.collider(this.laserP1, this.limitenorte, this.laserFloor, null, this);
 
-    this.physics.add.collider(this.laser, this.inimigo, () => {
-      this.inimigo.disableBody(true, true);
-      this.laser.clear(true, true);
-      this.jetBag
-        .create(this.inimigo.x, this.inimigo.y, "jetBag")
-        //.setScrollFactor(0.9, 1)
-        .setPipeline("Light2D")
-        .anims.play("jetBag-idle", true).body.allowGravity = false;
-    });
+    this.physics.add.collider(this.laser, this.inimigo, this.destroyLaser, null, this);
 
     this.physics.add.overlap(this.player, this.painelLuz, () => {
       if (this.painelJaAcionado === 1) return;
@@ -2725,6 +2720,24 @@ class scene0 extends Phaser.Scene {
       }, 100);
     }
   }
+
+    destroyLaser(laser, enemy) {
+      laser.destroy();
+      enemy.disableBody();
+      this.jetBag
+        .create(this.inimigo.x, this.inimigo.y, "jetBag")
+        //.setScrollFactor(0.9, 1)
+        .setPipeline("Light2D")
+        .anims.play("jetBag-idle", true);
+      
+      this.physics.add.collider(this.jetBag, this.layerPiso);
+      
+    };
+
+  laserFloor(laser, piso) {
+    laser.destroy();
+  }
+  
 
   enemyAt(player, inimigo) {
     if (!this.canTakeDamage) {
