@@ -5,7 +5,7 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 4;
-    this.fase4 = false;
+    this.fase4 = true;
     this.fase5 = false;
     this.vida = 300;
     this.invulnerable = false;
@@ -42,6 +42,7 @@ class scene1 extends Phaser.Scene {
     this.inFinalDoorP2 = false;
     this.camP1 = false;
     this.score = 0;
+    this.concertando = false;
     //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
@@ -461,7 +462,7 @@ class scene1 extends Phaser.Scene {
         end: 3,
       }),
       frameRate: 3,
-      repeat: -1,
+      repeat: 0,
     });
 
     this.createSemicircleLifeBar();
@@ -734,6 +735,7 @@ class scene1 extends Phaser.Scene {
     //faisca no telescopio
     this.faisca3 = this.add.sprite(1107, 1490, "faisca");
     this.faisca3.anims.play("faiscando").setScale(2);
+    this.faisca3.setVisible(false);
 
     this.anims.create({
       key: "chipIdle",
@@ -922,82 +924,109 @@ class scene1 extends Phaser.Scene {
       //  this.liberarIa();
       // });
       // }
-      this.painelfios.setVisible(true);
-      this.painelfios.setDepth(3);
-      this.painelfios.setScale(5);
-      if (this.faisca1) {
-        this.faisca1.setVisible(false);
+      if (this.isConsertando) {
+        return;
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
+
+      // Trava para impedir que o código rode nos próximos frames de colisão
+      this.isConsertando = true;
+      this.painelfios.setVisible(true).setDepth(3).setScale(5);
       this.painelfios.anims.play("fiosconsertando");
-      this.time.delayedCall(1400, () => {
+      this.painelfios.once("animationcomplete", (anim, frame) => {
+        if (anim.key === "fiosconsertando") { 
+        if (this.faisca1) {
+          this.faisca1.setVisible(false);
+        }
+        this.isConsertando = false;
         this.painelfios.setVisible(false);
-        this.painelfios.anims.stop();
+        //this.painelfios.anims.stop();
+        this.antenasconsertadas += 1;
+          this.liberarIa();
+        
+      }
       });
+        
     });
 
     this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
-      this.painelfios.setPosition(1107, 1490);
-      this.painelfios.setVisible(true);
-      this.painelfios.setDepth(3);
-      this.painelfios.setScale(5);
-      if (this.faisca3) {
-        this.faisca3.setVisible(false);
+      if (this.isConsertando) {
+        return;
       }
-      this.iaChip.enableBody(
-        true,
-        this.playerroxo.x + 35,
-        this.playerroxo.y,
-        true,
-        true,
-      );
-      this.antenasconsertadas += 1;
-      this.liberarIa();
+      this.painelfios.setPosition(1107, 1490);
+      // Trava para impedir que o código rode nos próximos frames de colisão
+      this.isConsertando = true;
+      this.painelfios.setVisible(true).setDepth(3).setScale(5);
       this.painelfios.anims.play("fiosconsertando");
-      this.time.delayedCall(1400, () => {
-        this.painelfios.setVisible(false);
-        this.painelfios.anims.stop();
+      this.painelfios.once("animationcomplete", (anim, frame) => {
+        if (anim.key === "fiosconsertando") {
+          if (this.faisca3) {
+            this.faisca3.setVisible(false);
+          }
+           this.isConsertando = false;
+          this.painelfios.setVisible(false);
+          //this.painelfios.anims.stop();
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+        }
       });
     });
+
 
     this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
       this.playerIa();
     });
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
-      this.painelfios.setPosition(820, 1420);
-      this.painelfios.setVisible(true);
-      this.painelfios.setDepth(3);
-      this.painelfios.setScale(5);
-      if (this.faisca2) {
-        this.faisca2.setVisible(false);
+      if (this.isConsertando) {
+        return;
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
+      this.painelfios.setPosition(820, 1420);
+      // Trava para impedir que o código rode nos próximos frames de colisão
+      this.isConsertando = true;
+      this.painelfios.setVisible(true).setDepth(3).setScale(5);
       this.painelfios.anims.play("fiosconsertando");
-      this.time.delayedCall(1400, () => {
-        this.painelfios.setVisible(false);
-        this.painelfios.anims.stop();
+      this.painelfios.once("animationcomplete", (anim, frame) => {
+        if (anim.key === "fiosconsertando") {
+          if (this.faisca2) {
+            this.faisca2.setVisible(false);
+          }
+           this.isConsertando = false;
+          this.painelfios.setVisible(false);
+          //this.painelfios.anims.stop();
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+          
+          
+        }
       });
     });
 
+
     this.physics.add.collider(this.playerroxo, this.antena4, () => {
-      this.painelfios.setPosition(433, 1468);
-      this.painelfios.setVisible(true);
-      this.painelfios.setDepth(3);
-      this.painelfios.setScale(5);
-      if (this.faisca4) {
-        this.faisca4.setVisible(false);
+      if (this.isConsertando) {
+        return;
       }
-      this.antenasconsertadas += 1;
-      this.liberarIa();
+      this.painelfios.setPosition(433, 1468);
+      // Trava para impedir que o código rode nos próximos frames de colisão
+      this.isConsertando = true;
+      this.painelfios.setVisible(true).setDepth(3).setScale(5);
       this.painelfios.anims.play("fiosconsertando");
-      this.time.delayedCall(1400, () => {
-        this.painelfios.setVisible(false);
-        this.painelfios.anims.stop();
+      this.painelfios.once("animationcomplete", (anim, frame) => {
+        if (anim.key === "fiosconsertando") {
+          if (this.faisca4) {
+            this.faisca4.setVisible(false);
+          }
+           this.isConsertando = false;
+          this.painelfios.setVisible(false);
+          //this.painelfios.anims.stop();
+          this.antenasconsertadas += 1;
+          this.liberarIa();
+          
+          
+        }
       });
     });
+
 
     const destroyLaser = (laser, limit) => {
       if (laser && laser.disableBody) {
@@ -1273,14 +1302,17 @@ class scene1 extends Phaser.Scene {
   }
 
   liberarIa() {
-    if (this.antenasconsertadas != 3) {
+    if (this.antenasconsertadas === 3) {
+      this.faisca3.setVisible(true);
+      this.faisca3.anims.play("faiscando");
+      console.log("ia disponivel");
+      return;
+    } else if (this.antenasconsertadas != 3) {
       console.log("ia não disponivel");
       this.faisca3.setVisible(false);
-      return;
-    } else if (this.antenasconsertadas === 3) console.log("ia disponivel");
-    this.faisca3.setVisible(true);
-  } 
-
+    }
+  }
+  
   playerIa() {
     this.iaChip.disableBody(true, true);
     this.collectIa = true;
@@ -1390,7 +1422,9 @@ class scene1 extends Phaser.Scene {
     this.puzzleAberto = this.verificarMinigamesAtivos();
     this.cannon.setAngle(this.angleCannon);
 
-    console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
+    this.liberarIa();
+
+   // console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
 
     if (this.inFinalDoorP2) {
       this.game.socket.emit("scene1", this.game.room, {
