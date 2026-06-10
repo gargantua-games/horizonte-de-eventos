@@ -18,8 +18,8 @@ class scene1 extends Phaser.Scene {
       "termo",
       "sudoku",
     ];
-    this.portaOverlapTime = 0;
-    this.porta2OverlapTime = 0;
+   // this.portaOverlapTime = 0;
+    //this.porta2OverlapTime = 0;
     this.portalTeleported = false;
     this.portal2Teleported = false;
     this.bulletP1 = true;
@@ -1585,28 +1585,22 @@ class scene1 extends Phaser.Scene {
     const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
     if (portaOverlap && !this.portalTeleported) {
-      this.portaOverlapTime += delta;
-      if (this.portaOverlapTime >= 2000) {
+    //  this.portaOverlapTime += delta;
+      //if (this.portaOverlapTime >= 2000) {
         this.portalTeleported = true;
-        this.portaOverlapTime = 0;
+        //this.portaOverlapTime = 0;
         this.teletransporte();
-      }
-    } else if (!portaOverlap) {
-      this.portaOverlapTime = 0;
-      this.portalTeleported = false;
+     // }
     }
 
     if (porta2Overlap && !this.portal2Teleported) {
-      this.porta2OverlapTime += delta;
-      if (this.porta2OverlapTime >= 2000) {
+     // this.porta2OverlapTime += delta;
+    //  if (this.porta2OverlapTime >= 2000) {
         this.portal2Teleported = true;
-        this.porta2OverlapTime = 0;
+       // this.porta2OverlapTime = 0;
         this.teletransporte2();
-      }
-    } else if (!porta2Overlap) {
-      this.porta2OverlapTime = 0;
-      this.portal2Teleported = false;
-    }
+     // }
+    } 
 
     if (this.puzzleAberto) {
       if (this.playerroxo) {
