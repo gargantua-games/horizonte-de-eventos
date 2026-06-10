@@ -1700,8 +1700,8 @@ class scene0 extends Phaser.Scene {
       loop: true,
       callback: () => {
         this.positionText.setText(
-          
-          `X: ${Math.round(this.inimigo.x)} Y: ${Math.round(this.inimigo.y)}`
+          this.movingP1,
+          /*`X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`*/
         );
       },
     });
@@ -2220,7 +2220,7 @@ class scene0 extends Phaser.Scene {
 
         this.game.socket.removeAllListeners();
         this.scene.stop("scene0");
-        this.scene.start("scene2", { role: "pilot", engrenagens: this.score, });
+        this.scene.start("scene2", { role: "pilot", engrenagens: this.score,});
       }
     }
 
@@ -2236,12 +2236,12 @@ class scene0 extends Phaser.Scene {
           },
 
           door15: this.door15.anims.currentAnim
-            ? this.door15.anims.currentAnim.key
-            : null,
+              ? this.door15.anims.currentAnim.key
+              : null,
 
           door25: this.door25.anims.currentAnim
-            ? this.door25.anims.currentAnim.key
-            : null,
+              ? this.door25.anims.currentAnim.key
+              : null,
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -2265,17 +2265,17 @@ class scene0 extends Phaser.Scene {
     }
 
     if (this.fase4) {
-      try {
-        this.game.socket.emit("scene0", this.game.room, {
-          cannon: {
-            x: this.cannon.x,
-            y: this.cannon.y,
-            shooting: this.shooting,
-          },
-        });
-      } catch (e) {
-        console.error("Error updating player:", e);
-      }
+    try {
+      this.game.socket.emit("scene0", this.game.room, {
+        cannon: {
+          x: this.cannon.x,
+          y: this.cannon.y,
+          shooting: this.shooting,
+        },
+      });
+    } catch (e) {
+      console.error("Error updating player:", e);
+    }
     }
 
     if (this.energy) {
@@ -2328,8 +2328,8 @@ class scene0 extends Phaser.Scene {
     const padPressed =
       !!pad && Array.isArray(pad.buttons)
         ? pad.buttons.some(
-          (button) => button && (button.pressed || button.value > 0.1),
-        )
+            (button) => button && (button.pressed || button.value > 0.1),
+          )
         : false;
 
     let horizontal = 0;
@@ -2469,8 +2469,8 @@ class scene0 extends Phaser.Scene {
       } else if (this.interecting && interectPressed) {
         this.iaBox.setVisible(false);
         this.uI.setVisible(false);
-        this.physics.world.setBounds(43, 0, 1222);
-        this.cameras.main.setBounds(43, 0, 1222);
+       this.physics.world.setBounds(43, 0, 1222);
+       this.cameras.main.setBounds(43, 0, 1222);
         this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
         this.cameras.main.scrollY =
           this.cannon.y - this.cameras.main.height + 1;
@@ -2687,50 +2687,49 @@ class scene0 extends Phaser.Scene {
     }
     if (this.inimigo.body.blocked.down) {
       //se inimigo estiver no chão, ele segue o player
-      this.enemyGravity = false
       this.torreta.anims.play("torretaidle", true);
       this.torreta.once("animationcomplete", (anim, frame) => {
         if (anim.key === "torretaidle") {
           this.movingTorreta = true;
         }
       });
-        setInterval(() => {
-      
-        if (this.player.x - this.inimigo.x > 50) {
-          this.inimigo
-            .setVelocityX(120)
-            .anims.play("enemyWalk", true)
-            .setPipeline("Light2D")
-            .body.setSize(30, 37)
-            .setOffset(33, 17);
-          this.inimigo.flipX = true;
-        } else if (this.player.x - this.inimigo.x < -50) {
-          this.inimigo
-            .setVelocityX(-120)
-            .anims.play("enemyWalk", true)
-            .setPipeline("Light2D")
-            .body.setSize(30, 37)
-            .setOffset(55, 17);
-          this.inimigo.flipX = false;
-        } else if (0 < this.player.x - this.inimigo.x < 0) {
-          this.inimigo.setVelocityX(0);
+      setInterval(() => {
+        if (this.inimigo.y === 1837) {
+          if (this.player.x - this.inimigo.x > 50) {
+            this.inimigo
+              .setVelocityX(120)
+              .anims.play("enemyWalk", true)
+              .setPipeline("Light2D")
+              .body.setSize(30, 37)
+              .setOffset(33, 17);
+            this.inimigo.flipX = true;
+          } else if (this.player.x - this.inimigo.x < -50) {
+            this.inimigo
+              .setVelocityX(-120)
+              .anims.play("enemyWalk", true)
+              .setPipeline("Light2D")
+              .body.setSize(30, 37)
+              .setOffset(55, 17);
+            this.inimigo.flipX = false;
+          } else if (0 < this.player.x - this.inimigo.x < 0) {
+            this.inimigo.setVelocityX(0);
+          }
+        } else if (this.inimigo.y != 1837) {
+          this.inimigo.setVelocityX(0).setFrame("14");
         }
-      
-       }, 100);
-    } else { 
-    this.inimigo.setVelocityX(0).setFrame("14");
-  }
+      }, 100);
+    }
   }
 
     destroyLaser(laser, enemy) {
       laser.destroy();
-      this.inimigo.disableBody(true, true);
       this.jetBag
         .create(this.inimigo.x, this.inimigo.y, "jetBag")
         //.setScrollFactor(0.9, 1)
         .setPipeline("Light2D")
         .anims.play("jetBag-idle", true);
       
+      this.inimigo.disableBody(true);
       this.physics.add.collider(this.jetBag, this.layerPiso);
       
     };
