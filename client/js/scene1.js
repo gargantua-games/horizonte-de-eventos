@@ -1386,6 +1386,8 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.setVisible(false);
     }
 
+    //if (this.fase4) {
+
     if (this.positionP2 && this.fase4) {
       try {
         this.game.socket.emit("scene1", this.game.room, {
@@ -1401,6 +1403,7 @@ class scene1 extends Phaser.Scene {
         console.error("Error updating player:", e);
       }
     }
+    //}
 
     if (this.game.audio && this.comunication) {
       this.game.audio.volume = this.comunication.isDown ? 1 : 0;
@@ -1438,6 +1441,18 @@ class scene1 extends Phaser.Scene {
           .setVelocityX(-150);
       }
     }
+
+    /*if (this.puzzleAberto) {
+      if (this.playerroxo) {
+        this.playerroxo.setVelocity(0, 0);
+        this.playerroxo.anims.play("idlecostas", true);
+        this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
+      }
+      if (this.passos && this.passos.isPlaying) {
+        this.passos.stop();
+      }
+      return;
+    }*/
 
     if (!this.outShip) {
       this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
@@ -1666,8 +1681,6 @@ class scene1 extends Phaser.Scene {
         const dy = this.playerroxo.y - enemy.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         const isTouchingCaixa = this.physics.overlap(enemy, this.caixa);
-        enemy.body.setCollideWorldBounds(true);
-        enemy.body.allowSleep = false;
 
         if (distance > 0) {
           enemy.setVelocityX((dx / distance) * 80);
@@ -1710,10 +1723,11 @@ class scene1 extends Phaser.Scene {
           id: alien.getData("id"),
           x: alien.x,
           y: alien.y,
+          // vx: alien.body.velocity.x,
+          // vy: alien.body.velocity.y,
           flipX: alien.flipX, // Lado para onde está olhando
           anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null, // Animação atual
         });
-        console.log("Enviando posições dos aliens para o socket...");
       });
 
       // Transmite o bloco de movimentos para a scene0

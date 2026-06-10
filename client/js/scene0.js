@@ -1956,10 +1956,8 @@ class scene0 extends Phaser.Scene {
       }
     });
 
-
-    
-    this.game.socket.on('atualizar-movimento-aliens', (pacoteAliens) => {
-    if (!this.inimigosaliens) return;
+    this.game.socket.on("atualizar-movimento-aliens", (pacoteAliens) => {
+      if (!this.inimigosaliens) return;
 
       pacoteAliens.forEach((dados) => {
         this.inimigosaliens.getChildren().forEach((alien) => {
