@@ -2693,7 +2693,7 @@ class scene0 extends Phaser.Scene {
           this.movingTorreta = true;
         }
       });
-      setInterval(() => {
+    //  setInterval(() => {
         if (this.inimigo.y === 1837) {
           if (this.player.x - this.inimigo.x > 50) {
             this.inimigo
@@ -2717,7 +2717,7 @@ class scene0 extends Phaser.Scene {
         } else if (this.inimigo.y != 1837) {
           this.inimigo.setVelocityX(0).setFrame("14");
         }
-      }, 100);
+     // }, 100);
     }
   }
 
