@@ -6,7 +6,7 @@ class scene1 extends Phaser.Scene {
     this.estoutrabalhando = false;
     this.doorOpen = 0;
     this.fase4 = true;
-    this.fase5 = false;
+    this.fase5 = true;
     this.vida = 300;
     this.invulnerable = false;
     this.positionP2 = false;
@@ -156,6 +156,16 @@ class scene1 extends Phaser.Scene {
     this.lights.enable().setAmbientColor(0xe0f7ff);
 
     //animações
+     this.anims.create({
+       key: "engrenagem-idleciano",
+       frames: this.anims.generateFrameNumbers("engrenagem", {
+         start: 6,
+         end: 7,
+       }),
+       frameRate: 2,
+       repeat: -1,
+     });
+    
     this.anims.create({
       key: "playerIcon",
       frames: this.anims.generateFrameNumbers("playersIcon", {
@@ -827,6 +837,10 @@ class scene1 extends Phaser.Scene {
       .create(220, 3365 - 1184, "plataform")
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
+
+    this.cracha = this.physics.add.sprite(535, 2165, "engrenagem");
+    this.cracha.anims.play("engrenagem-idleciano");
+    this.cracha.setScale(0.8);
 
     this.platform12 = this.physics.add.sprite(350, 2243, "plataform"); //primeiro interagir
     this.platform12
