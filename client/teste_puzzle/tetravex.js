@@ -131,12 +131,18 @@ export default class Tetravex extends Phaser.Scene {
       }
     });
 
-    // Criar superfície dinâmica de desenho dentro do Phaser
-    this.canvasTexture = this.textures.createCanvas(
-      "tetravex_canvas",
-      width,
-      height,
-    );
+    // [CORREÇÃO AQUI]: Criar ou reaproveitar a superfície dinâmica de desenho dentro do Phaser
+    if (this.textures.exists("tetravex_canvas")) {
+      this.canvasTexture = this.textures.get("tetravex_canvas");
+      this.canvasTexture.clear(); // Limpa o conteúdo anterior
+    } else {
+      this.canvasTexture = this.textures.createCanvas(
+        "tetravex_canvas",
+        width,
+        height,
+      );
+    }
+
     this.ctx = this.canvasTexture.getContext();
     this.canvasImage = this.add.image(0, 0, "tetravex_canvas").setOrigin(0);
 

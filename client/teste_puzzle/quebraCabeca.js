@@ -46,7 +46,7 @@ export default class quebraCabeca extends Phaser.Scene {
           {
             fill: "#00ff0d",
             fontFamily: "sarpanchregular",
-            fontSize: "45px",
+            fontSize: "40px",
           },
         )
         .setOrigin(0.5)

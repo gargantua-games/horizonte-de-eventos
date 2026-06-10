@@ -42,9 +42,9 @@ class gameover1 extends Phaser.Scene {
     const Text1 = "SIMULAÇÃO FRACASSADA";
     const Text2 = "Você falhou.\nMais sorte da próxima vez";
 
-    this.text1 = this.add.text(325, 110, "", {
+    this.text1 = this.add.text(323, 110, "", {
       fontFamily: "sarpanchregular",
-      fontSize: "33px",
+      fontSize: "28px",
       fill: "#63ff8a",
     });
 

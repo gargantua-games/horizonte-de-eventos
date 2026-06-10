@@ -128,7 +128,7 @@ class scene0 extends Phaser.Scene {
       right: Phaser.Input.Keyboard.KeyCodes.D,
     });
     // ===============================================
-
+    this.disparo = this.sound.add("disparo", { volume: 0.7 });
     this.passos = this.sound.add("passos", { loop: true, volume: 2 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
@@ -1187,7 +1187,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 3532, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1921,6 +1921,7 @@ class scene0 extends Phaser.Scene {
           }
           if (jklState.K && this.bullet === true) {
             this.bullet = false;
+            this.disparo.play();
 
             this.laser
               .create(this.torreta.x - 15, this.torreta.y - 5, "torreta", 9) //873, 950 //400, 40

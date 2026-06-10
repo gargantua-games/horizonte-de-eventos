@@ -65,9 +65,9 @@ export default class helldivers extends Phaser.Scene {
 
     this.comojogarText = this.add
       .text(
-        650,
+        660,
         215,
-        "Aperte as teclas das setas correspondentes à sequência.\nMas rápido, o seu tempo é limitado!\nClique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
+        "Aperte as teclas das setas correspondentes à sequência.\nMas rápido, o seu tempo é limitado!\nClique em (como jogar) de novo para fechar o tutorial\ne recomeçar o desafio.",
         {
           fill: "#00ff0d",
           fontFamily: "sarpanchregular",

@@ -34,13 +34,13 @@ export default class sudoku extends Phaser.Scene {
 
     this.comojogarText = this.add
       .text(
-        600,
+        622,
         215,
         "Utilize as teclas dos números 1,2,3 e 4. Cada coluna/linha deve ter um dígito de cada,\nou seja, uma coluna/linha não deve ter dígitos repetidos.\nCaso termine o sudoku e ele ficar vermelho, significa que algum número\ndo tabuleiro está errado. Descubra onde está seu(s) erro(s) e coloque o(s) número(s) certo(s)\nno lugar. Clique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
         {
           fill: "#00ff0d",
           fontFamily: "sarpanchregular",
-          fontSize: "20px",
+          fontSize: "19px",
         },
       )
       .setOrigin(0.5)
