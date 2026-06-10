@@ -242,22 +242,43 @@ if (this.game.room) {
       if (boss) this.atirarInimigo(boss, data.ataque); // Força o ataque que o piloto sorteou
     });
 
-   /* this.game.socket.on("destroy-entity", (id) => {
-       this.destruirEntidadeRemota(id); // Para quando o piloto avisar que algo morreu
-    });*/
+    this.game.socket.on("ship-shot", () => {
+      this.dispararTiro(); 
+    });
+   
+    // === NOVO: RECEBER VIDA DO JOGADOR ===
+    this.game.socket.on("sync-player-health", (data) => {
+      // Força a barra de vida do atirador a ser igual à do piloto
+      this.vidaAtual = data.hp;
+      this.desenharBarraVida();
 
-  }
+      // Garante que o atirador morra se o piloto disser que a vida zerou
+      if (this.vidaAtual <= 0 && !this.playerIsDead) {
+        this.playerIsDead = true;
+        this.nave.setVelocity(0, 0);
+        this.nave.setTint(0xff0000);
+        this.time.delayedCall(1500, () => this.scene.start("gameover1"));
+      }
+    });
 
-  // Lógica de Ambos: Os dois precisam escutar quando um tiro é disparado
-  // para instanciar o laser na tela ao mesmo tempo
-  this.game.socket.on("ship-shot", () => {
-    this.dispararTiro(); // Sua função que cria o tiro na tela
-  });
-
-  
-
+    this.game.socket.on("sync-enemy-health", (data) => {
+      // Procura o inimigo pelo ID Único
+      let inimigo = this.enemies.getChildren().find(e => e.idUnico === data.id);
+      
+      if (inimigo && !inimigo.isDead) {
+        inimigo.hp = data.hp; // Sobrescreve a vida local com a do Piloto
+        
+        // Se a física falhou localmente para o atirador, mas o piloto confirmou a morte:
+        if (inimigo.hp <= 0) {
+           inimigo.isDead = true;
+           // Opcional: Você pode forçar a lógica de morte aqui ou deixar 
+           // o próprio código do Atirador limpar na próxima colisão que ele registrar.
+        }
+      }
+    });
     
-
+  }
+  
   }
 
   update(time, delta) {
@@ -999,6 +1020,14 @@ spawnAsteroide(customY, remoteData = null) {
     inimigo.hp -= tiro.dano;
     tiro.destroy();
 
+    if (this.localRole === "pilot") {
+      this.game.socket.emit("sync-enemy-health", {
+        room: this.game.room,
+        id: inimigo.idUnico,
+        hp: inimigo.hp
+      });
+    }
+
     inimigo.setTint(0xff3333);
     this.time.delayedCall(100, () => { if (inimigo && inimigo.active) inimigo.clearTint(); });
 
@@ -1075,7 +1104,14 @@ spawnAsteroide(customY, remoteData = null) {
     this.nave.setTint(0xff3333);
     this.time.delayedCall(150, () => { if (!this.playerIsDead && this.nave.active) this.nave.clearTint(); });
 
-    if (this.vidaAtual <= 0) {
+    if (this.localRole === "pilot") {
+      this.game.socket.emit("sync-player-health", {
+        room: this.game.room,
+        hp: this.vidaAtual
+      });
+    }
+
+    if (this.vidaAtual <= 0 && !this.playerIsDead) {
       this.playerIsDead = true;
       this.nave.setVelocity(0, 0);
       this.nave.setTint(0xff0000);
