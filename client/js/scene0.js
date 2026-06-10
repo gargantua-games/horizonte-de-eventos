@@ -1700,8 +1700,8 @@ class scene0 extends Phaser.Scene {
       loop: true,
       callback: () => {
         this.positionText.setText(
-          this.movingP1,
-          /*`X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`*/
+          
+          `X: ${Math.round(this.inimigo.x)} Y: ${Math.round(this.inimigo.y)}`
         );
       },
     });
@@ -2687,6 +2687,7 @@ class scene0 extends Phaser.Scene {
     }
     if (this.inimigo.body.blocked.down) {
       //se inimigo estiver no chão, ele segue o player
+      this.enemyGravity = false
       this.torreta.anims.play("torretaidle", true);
       this.torreta.once("animationcomplete", (anim, frame) => {
         if (anim.key === "torretaidle") {
