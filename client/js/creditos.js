@@ -13,14 +13,10 @@ class creditos extends Phaser.Scene {
 
     const content = [
       
-      "Desenvolvedores de jogos:",
+      "Desenvolvedores do jogo:",
       "Luiza",
       "Rafael",
       "Pedro",
-      "",
-
-      "Designer de jogos:",
-      "sla o q q é isso",
       "",
 
       "Artista digital:",
@@ -64,6 +60,7 @@ class creditos extends Phaser.Scene {
 
       "Código da cena de créditos (esta mesma): Elise, do Astronautica",
       "",
+      
 
       "OBRIGADO POR JOGAR HORIZONTE DE EVENTOS!"
     ];

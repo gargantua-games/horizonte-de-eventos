@@ -8,15 +8,7 @@ class gameover2 extends Phaser.Scene {
  // }
 
   create() {
-   if (this.trilhasonora) {
-     this.trilhasonora.pause();
-   }
-   if (this.respiracao) {
-     this.respiracao.pause();
-   }
-   if (this.batimentocardiaco) {
-     this.batimentocaridaco.pause();
-   }
+  this.sound.stopAll();
 
    this.trilhacreditos = this.sound.add("trilhacreditos", {
      loop: true,
@@ -105,11 +97,22 @@ class gameover2 extends Phaser.Scene {
     };
 
     typeChar1();
+ this.delayedCall = this.time.delayedCall(13000, () => {
+   //12000
+   this.tweens.add({
+     targets: [bg, this.text1, this.text2,this.text3],
+     alpha: 0,
+     duration: 1200,
+     ease: "Linear",
+     delay: 200,
+   });
+ });
 
-     this.time.delayedCall(8000, () => {
-       this.scene.stop("gameover2");
-       this.scene.start("creditos");
-     });
+ this.time.delayedCall(15000, () => {
+   this.scene.stop("gameover2");
+   this.scene.start("creditos");
+ });
+   
   }
 
   update() {}

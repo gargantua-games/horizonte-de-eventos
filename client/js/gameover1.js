@@ -8,10 +8,7 @@ class gameover1 extends Phaser.Scene {
   //}
 
   create() {
-
-    if(this.trilhasonora){this.trilhasonora.pause()}
-    if (this.respiracao) { this.respiracao.pause(); }
-    if (this.batimentocardiaco){this.batimentocaridaco.pause();}
+    this.sound.stopAll();
     
     this.trilhacreditos = this.sound.add("trilhacreditos", {
       loop: true,
@@ -83,7 +80,18 @@ class gameover1 extends Phaser.Scene {
 
     typeChar1();
 
-    this.time.delayedCall(8000, () => {
+     this.delayedCall = this.time.delayedCall(10000, () => {
+       //12000
+       this.tweens.add({
+         targets: [bg, this.text1,this.text2],
+         alpha: 0,
+         duration: 1200,
+         ease: "Linear",
+         delay: 200,
+       });
+     });
+    
+    this.time.delayedCall(12000, () => {
       this.scene.stop("gameover1");
       this.scene.start("creditos");
     });
