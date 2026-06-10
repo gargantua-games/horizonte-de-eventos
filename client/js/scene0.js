@@ -1315,13 +1315,13 @@ class scene0 extends Phaser.Scene {
 
     this.physics.add.collider(this.laser, this.inimigo, () => {
       this.laser.destroy();
+      this.inimigo.disableBody(true, true);
       this.jetBag
         .create(this.inimigo.x, this.inimigo.y, "jetBag")
         //.setScrollFactor(0.9, 1)
         .setPipeline("Light2D")
         .anims.play("jetBag-idle", true);
       
-      this.inimigo.disableBody(true, true);
       this.physics.add.collider(this.jetBag, this.layerPiso);
     });
 
