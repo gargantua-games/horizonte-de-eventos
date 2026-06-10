@@ -1311,6 +1311,7 @@ class scene0 extends Phaser.Scene {
     this.physics.add.collider(this.inimigo, this.layerPiso);
 
     this.physics.add.collider(this.laser, this.layerPiso, this.laserFloor, null, this);
+    this.physics.add.collider(this.laserP1, this.layerPiso, this.laserFloor, null, this);
     this.physics.add.collider(this.laserP1, this.limitenorte, this.laserFloor, null, this);
 
     this.physics.add.collider(this.laser, this.inimigo, () => {
