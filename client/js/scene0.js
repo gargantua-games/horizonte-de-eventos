@@ -2723,7 +2723,7 @@ class scene0 extends Phaser.Scene {
 
     destroyLaser(laser, enemy) {
       laser.destroy();
-      enemy.disableBody();
+      this.inimigo.disableBody(true, true);
       this.jetBag
         .create(this.inimigo.x, this.inimigo.y, "jetBag")
         //.setScrollFactor(0.9, 1)
