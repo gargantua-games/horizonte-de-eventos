@@ -1313,7 +1313,17 @@ class scene0 extends Phaser.Scene {
     this.physics.add.collider(this.laser, this.layerPiso, this.laserFloor, null, this);
     this.physics.add.collider(this.laserP1, this.limitenorte, this.laserFloor, null, this);
 
-    this.physics.add.collider(this.laser, this.inimigo, this.destroyLaser, null, this);
+    this.physics.add.collider(this.laser, this.inimigo, () => {
+      this.laser.destroy();
+      this.jetBag
+        .create(this.inimigo.x, this.inimigo.y, "jetBag")
+        //.setScrollFactor(0.9, 1)
+        .setPipeline("Light2D")
+        .anims.play("jetBag-idle", true);
+      
+      this.inimigo.disableBody(true, true);
+      this.physics.add.collider(this.jetBag, this.layerPiso);
+    });
 
     this.physics.add.overlap(this.player, this.painelLuz, () => {
       if (this.painelJaAcionado === 1) return;
@@ -2721,18 +2731,6 @@ class scene0 extends Phaser.Scene {
     }
   }
 
-    destroyLaser(laser, enemy) {
-      laser.destroy();
-      this.jetBag
-        .create(this.inimigo.x, this.inimigo.y, "jetBag")
-        //.setScrollFactor(0.9, 1)
-        .setPipeline("Light2D")
-        .anims.play("jetBag-idle", true);
-      
-      this.inimigo.disableBody(true);
-      this.physics.add.collider(this.jetBag, this.layerPiso);
-      
-    };
 
   laserFloor(laser, piso) {
     laser.destroy();
