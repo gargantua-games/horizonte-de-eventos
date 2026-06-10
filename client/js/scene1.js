@@ -4,7 +4,7 @@ class scene1 extends Phaser.Scene {
 
     this.speed = 200;
     this.estoutrabalhando = false;
-    this.doorOpen = 4;
+    this.doorOpen = 0;
     this.fase4 = true;
     this.fase5 = false;
     this.vida = 300;
@@ -86,6 +86,7 @@ class scene1 extends Phaser.Scene {
       loop: true,
       volume: 1,
     });
+    this.disparo = this.sound.add("disparo",{ volume: 0.7 });
 
     //adiciona o espaço ao fundo
     this.space = this.add.image("space1");
@@ -1715,6 +1716,7 @@ class scene1 extends Phaser.Scene {
       }
     }*/
 
+    if (jkl.K.isDown) { this.disparo.play(); } 
     // Animações e som baseado no movimento
     const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
 
