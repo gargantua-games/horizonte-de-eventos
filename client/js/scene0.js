@@ -1231,9 +1231,9 @@ class scene0 extends Phaser.Scene {
     this.faisca4.anims.play("faiscando");
     this.faisca4.setScale(2);
 
-    this.cannon = this.add.sprite(656, 4320, "torreta");
+    this.cannon = this.physics.add.sprite(656, 4320, "torreta");
     this.cannon.setPipeline("Light2D").setAngle(180).setScale(1.5).
-
+      body.allowGravity = false;
     
     this.cannon.setCollideWorldBounds(true);
 
