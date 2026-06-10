@@ -30,7 +30,6 @@ class scene0 extends Phaser.Scene {
     this.movingTorreta = false;
     this.camP2 = true;
     this.movingP1 = true;
-    this.angleCannon = 0;
     this.bulletP1 = true;
     this.shooting = false;
     this.interecting = false;
@@ -1203,7 +1202,6 @@ class scene0 extends Phaser.Scene {
 
     //osciloscopios exterior
     this.osciloscopios = this.add.group({
-      allowGravity: false,
       immovable: true,
       pipeline: "Light2D",
     });
@@ -1215,11 +1213,11 @@ class scene0 extends Phaser.Scene {
     this.player2 = this.add.sprite(92, 3890, "playerroxo", 3);
     this.player2.setPipeline("Light2D");
 
-    this.cannon = this.add.sprite(656, 4336, "cannon");
-    this.cannon.setPipeline("Light2D");
-
-    this.turretP1 = this.add.sprite(656, 4337, "turret");
-    this.turretP1.setPipeline("Light2D");
+    this.cannon = this.physics.add.sprite(656, 4320, "torreta");
+    this.cannon.setPipeline("Light2D").setAngle(180).setScale(1.5).
+      body.allowGravity = false;
+    
+    this.cannon.setCollideWorldBounds(true);
 
     this.inimigosaliens = this.add.group({
       // allowGravity: false,
@@ -1239,10 +1237,6 @@ class scene0 extends Phaser.Scene {
       .setIntensity(0)
       .setColor(0xf5f5f5);
 
-    /*this.coracao = this.add
-      .sprite(165, 60, "redLife")
-      .setScrollFactor(0)
-      .setScale(3);*/
 
     this.createSemicircleLifeBar();
 
@@ -2168,7 +2162,7 @@ class scene0 extends Phaser.Scene {
   }
 
   update() {
-    this.cannon.setAngle(this.angleCannon);
+   
     this.GameOver();
 
     console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
@@ -2227,7 +2221,8 @@ class scene0 extends Phaser.Scene {
     try {
       this.game.socket.emit("scene0", this.game.room, {
         cannon: {
-          angle: this.angleCannon,
+          x: this.cannon.x,
+          y: this.cannon.y,
           shooting: this.shooting,
         },
       });
@@ -2416,6 +2411,7 @@ class scene0 extends Phaser.Scene {
 
       if (!this.interecting && !this.camP2 && interectPressed) {
         this.movingP1 = true;
+        this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
         this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
         this.cameras.main.scrollY =
           this.player.y - this.cameras.main.height / 2 - 120;
@@ -2426,9 +2422,11 @@ class scene0 extends Phaser.Scene {
       } else if (this.interecting && interectPressed) {
         this.iaBox.setVisible(false);
         this.uI.setVisible(false);
+        
+      this.cameras.main.setBounds(32,0 , this.tilemap.widthInPixels - 32);
         this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
         this.cameras.main.scrollY =
-          this.cannon.y - this.cameras.main.height - 14;
+          this.cannon.y - this.cameras.main.height + 1;
         this.camP2 = false;
         this.movingP1 = false;
         this.layerEnfeites.setScrollFactor(1);
@@ -2599,57 +2597,37 @@ class scene0 extends Phaser.Scene {
         }
       }
     } else if (!this.movingP1) {
-      if (horizontal === 0 && vertical < 0) {
-        this.angleCannon = 0;
-      }
-      if (horizontal > 0 && vertical >= 0) {
-        this.angleCannon = 80;
-      } else if (horizontal < 0 && vertical >= 0) {
-        this.angleCannon = -80;
-      } else if (horizontal > 0 && vertical < 0) {
-        this.angleCannon = 50;
-      } else if (horizontal < 0 && vertical < 0) {
-        this.angleCannon = -50;
-      }
+      this.player.setVelocity(0);
+     // if (this.fase4) {
+      
+        if (horizontal < 0) {
+          this.cannon.setVelocityX(-150);
+        } else if (horizontal > 0) {
+          this.cannon.setVelocityX(150);
+        } else {
+          this.cannon.setVelocityX(0);
+        }
+      
 
-      if (jumpPressed) {
-        this.shooting = true;
-      } else if (!jumpPressed) {
-        this.shooting = false;
-      }
+      
 
-      if (jumpPressed && this.bulletP1) {
-        this.bulletP1 = false;
-        setTimeout(() => {
-          this.bulletP1 = true;
-        }, 1000);
+        if (jumpPressed) {
+          this.shooting = true;
+        } else if (!jumpPressed) {
+          this.shooting = false;
+        }
 
-        if (this.angleCannon === 0) {
+        if (jumpPressed && this.bulletP1) {
+          this.bulletP1 = false;
+          setTimeout(() => {
+            this.bulletP1 = true;
+          }, 1000);
+
           this.laserP1
             .create(this.cannon.x, this.cannon.y - 20, "bulletP1")
             .setVelocityY(-200);
-        } else if (this.angleCannon === 80) {
-          this.laserP1
-            .create(this.cannon.x + 30, this.cannon.y - 5, "bulletP1")
-            .setVelocityY(-33)
-            .setVelocityX(165);
-        } else if (this.angleCannon === -80) {
-          this.laserP1
-            .create(this.cannon.x - 30, this.cannon.y - 5, "bulletP1")
-            .setVelocityY(-33)
-            .setVelocityX(-165);
-        } else if (this.angleCannon === 50) {
-          this.laserP1
-            .create(this.cannon.x + 20, this.cannon.y - 15, "bulletP1")
-            .setVelocityY(-150)
-            .setVelocityX(150);
-        } else if (this.angleCannon === -50) {
-          this.laserP1
-            .create(this.cannon.x - 20, this.cannon.y - 15, "bulletP1")
-            .setVelocityY(-150)
-            .setVelocityX(-150);
         }
-      }
+     // }
     }
 
     // movimentação inimigo

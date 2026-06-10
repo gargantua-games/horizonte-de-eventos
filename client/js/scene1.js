@@ -24,7 +24,6 @@ class scene1 extends Phaser.Scene {
     this.portal2Teleported = false;
     this.bulletP1 = true;
     this.shoot = false;
-    this.angleCannon = 0;
     this.inimigosalienscount = 0;
     this.outShip = false;
     this.comunicationP2 = true;
@@ -1295,7 +1294,7 @@ class scene1 extends Phaser.Scene {
       }
 
       if (state.cannon) {
-        this.angleCannon = state.cannon.angle;
+        this.cannon.setPosition(state.cannon.x, (state.cannon.y - 2624))
         this.shoot = state.cannon.shooting;
       }
     });
@@ -1420,7 +1419,6 @@ class scene1 extends Phaser.Scene {
     this.GameOver();
 
     this.puzzleAberto = this.verificarMinigamesAtivos();
-    this.cannon.setAngle(this.angleCannon);
 
     this.liberarIa();
 
@@ -1509,32 +1507,11 @@ class scene1 extends Phaser.Scene {
       setTimeout(() => {
         this.bulletP1 = true;
       }, 1000);
-
-      if (this.angleCannon === 0) {
+      
         this.laserP1
           .create(this.cannon.x, this.cannon.y - 20, "bulletP1")
           .setVelocityY(-200);
-      } else if (this.angleCannon === 80) {
-        this.laserP1
-          .create(this.cannon.x + 30, this.cannon.y - 5, "bulletP1")
-          .setVelocityY(-33)
-          .setVelocityX(165);
-      } else if (this.angleCannon === -80) {
-        this.laserP1
-          .create(this.cannon.x - 30, this.cannon.y - 5, "bulletP1")
-          .setVelocityY(-33)
-          .setVelocityX(-165);
-      } else if (this.angleCannon === 50) {
-        this.laserP1
-          .create(this.cannon.x + 20, this.cannon.y - 15, "bulletP1")
-          .setVelocityY(-150)
-          .setVelocityX(150);
-      } else if (this.angleCannon === -50) {
-        this.laserP1
-          .create(this.cannon.x - 20, this.cannon.y - 15, "bulletP1")
-          .setVelocityY(-150)
-          .setVelocityX(-150);
-      }
+      
     }
 
     /*if (this.puzzleAberto) {
