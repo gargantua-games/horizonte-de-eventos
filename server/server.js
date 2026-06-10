@@ -127,6 +127,14 @@ socket.on("enemy-shoot", (data) => {
 socket.on("boss-attack", (data) => {
   socket.to(data.room).emit("boss-attack", data);
 });
+
+  socket.on("sync-player-health", (data) => {
+  socket.to(data.room).emit("sync-player-health", data);
+});
+
+socket.on("sync-enemy-health", (data) => {
+  socket.to(data.room).emit("sync-enemy-health", data);
+});
   
   socket.on("scene2", (room, state) => {
     if (room) {
