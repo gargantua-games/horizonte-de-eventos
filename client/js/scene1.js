@@ -937,11 +937,12 @@ class scene1 extends Phaser.Scene {
         if (this.faisca1) {
           this.faisca1.setVisible(false);
         }
-          this.isConsertando = false;
+        this.isConsertando = false;
         this.painelfios.setVisible(false);
         //this.painelfios.anims.stop();
         this.antenasconsertadas += 1;
-        this.liberarIa();
+          this.liberarIa();
+        
       }
       });
         
@@ -951,7 +952,7 @@ class scene1 extends Phaser.Scene {
       if (this.isConsertando) {
         return;
       }
-
+      this.painelfios.setPosition(1107, 1490);
       // Trava para impedir que o código rode nos próximos frames de colisão
       this.isConsertando = true;
       this.painelfios.setVisible(true).setDepth(3).setScale(5);
@@ -979,7 +980,7 @@ class scene1 extends Phaser.Scene {
       if (this.isConsertando) {
         return;
       }
-
+      this.painelfios.setPosition(820, 1420);
       // Trava para impedir que o código rode nos próximos frames de colisão
       this.isConsertando = true;
       this.painelfios.setVisible(true).setDepth(3).setScale(5);
@@ -994,6 +995,8 @@ class scene1 extends Phaser.Scene {
           //this.painelfios.anims.stop();
           this.antenasconsertadas += 1;
           this.liberarIa();
+          
+          
         }
       });
     });
@@ -1003,7 +1006,7 @@ class scene1 extends Phaser.Scene {
       if (this.isConsertando) {
         return;
       }
-
+      this.painelfios.setPosition(433, 1468);
       // Trava para impedir que o código rode nos próximos frames de colisão
       this.isConsertando = true;
       this.painelfios.setVisible(true).setDepth(3).setScale(5);
@@ -1018,6 +1021,8 @@ class scene1 extends Phaser.Scene {
           //this.painelfios.anims.stop();
           this.antenasconsertadas += 1;
           this.liberarIa();
+          
+          
         }
       });
     });
