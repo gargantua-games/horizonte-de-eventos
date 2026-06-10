@@ -438,6 +438,30 @@ class scene0 extends Phaser.Scene {
       repeat: -1,
     });
 
+   this.anims.create({
+      key: "faiscando",
+      frames: this.anims.generateFrameNumbers("faisca", {
+        start: 0,
+        end: 8,
+      }),
+      frameRate: 8,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: "portaabrindo",
+      frames: this.anims.generateFrameNumbers("porta", { start: 0, end: 7 }),
+      frameRate: 7,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "portafechando",
+      frames: this.anims.generateFrameNumbers("porta", { start: 7, end: 0 }),
+      frameRate: 7,
+      repeat: 0,
+    });
+
     this.anims.create({
       key: "engrenagem-idlelaranja",
       frames: this.anims.generateFrameNumbers("engrenagem", {
@@ -849,6 +873,9 @@ class scene0 extends Phaser.Scene {
     this.door25
       .setScrollFactor(0.95, 1)
       .setPipeline("Light2D").body.allowGravity = false;
+    
+    this.porta2 = this.add.sprite(55, (1573 + 2624), "porta", 0);
+    this.porta2.setAngle(90)
 
     this.platforms = this.physics.add.group({
       allowGravity: false,
@@ -1168,59 +1195,49 @@ class scene0 extends Phaser.Scene {
     this.player.anims.play("idleRight", true).setPipeline("Light2D");
 
     this.antenas = this.add.group({
-      allowGravity: false,
       immovable: true,
       pipeline: "Light2D",
     });
 
     this.antenas.create(537, 3948, "NewPiskel").setScale(-1, 1);
-
     this.antenas.create(880, 3979, "NewPiskel").setScale(-1, 1);
-
     this.antenas.create(1170, 3951, "NewPiskel").setScale(-1, 1);
-
     this.antenas.create(820, 4044, "NewPiskel").setScale(-1, 1);
-
     this.antenas.create(433, 4107, "NewPiskel").setScale(-1, 1);
-
     this.antenas.create(880, 4138, "NewPiskel").setScale(-1, 1);
-
     this.antenas.create(175, 4170, "NewPiskel").setScale(-1, 1);
-
-    //telescopios exterior
-    this.telescopios = this.add.group({
-      allowGravity: false,
-      immovable: true,
-      pipeline: "Light2D",
-    });
-
-    this.telescopios.create(207, 3987, "telescopio");
-
-    this.telescopios.create(338, 4211, "telescopio");
-
-    this.telescopios.create(1107, 4114, "telescopio");
-
-    //osciloscopios exterior
-    this.osciloscopios = this.add.group({
-      immovable: true,
-      pipeline: "Light2D",
-    });
-
-    this.osciloscopios.create(626, 4024, "osciloscopio");
-
-    this.osciloscopios.create(980, 4184, "osciloscopio");
+    this.antenas.create(207, 3987, "telescopio");
+    this.antenas.create(338, 4211, "telescopio");
+    this.antenas.create(1107, 4114, "telescopio");
+    this.antenas.create(626, 4024, "osciloscopio");
+    this.antenas.create(980, 4184, "osciloscopio");
 
     this.player2 = this.add.sprite(92, 3890, "playerroxo", 3);
     this.player2.setPipeline("Light2D");
 
-    this.cannon = this.physics.add.sprite(656, 4320, "torreta");
+    this.faisca1 = this.add.sprite(175, (1546 + 2624), "faisca");
+    this.faisca1.anims.play("faiscando");
+    this.faisca1.setScale(2);
+    
+    this.faisca2 = this.add.sprite(820, (1420 + 2624), "faisca");
+    this.faisca2.anims.play("faiscando");
+    this.faisca2.setScale(2); 
+    
+    this.faisca3 = this.add.sprite(1107, (1490 + 2624), "faisca");
+    this.faisca3.anims.play("faiscando").setScale(2);
+    this.faisca3.setVisible(false);
+    
+    this.faisca4 = this.add.sprite(433, (1468 + 2624), "faisca");
+    this.faisca4.anims.play("faiscando");
+    this.faisca4.setScale(2);
+
+    this.cannon = this.add.sprite(656, 4320, "torreta");
     this.cannon.setPipeline("Light2D").setAngle(180).setScale(1.5).
       body.allowGravity = false;
     
     this.cannon.setCollideWorldBounds(true);
 
     this.inimigosaliens = this.add.group({
-      // allowGravity: false,
       immovable: false,
       pipeline: "Light2D",
     });
@@ -1923,7 +1940,33 @@ class scene0 extends Phaser.Scene {
         this.player2.setPosition(state.playerroxo.x, state.playerroxo.y + 2624);
         this.player2.anims.play(state.playerroxo.animation, true);
       }
+
+      if (state.porta2) {
+        this.porta2.anims.play(state.porta2);
+      }
+
+      if (state.faisca1) {
+        this.faisca1.anims.play(state.faisca1.animation);
+        this.faisca1.setVisible(state.faisca1.visible);
+      }
+
+      if (state.faisca2) {
+        this.faisca2.anims.play(state.faisca2.animation);
+        this.faisca2.setVisible(state.faisca2.visible);
+      }
+
+      if (state.faisca3) {
+        this.faisca3.anims.play(state.faisca3.animation);
+        this.faisca3.setVisible(state.faisca3.visible);
+      }
+
+      if (state.faisca4) {
+        this.faisca4.anims.play(state.faisca4.animation);
+        this.faisca4.setVisible(state.faisca4.visible);
+      }
+
     });
+
     this.game.socket.on("criar-alien-scene0", (dadosAlien) => {
       console.log("Scene0 recebeu o sinal do alien!", dadosAlien);
       let alien = this.inimigosaliens.create(
@@ -2422,11 +2465,12 @@ class scene0 extends Phaser.Scene {
       } else if (this.interecting && interectPressed) {
         this.iaBox.setVisible(false);
         this.uI.setVisible(false);
-        
-      this.cameras.main.setBounds(32,0 , this.tilemap.widthInPixels - 32);
+       this.physics.world.setBounds(43, 0, 1222);
+       this.cameras.main.setBounds(43, 0, 1222);
         this.cameras.main.startFollow(this.cannon, false, 1, 0).zoom = 0.9;
         this.cameras.main.scrollY =
           this.cannon.y - this.cameras.main.height + 1;
+        this.cannon.setCollideWorldBounds(true);
         this.camP2 = false;
         this.movingP1 = false;
         this.layerEnfeites.setScrollFactor(1);
