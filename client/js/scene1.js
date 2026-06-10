@@ -5,8 +5,8 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = true;
-    this.fase5 = true;
+    this.fase4 = false;
+    this.fase5 = false;
     this.vida = 300;
     this.invulnerable = false;
     this.positionP2 = false;
@@ -40,6 +40,7 @@ class scene1 extends Phaser.Scene {
 
     this.inFinalDoorP1 = false;
     this.inFinalDoorP2 = false;
+    this.camP1 = false;
     //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
@@ -788,9 +789,14 @@ class scene1 extends Phaser.Scene {
       .setScrollFactor(0.99, 1)
       .setPipeline("Light2D");
 
-    this.porta3 = this.physics.add
+    this.porta3 = this.add
       .sprite(1215, 2337, "door")
+      .setScrollFactor(0.95, 1)
       .setPipeline("Light2D");
+    
+        this.door15 = this.add.sprite(92, 2337, "door", 7)
+        .setScrollFactor(0.95, 1)
+        .setPipeline("Light2D")
 
     this.painelLuz = this.physics.add.sprite(350, 2230, "painelLuz").setScale(0.3).setPipeline("Light2D");
 
@@ -1054,11 +1060,11 @@ class scene1 extends Phaser.Scene {
 
     //camera
 
-    if (this.estoutrabalhando === false) {
+    /*if (this.estoutrabalhando === false) {
       this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
     } else if (this.estoutrabalhando) {
       this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-    }
+    }*/
     // Texto de posição do playerroxo atualizado a cada segundo
     this.positionText = this.add
       .text(200, 80, "X: 0 Y: 0", {
@@ -1465,10 +1471,37 @@ class scene1 extends Phaser.Scene {
       }
       return;
     }*/
+     const cursores = this.input.keyboard.createCursorKeys();
+    const qe = this.input.keyboard.addKeys("E, Q");
 
     if (!this.outShip) {
-      this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
-      this.playerroxo.setCollideWorldBounds(false);
+
+      if (this.fase5) {
+        if (qe.E.isDown && !this.camP1) {
+          this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
+          this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+          this.lights.setAmbientColor(0x303030);
+          this.camP1 = true
+
+          this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
+        } else if (qe.Q.isDown && this.camP1) {
+          this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
+          this.cameras.main.setBounds(
+            24,
+            24,
+            this.tilemap.widthInPixels - 48,
+            708,
+          );
+          this.lights.setAmbientColor(0xe0f7ff);
+          this.playerroxo.setCollideWorldBounds(false);
+          this.camP1 = false;
+        }
+      } else if(!this.fase5) {
+        this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
+        this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
+        this.playerroxo.setCollideWorldBounds(false);
+        this.lights.setAmbientColor(0xe0f7ff);
+      }
     } else if (this.outShip) {
       const bx = 43;
       const by = 0;
@@ -1549,8 +1582,7 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
-    const cursores = this.input.keyboard.createCursorKeys();
-    const qe = this.input.keyboard.addKeys("E, Q");
+   
 
     this.comunication = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SHIFT,
@@ -1604,11 +1636,11 @@ class scene1 extends Phaser.Scene {
       this.limites,
    );
     this.cameras.main.setBounds(24, 24, (this.tilemap.widthInPixels - 48), 708);*/
-    if (this.fase5) {
+   /* if (this.fase5) {
       if (qe.E.isDown) {
         this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
-        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 0.7;
-        this.lights.setAmbientColor(0x202020);
+        this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
+        this.lights.setAmbientColor(0x303030);
 
         this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
       } else if (qe.Q.isDown) {
@@ -1619,12 +1651,13 @@ class scene1 extends Phaser.Scene {
           this.tilemap.widthInPixels - 48,
           708,
         );
-      } else if (qe.E.isUp) {
+        this.lights.setAmbientColor(0xe0f7ff);
+      } /*else if (qe.E.isUp) {
         this.lights.setAmbientColor(0xe0f7ff);
         this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom =
           1.5;
       }
-    }
+    }*/
 
     // Animações e som baseado no movimento
     const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
