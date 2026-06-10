@@ -1043,7 +1043,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(
       this.laserP1,
       this.limitenorte,
-      this.destroyLaser(),
+      this.destroyLaser,
       null,
       this,
     );
@@ -1051,7 +1051,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(
       this.laserP1,
       this.limites,
-      this.destroyLaser(),
+      this.destroyLaser,
       null,
       this,
     );
