@@ -19,7 +19,7 @@ class scene2 extends Phaser.Scene {
     this.game.isP1 = data.souP1;*/
     this.localRole = data.role;
     
-    this.engrenagem = data.engrenagem !== undefined ? Phaser.Math.Clamp(data.engrenagem, 0, 4) : 0;
+    //this.engrenagem = data.engrenagem !== undefined ? Phaser.Math.Clamp(data.engrenagem, 0, 4) : 0;
 
     this.atributosNave = [
       { vidaMax: 3, velocidade: 200, dano: 1, cadencia: 600, velTiro: 350 },
@@ -66,7 +66,7 @@ class scene2 extends Phaser.Scene {
 
     this.space = this.add.tileSprite(0, 0, 2000, 800, "space1").setOrigin(0, 0).setDisplaySize(2000, 800).setScrollFactor(0);
 
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.scene.restart({ engrenagem: 0 }));
+   /* this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE).on('down', () => this.scene.restart({ engrenagem: 0 }));
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.TWO).on('down', () => this.scene.restart({ engrenagem: 1 }));
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.THREE).on('down', () => this.scene.restart({ engrenagem: 2 }));
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR).on('down', () => this.scene.restart({ engrenagem: 3 }));
@@ -76,7 +76,7 @@ class scene2 extends Phaser.Scene {
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO).on('down', () => this.scene.restart({ engrenagem: 1 }));
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_THREE).on('down', () => this.scene.restart({ engrenagem: 2 }));
     this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR).on('down', () => this.scene.restart({ engrenagem: 3 }));
-    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE).on('down', () => this.scene.restart({ engrenagem: 4 }));
+    this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FIVE).on('down', () => this.scene.restart({ engrenagem: 4 }));*/
 
     if (!this.anims.exists('boss_preparando')) {
       this.anims.create({ key: 'boss_preparando', frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 21 }), frameRate: 15, repeat: 0 });
@@ -267,9 +267,12 @@ if (this.game.room) {
     this.game.socket.on("scene2", state => {
       if (state.engrenagens) {
         this.engrenagem = state.engrenagens
+        console.log("recebo que engrenagens é:" + this.engrenagem)
       }
-        
+      
     })
+
+    console.log("engrenagens:" + this.engrenagem)
 
     
 

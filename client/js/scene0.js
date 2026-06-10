@@ -2172,8 +2172,13 @@ class scene0 extends Phaser.Scene {
 
     if (this.inFinalDoorP1) {
       this.game.socket.emit("scene0", this.game.room, {
-        engrenagens: this.score,
+        //engrenagens: this.score,
         inFinalDoorP1: this.inFinalDoorP1,
+      });
+
+      this.game.socket.emit("scene2", this.game.room, {
+        engrenagens: this.score,
+        
       });
 
       if (this.inFinalDoorP2) {
