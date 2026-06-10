@@ -5,8 +5,8 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = true;
-    this.fase5 = true;
+    this.fase4 = false;
+    this.fase5 = false;
     this.vida = 300;
     this.invulnerable = false;
     this.positionP2 = false;

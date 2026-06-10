@@ -23,7 +23,7 @@ class scene0 extends Phaser.Scene {
     this.life = 6;
     this.canTakeDamage = true;
     this.enemyGravity = false;
-    this.doorOpen = 4;
+    this.doorOpen = 0;
     this.bullet = true;
     this.platform12Interval = null;
     this.platform15Interval = null;
