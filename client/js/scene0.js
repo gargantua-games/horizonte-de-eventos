@@ -128,7 +128,7 @@ class scene0 extends Phaser.Scene {
       right: Phaser.Input.Keyboard.KeyCodes.D,
     });
     // ===============================================
-
+    this.disparo = this.sound.add("disparo", { volume: 0.7 });
     this.passos = this.sound.add("passos", { loop: true, volume: 2 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
@@ -1904,6 +1904,7 @@ class scene0 extends Phaser.Scene {
           }
           if (jklState.K && this.bullet === true) {
             this.bullet = false;
+            this.disparo.play();
 
             this.laser
               .create(this.torreta.x - 15, this.torreta.y - 5, "torreta", 9) //873, 950 //400, 40
