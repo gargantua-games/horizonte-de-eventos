@@ -4,8 +4,8 @@ class scene1 extends Phaser.Scene {
 
     this.speed = 200;
     this.estoutrabalhando = false;
-    this.doorOpen = 0;
-    this.fase4 = true;
+    this.doorOpen = 4;
+    this.fase4 = false;
     this.fase5 = false;
     this.vida = 300;
     this.invulnerable = false;
@@ -41,6 +41,7 @@ class scene1 extends Phaser.Scene {
     this.inFinalDoorP1 = false;
     this.inFinalDoorP2 = false;
     this.camP1 = false;
+    this.score = 0;
     //fase1: genius; fase2: helldivers; fase3: quebra cabeça; fase4: genius/helldivers; fase5: termo;
   }
 
@@ -805,7 +806,7 @@ class scene1 extends Phaser.Scene {
       .setPipeline("Light2D");
 
     this.porta3 = this.add
-      .sprite(1215, 2337, "door")
+      .sprite(1152, 2337, "door")
       .setScrollFactor(0.95, 1)
       .setPipeline("Light2D");
     
@@ -1224,6 +1225,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.socket.on("scene0", (state) => {
       this.inFinalDoorP1 = state.inFinalDoorP1;
+      this.score = state.engrenagens
       
       if (state && state.infase !== undefined) {
         this.infase = Number(state.infase);
@@ -1398,7 +1400,7 @@ class scene1 extends Phaser.Scene {
       if (this.inFinalDoorP1) {
         this.game.socket.removeAllListeners();
         this.scene.stop("scene1");
-        this.scene.start("scene2", { role: "shooter" });
+        this.scene.start("scene2", { role: "shooter", engrenagens: this.score,});
       }
     }
 
@@ -1518,6 +1520,7 @@ class scene1 extends Phaser.Scene {
     if (!this.outShip) {
 
       if (this.fase5) {
+        if(!this.puzzleAberto){
         if (qe.E.isDown && !this.camP1) {
           this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
           this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
@@ -1537,6 +1540,7 @@ class scene1 extends Phaser.Scene {
           this.playerroxo.setCollideWorldBounds(false);
           this.camP1 = false;
         }
+      }
       } else if(!this.fase5) {
         this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
         this.cameras.main.setBounds(24, 24, this.tilemap.widthInPixels - 48, 708);
