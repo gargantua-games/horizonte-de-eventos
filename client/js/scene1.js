@@ -1482,24 +1482,15 @@ class scene1 extends Phaser.Scene {
               ? this.porta2.anims.currentAnim.key
               : null,
           faisca1: {
-            animation: this.faisca1.anims.currentAnim
-              ? this.faisca1.anims.currentAnim.key
-              : null,
             visible: this.faisca1 ? this.faisca1.visible : false,
           },
-          faisca2: { animation: this.faisca2.anims.currentAnim
-              ? this.faisca2.anims.currentAnim.key
-              : null,
+          faisca2: {
             visible: this.faisca2 ? this.faisca2.visible : false,
           },
-          faisca3: { animation: this.faisca3.anims.currentAnim
-              ? this.faisca3.anims.currentAnim.key
-              : null,
+          faisca3: {
             visible: this.faisca3 ? this.faisca3.visible : false,
           },
-          faisca4: { animation: this.faisca4.anims.currentAnim
-              ? this.faisca4.anims.currentAnim.key
-              : null,
+          faisca4: {
             visible: this.faisca4 ? this.faisca4.visible : false,
           },
         });

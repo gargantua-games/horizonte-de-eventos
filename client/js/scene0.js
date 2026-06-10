@@ -1954,22 +1954,18 @@ class scene0 extends Phaser.Scene {
       }
 
       if (state.faisca1) {
-        this.faisca1.anims.play(state.faisca1.animation);
         this.faisca1.setVisible(state.faisca1.visible);
       }
 
       if (state.faisca2) {
-        this.faisca2.anims.play(state.faisca2.animation);
         this.faisca2.setVisible(state.faisca2.visible);
       }
 
       if (state.faisca3) {
-        this.faisca3.anims.play(state.faisca3.animation);
         this.faisca3.setVisible(state.faisca3.visible);
       }
 
       if (state.faisca4) {
-        this.faisca4.anims.play(state.faisca4.animation);
         this.faisca4.setVisible(state.faisca4.visible);
       }
 
