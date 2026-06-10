@@ -113,10 +113,7 @@ class scene2 extends Phaser.Scene {
     }
 
     this.nave = this.matter.add.sprite(100, 400, "nave-" + (this.engrenagem + 1));
-
-    // 1. Define a escala visual primeiro (todas ficam com tamanho final de 128x128)
-    let playerScale = this.engrenagem === 4 ? 1.0 : 2.0;
-    this.nave.setScale(playerScale);
+    this.nave.setScale(1.0); // Garante que fica no tamanho real da imagem (128x128)
 
     // 2. MODIFICA AQUI AS COLISÕES DO JOGADOR (UMA POR UMA)
     let pWidth, pHeight;
@@ -130,7 +127,7 @@ class scene2 extends Phaser.Scene {
         pHeight = 50;
         break;
       case 2: // Nave 3
-        pWidth = 100;
+        pWidth = 60;
         pHeight = 60;
         break;
       case 3: // Nave 4
@@ -557,9 +554,8 @@ spawnAsteroide(customY, remoteData = null) {
       let keyInimigo = "naveinimiga" + (this.enemyIndex + 1);
       e = this.matter.add.sprite(spawnX, spawnY, keyInimigo);
 
-      // 1. Define a escala visual primeiro
-      let enemyScale = (this.enemyIndex === 2) ? 1.0 : 2.0;
-      e.setScale(enemyScale);
+      // 1. Define a escala visual para mostrar cada nave no tamanho real de 128x128
+      e.setScale(1.0);
 
       // 2. MODIFICA AQUI AS COLISÕES DOS INIMIGOS COMUNS (UMA POR UMA)
       let eWidth, eHeight;
@@ -612,7 +608,7 @@ spawnAsteroide(customY, remoteData = null) {
       e.play("boss_voando");
       e.setDepth(10);
 
-      const hpBaseBoss = [150, 250, 350, 500, 650];
+      const hpBaseBoss = [113, 188, 263, 375, 488];
       e.hp = hpBaseBoss[this.engrenagem];
 
       e.isBoss = true;
@@ -704,7 +700,7 @@ spawnAsteroide(customY, remoteData = null) {
       e.play("boss_voando");
       e.setDepth(10);
 
-      const hpBaseBoss = [150, 250, 350, 500, 650];
+      const hpBaseBoss = [113, 188, 263, 375, 488];
       e.hp = hpBaseBoss[this.engrenagem];
 
       e.isBoss = true;
