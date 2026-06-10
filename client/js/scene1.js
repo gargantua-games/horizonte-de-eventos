@@ -647,11 +647,8 @@ class scene1 extends Phaser.Scene {
     this.consolew6;
     this.consolew6.setImmovable(true);
 
-    this.cannon = this.add.sprite(656, 1712, "cannon");
-    this.cannon.setPipeline("Light2D");
-
-    this.turretP1 = this.add.sprite(656, 1713, "turret");
-    this.turretP1.setPipeline("Light2D");
+    this.cannon = this.add.sprite(656, (4320 - 2616), "torreta");
+    this.cannon.setPipeline("Light2D").setAngle(180).setDepth(999);
 
     //exterior da nave antenas
     this.antenas = this.physics.add.group({
@@ -682,25 +679,15 @@ class scene1 extends Phaser.Scene {
       .body.setSize(20, 30)
       .setOffset(27, 0);
 
-    //telescopios exterior
-    this.telescopios = this.physics.add.group({
-      immovable: true,
-      pipeline: "Light2D",
-    });
 
-    this.telescopios.create(207, 1363, "telescopio").body.setSize(20, 20);
 
-    this.telescopios.create(338, 1587, "telescopio").body.setSize(20, 20);
+    this.antenas.create(207, 1363, "telescopio").body.setSize(20, 20);
 
-    //osciloscopios exterior
-    this.osciloscopios = this.physics.add.group({
-      immovable: true,
-      pipeline: "Light2D",
-    });
+    this.antenas.create(338, 1587, "telescopio").body.setSize(20, 20);
 
-    this.osciloscopios.create(626, 1400, "osciloscopio").body.setSize(35, 17);
+    this.antenas.create(626, 1400, "osciloscopio").body.setSize(35, 17);
 
-    this.osciloscopios.create(980, 1560, "osciloscopio").body.setSize(35, 17);
+    this.antenas.create(980, 1560, "osciloscopio").body.setSize(35, 17);
 
     this.limiteporta = this.physics.add.sprite(638, 750, "bigboss");
     this.limiteporta.setSize(128, 32);
@@ -711,30 +698,34 @@ class scene1 extends Phaser.Scene {
     this.limitenorte.setSize(1280, 17);
 
     //faisca na antena
-    this.faisca1 = this.physics.add.sprite(175, 1546, "faisca");
-    this.faisca1.anims.play("faiscando");
-    this.faisca1.setScale(2);
-
+    
     this.antena1 = this.physics.add.sprite(175, 1546, "NewPiskel");
     this.antena1.body.setSize(20, 30);
     this.antena1.setOffset(27, 0);
     this.antena1.setScale(-1, 1);
     this.antena1.setImmovable(true);
-
+    
     //faísca na segunda antena
-    this.faisca2 = this.physics.add.sprite(820, 1420, "faisca");
-    this.faisca2.anims.play("faiscando");
-    this.faisca2.setScale(2);
-
     this.antena2 = this.physics.add.sprite(820, 1420, "NewPiskel");
     this.antena2.body.setSize(20, 30);
     this.antena2.setOffset(10, 0);
     this.antena2.setImmovable(true);
-
-    //faisca no telescopio
+   
+    this.faisca1 = this.physics.add.sprite(175, 1546, "faisca");
+    this.faisca1.anims.play("faiscando");
+    this.faisca1.setScale(2);
+    
+    this.faisca2 = this.physics.add.sprite(820, 1420, "faisca");
+    this.faisca2.anims.play("faiscando");
+    this.faisca2.setScale(2); 
+    
     this.faisca3 = this.add.sprite(1107, 1490, "faisca");
     this.faisca3.anims.play("faiscando").setScale(2);
     this.faisca3.setVisible(false);
+    
+    this.faisca4 = this.physics.add.sprite(433, 1468, "faisca");
+    this.faisca4.anims.play("faiscando");
+    this.faisca4.setScale(2);
 
     this.anims.create({
       key: "chipIdle",
@@ -755,10 +746,7 @@ class scene1 extends Phaser.Scene {
     this.telescopio3.body.setSize(20, 20);
     this.telescopio3.setImmovable(true);
 
-    this.faisca4 = this.physics.add.sprite(433, 1468, "faisca");
-    this.faisca4.anims.play("faiscando");
-    this.faisca4;
-    this.faisca4.setScale(2);
+
 
     this.antena4 = this.physics.add.sprite(433, 1468, "NewPiskel");
     this.antena4;
@@ -910,8 +898,6 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.consolew6);
     this.physics.add.collider(this.playerroxo, this.bigboss);
     this.physics.add.collider(this.playerroxo, this.antenas);
-    this.physics.add.collider(this.playerroxo, this.telescopios);
-    this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
       //if (!this.puzzleAberto && this.faisca1.visible) {
@@ -1491,6 +1477,30 @@ class scene1 extends Phaser.Scene {
               ? this.playerroxo.anims.currentAnim.key
               : null,
           },
+          porta2: this.porta2.anims.currentAnim
+              ? this.porta2.anims.currentAnim.key
+              : null,
+          faisca1: {
+            animation: this.faisca1.anims.currentAnim
+              ? this.faisca1.anims.currentAnim.key
+              : null,
+            visible: this.faisca1 ? this.faisca1.visible : false,
+          },
+          faisca2: { animation: this.faisca2.anims.currentAnim
+              ? this.faisca2.anims.currentAnim.key
+              : null,
+            visible: this.faisca2 ? this.faisca2.visible : false,
+          },
+          faisca3: { animation: this.faisca3.anims.currentAnim
+              ? this.faisca3.anims.currentAnim.key
+              : null,
+            visible: this.faisca3 ? this.faisca3.visible : false,
+          },
+          faisca4: { animation: this.faisca4.anims.currentAnim
+              ? this.faisca4.anims.currentAnim.key
+              : null,
+            visible: this.faisca4 ? this.faisca4.visible : false,
+          },
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -1518,7 +1528,7 @@ class scene1 extends Phaser.Scene {
       if (this.playerroxo) {
         this.playerroxo.setVelocity(0, 0);
         this.playerroxo.anims.play("idlecostas", true);
-        this.caixa.setPosition(this.playerroxo.x, this.playerroxo.y)
+        this.caixa.setPosition(this.faisca1, this.playerroxo.y)
       }
       if (this.passos && this.passos.isPlaying) {
         this.passos.stop();
