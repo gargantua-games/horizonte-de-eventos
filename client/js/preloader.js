@@ -235,14 +235,14 @@ class preloader extends Phaser.Scene {
     this.load.spritesheet("explosao", "assets-usados/explosion.png", { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet("feixelaser", "/tiros/feixelaser.png", { frameWidth: 256, frameHeight: 64 });
 
-    this.load.spritesheet("nave-1", "naves/nave-1.png", { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet("nave-2", "naves/nave-2.png", { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet("nave-3", "naves/nave-3.png", { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet("nave-4", "naves/nave-4.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("nave-1", "naves/nave-1.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("nave-2", "naves/nave-2.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("nave-3", "naves/nave-3.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("nave-4", "naves/nave-4.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("nave-5", "naves/nave-5.png", { frameWidth: 128, frameHeight: 128 });
 
-    this.load.spritesheet("naveinimiga1", "naves/naveinimiga1.png", { frameWidth: 64, frameHeight: 64 });
-    this.load.spritesheet("naveinimiga2", "naves/naveinimiga2.png", { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet("naveinimiga1", "naves/naveinimiga1.png", { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet("naveinimiga2", "naves/naveinimiga2.png", { frameWidth: 128, frameHeight: 128 });
     this.load.spritesheet("naveinimiga3", "naves/naveinimiga3.png", { frameWidth: 128, frameHeight: 128 });
     
     // UI e Fontes
