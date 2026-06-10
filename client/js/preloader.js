@@ -148,6 +148,11 @@ class preloader extends Phaser.Scene {
       frameWidth: 96,
       frameHeight: 64,
     });
+
+    this.load.spritesheet("painelfios", "painelfios.png", {
+      frameWidth: 32,
+      frameHeight: 32,
+    });
     
     this.load.spritesheet("plataform", "plataform.png", {
       frameWidth: 64,

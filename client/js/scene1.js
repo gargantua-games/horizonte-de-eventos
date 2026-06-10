@@ -5,7 +5,7 @@ class scene1 extends Phaser.Scene {
     this.speed = 200;
     this.estoutrabalhando = false;
     this.doorOpen = 0;
-    this.fase4 = false;
+    this.fase4 = true;
     this.fase5 = false;
     this.vida = 300;
     this.invulnerable = false;
@@ -71,6 +71,7 @@ class scene1 extends Phaser.Scene {
   create() {
     this.physics.world.gravity.y = 0;
     this.infase = 1;
+    
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
@@ -451,7 +452,21 @@ class scene1 extends Phaser.Scene {
       repeat: -1,
     });
 
+
+    this.anims.create({
+      key: "fiosconsertando",
+      frames: this.anims.generateFrameNumbers("painelfios", {
+        start: 0,
+        end: 3,
+      }),
+      frameRate: 3,
+      repeat: -1,
+    });
+
     this.createSemicircleLifeBar();
+
+    this.painelfios = this.physics.add.sprite(175, 1546, "painelfios");
+    this.painelfios.setVisible(false);
 
     //adicionar porta
     this.porta = this.physics.add.sprite(1200, 640, "porta", 0);
@@ -463,8 +478,8 @@ class scene1 extends Phaser.Scene {
 
     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
-   this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
-   this.avisoconsole.anims.play("avisopiscando");
+    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
+    this.avisoconsole.anims.play("avisopiscando");
     
 
     this.laserP1 = this.physics.add.group({
@@ -717,7 +732,7 @@ class scene1 extends Phaser.Scene {
 
     //faisca no telescopio
     this.faisca3 = this.add.sprite(1107, 1490, "faisca");
-    this.faisca3.anims.play("faiscando").setScale(2).setVisible(false);
+    this.faisca3.anims.play("faiscando").setScale(2);
 
     this.anims.create({
       key: "chipIdle",
@@ -794,9 +809,9 @@ class scene1 extends Phaser.Scene {
       .setScrollFactor(0.95, 1)
       .setPipeline("Light2D");
     
-        this.door15 = this.add.sprite(92, 2337, "door", 7)
-        .setScrollFactor(0.95, 1)
-        .setPipeline("Light2D")
+    this.door15 = this.add.sprite(92, 2337, "door", 7)
+      .setScrollFactor(0.95, 1)
+      .setPipeline("Light2D")
 
     this.painelLuz = this.physics.add.sprite(350, 2230, "painelLuz").setScale(0.3).setPipeline("Light2D");
 
@@ -829,7 +844,7 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.layerParede);
     this.physics.add.collider(this.playerroxo, this.consolelongo);
     this.physics.add.collider(this.playerroxo, this.consolemedio, () => {
-      if (this.doorOpen === 4 && this.infase ===5) {
+      if (this.doorOpen === 4 && this.infase === 5) {
         if (this.playerroxo.y > 530) {
           if (!this.puzzleAberto) {
             this.puzzleAberto = true;
@@ -897,34 +912,52 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.osciloscopios);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
-      if (!this.puzzleAberto && this.faisca1.visible) {
-        this.abrirMinigameAleatorio(() => {
-          if (this.faisca1) {
-            this.faisca1.setVisible(false);
-          }
-          this.antenasconsertadas += 1;
-          this.liberarIa();
-        });
+      //if (!this.puzzleAberto && this.faisca1.visible) {
+      //  this.abrirMinigameAleatorio(() => {
+      //  if (this.faisca1) {
+      //   this.faisca1.setVisible(false);
+      //  }
+      // this.antenasconsertadas += 1;
+      //  this.liberarIa();
+      // });
+      // }
+      this.painelfios.setVisible(true);
+      this.painelfios.setDepth(3);
+      this.painelfios.setScale(5);
+      if (this.faisca1) {
+        this.faisca1.setVisible(false);
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
+      this.painelfios.anims.play("fiosconsertando");
+      this.time.delayedCall(1400, () => {
+        this.painelfios.setVisible(false);
+        this.painelfios.anims.stop();
+      });
     });
 
     this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
-      if (!this.puzzleAberto && this.faisca3.visible) {
-        this.abrirMinigameAleatorio(() => {
-          if (this.faisca3) {
-            this.faisca3.setVisible(false);
-            this.iaChip.enableBody(
-              true,
-              this.playerroxo.x + 35,
-              this.playerroxo.y,
-              true,
-              true,
-            );
-          }
-          this.antenasconsertadas += 1;
-          this.liberarIa();
-        });
+      this.painelfios.setPosition(1107, 1490);
+      this.painelfios.setVisible(true);
+      this.painelfios.setDepth(3);
+      this.painelfios.setScale(5);
+      if (this.faisca3) {
+        this.faisca3.setVisible(false);
       }
+      this.iaChip.enableBody(
+        true,
+        this.playerroxo.x + 35,
+        this.playerroxo.y,
+        true,
+        true,
+      );
+      this.antenasconsertadas += 1;
+      this.liberarIa();
+      this.painelfios.anims.play("fiosconsertando");
+      this.time.delayedCall(1400, () => {
+        this.painelfios.setVisible(false);
+        this.painelfios.anims.stop();
+      });
     });
 
     this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
@@ -932,27 +965,37 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
-      if (!this.puzzleAberto && this.faisca2.visible) {
-        this.abrirMinigameAleatorio(() => {
-          if (this.faisca2) {
-            this.faisca2.setVisible(false);
-          }
-          this.antenasconsertadas += 1;
-          this.liberarIa();
-        });
+      this.painelfios.setPosition(820, 1420);
+      this.painelfios.setVisible(true);
+      this.painelfios.setDepth(3);
+      this.painelfios.setScale(5);
+      if (this.faisca2) {
+        this.faisca2.setVisible(false);
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
+      this.painelfios.anims.play("fiosconsertando");
+      this.time.delayedCall(1400, () => {
+        this.painelfios.setVisible(false);
+        this.painelfios.anims.stop();
+      });
     });
 
     this.physics.add.collider(this.playerroxo, this.antena4, () => {
-      if (!this.puzzleAberto && this.faisca4.visible) {
-        this.abrirMinigameAleatorio(() => {
-          if (this.faisca4) {
-            this.faisca4.setVisible(false);
-          }
-          this.antenasconsertadas += 1;
-          this.liberarIa();
-        });
+      this.painelfios.setPosition(433, 1468);
+      this.painelfios.setVisible(true);
+      this.painelfios.setDepth(3);
+      this.painelfios.setScale(5);
+      if (this.faisca4) {
+        this.faisca4.setVisible(false);
       }
+      this.antenasconsertadas += 1;
+      this.liberarIa();
+      this.painelfios.anims.play("fiosconsertando");
+      this.time.delayedCall(1400, () => {
+        this.painelfios.setVisible(false);
+        this.painelfios.anims.stop();
+      });
     });
 
     const destroyLaser = (laser, limit) => {
@@ -1232,11 +1275,9 @@ class scene1 extends Phaser.Scene {
       console.log("ia não disponivel");
       this.faisca3.setVisible(false);
       return;
-    }
-
-    console.log("ia disponivel");
+    } else if (this.antenasconsertadas === 3) console.log("ia disponivel");
     this.faisca3.setVisible(true);
-  }
+  } 
 
   playerIa() {
     this.iaChip.disableBody(true, true);
@@ -1720,7 +1761,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-    if (this.inimigosaliens) {
+    /*if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1758,7 +1799,7 @@ class scene1 extends Phaser.Scene {
           enemy.anims.stop();
         }
       });
-    }
+    }*/
 
     if (this.inimigosaliens && this.inimigosaliens.getLength() > 0) {
       let pacoteAliens = [];
