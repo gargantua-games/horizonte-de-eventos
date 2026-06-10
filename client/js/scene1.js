@@ -7,7 +7,7 @@ class scene1 extends Phaser.Scene {
     this.doorOpen = 0;
     this.fase4 = false;
     this.fase5 = false;
-    this.vida = 300;
+    this.vida = 4;
     this.invulnerable = false;
     this.positionP2 = false;
     this.puzzleAberto = false;
@@ -398,6 +398,20 @@ class scene1 extends Phaser.Scene {
     this.anims.create({
       key: "portafechando",
       frames: this.anims.generateFrameNumbers("porta", { start: 7, end: 0 }),
+      frameRate: 7,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "open-door",
+      frames: this.anims.generateFrameNumbers("door", { start: 0, end: 7 }),
+      frameRate: 7,
+      repeat: 0,
+    });
+
+    this.anims.create({
+      key: "close-door",
+      frames: this.anims.generateFrameNumbers("door", { start: 7, end: 0 }),
       frameRate: 7,
       repeat: 0,
     });
@@ -1293,6 +1307,13 @@ class scene1 extends Phaser.Scene {
           state.platform15.y - 1184,
         );
       }
+      if (state.door15) {
+        this.door15.anims.play(state.door15)
+      }
+
+      if (state.door25) {
+        this.door25.anims.play(state.door25)
+      }
 
       if (state.cannon) {
         this.cannon.setPosition(state.cannon.x, (state.cannon.y - 2624))
@@ -1389,9 +1410,9 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
-    const maxLife = 3;
+    const maxLife = 4;
     const radius = this.lifeRadius;
-    const segmentCount = 3;
+    const segmentCount = 4;
     const gapDegrees = 5;
     const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
@@ -1480,7 +1501,7 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.setVisible(false);
     }
 
-    //if (this.fase4) {
+    if (this.fase4) {
 
     if (this.positionP2 && this.fase4) {
       try {
@@ -1521,7 +1542,7 @@ class scene1 extends Phaser.Scene {
         console.error("Error updating player:", e);
       }
     }
-    //}
+    }
 
     if (this.game.audio && this.comunication) {
       this.game.audio.volume = this.comunication.isDown ? 1 : 0;
@@ -1774,7 +1795,7 @@ class scene1 extends Phaser.Scene {
         }
       }
     } else if (this.collectIa) {
-      // this.playerIcon.anims.play("playerIconVerde")
+       this.playerIcon.anims.play("playerIconVerde")
 
       if (horizontal > 0.1) {
         this.playerroxo.anims.play("andardireitaverde", true);
@@ -1802,7 +1823,7 @@ class scene1 extends Phaser.Scene {
     }
 
     // Movimento dos inimigos aliens
-    /*if (this.inimigosaliens) {
+    if (this.inimigosaliens) {
       this.inimigosaliens.children.each((enemy) => {
         const dx = this.playerroxo.x - enemy.x;
         const dy = this.playerroxo.y - enemy.y;
@@ -1840,7 +1861,7 @@ class scene1 extends Phaser.Scene {
           enemy.anims.stop();
         }
       });
-    }*/
+    }
 
     if (this.inimigosaliens && this.inimigosaliens.getLength() > 0) {
       let pacoteAliens = [];
@@ -1850,8 +1871,6 @@ class scene1 extends Phaser.Scene {
           id: alien.getData("id"),
           x: alien.x,
           y: alien.y,
-          // vx: alien.body.velocity.x,
-          // vy: alien.body.velocity.y,
           flipX: alien.flipX, // Lado para onde está olhando
           anim: alien.anims.currentAnim ? alien.anims.currentAnim.key : null, // Animação atual
         });
@@ -1988,7 +2007,7 @@ class scene1 extends Phaser.Scene {
   }
 
   teletransporte2() {
-    //if (this.antenasconsertadas === 3)
+    if (this.antenasconsertadas === 3)
     {
       this.porta2.anims.play("portaabrindo", true);
       this.positionP2 = false;

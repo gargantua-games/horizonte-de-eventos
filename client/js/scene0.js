@@ -20,7 +20,7 @@ class scene0 extends Phaser.Scene {
     this.collectEng2 = false;
     this.collectEng3 = false;
     this.collectEng5 = false;
-    this.life = 6;
+    this.life = 10;
     this.canTakeDamage = true;
     this.enemyGravity = false;
     this.doorOpen = 0;
@@ -2152,9 +2152,9 @@ class scene0 extends Phaser.Scene {
       return;
     }
 
-    const maxLife = 6;
+    const maxLife = 10;
     const radius = this.lifeRadius;
-    const segmentCount = 6;
+    const segmentCount = 10;
     const gapDegrees = 5;
     const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
@@ -2239,6 +2239,14 @@ class scene0 extends Phaser.Scene {
               ? this.player.anims.currentAnim.key
               : null,
           },
+
+          door15: this.door15.anims.currentAnim
+              ? this.door15.anims.currentAnim.key
+              : null,
+
+          door25: this.door25.anims.currentAnim
+              ? this.door25.anims.currentAnim.key
+              : null,
         });
       } catch (e) {
         console.error("Error updating player:", e);
@@ -2261,7 +2269,7 @@ class scene0 extends Phaser.Scene {
       }
     }
 
-    //if (this.fase4) {
+    if (this.fase4) {
     try {
       this.game.socket.emit("scene0", this.game.room, {
         cannon: {
@@ -2273,7 +2281,7 @@ class scene0 extends Phaser.Scene {
     } catch (e) {
       console.error("Error updating player:", e);
     }
-    //}
+    }
 
     if (this.energy) {
       this.lights.enable().setAmbientColor(0xe0f7ff);
@@ -2643,7 +2651,7 @@ class scene0 extends Phaser.Scene {
       }
     } else if (!this.movingP1) {
       this.player.setVelocity(0);
-     // if (this.fase4) {
+      if (this.fase4) {
       
         if (horizontal < 0) {
           this.cannon.setVelocityX(-150);
@@ -2672,7 +2680,7 @@ class scene0 extends Phaser.Scene {
             .create(this.cannon.x, this.cannon.y - 20, "bulletP1")
             .setVelocityY(-200);
         }
-     // }
+      }
     }
 
     // movimentação inimigo
