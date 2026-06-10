@@ -35,7 +35,7 @@ class iniciov extends Phaser.Scene {
     this.text1 = this.add.text(
       322,
       110,
-      "A nave em que você trabalha como\nengenheiro está sob ataque. Por sorte,\nseu colega na sala de controle consegue te\najudar em seu caminho para as naves\nde fuga.Mas seja rápido, sua nave se\naproxima do horizonte de eventos de\num buraco negro!",
+      "A nave em que você trabalha como\nengenheiro está sob ataque. Por sorte,\nseu colega na sala de controle consegue te\najudar em seu caminho para as naves\nde fuga. Mas seja rápido, sua nave se\naproxima do horizonte de eventos de\num buraco negro!",
       {
         fontFamily: "sarpanchregular",
         fontSize: "20px",
