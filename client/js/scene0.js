@@ -23,7 +23,7 @@ class scene0 extends Phaser.Scene {
     this.life = 6;
     this.canTakeDamage = true;
     this.enemyGravity = false;
-    this.doorOpen = 0;
+    this.doorOpen = 4;
     this.bullet = true;
     this.platform12Interval = null;
     this.platform15Interval = null;
@@ -1068,6 +1068,7 @@ class scene0 extends Phaser.Scene {
 
           this.score -= 1;
           this.collectEng5 = false;
+          this.scoreText.setText(this.score + "/4");
         }
 
         this.platMoviment = false;
@@ -1160,7 +1161,7 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
@@ -1395,6 +1396,7 @@ class scene0 extends Phaser.Scene {
         this.score -= 1;
         this.engrenagem3.enableBody(true, 1209, 2604, true, true);
         this.collectEng3 = false;
+        this.scoreText.setText(this.score + "/4");
       }
     });
 
@@ -1417,6 +1419,7 @@ class scene0 extends Phaser.Scene {
         this.score -= 1;
         this.engrenagem1.enableBody(true, 1138, 968, true, true);
         this.collectEng1 = false;
+        this.scoreText.setText(this.score + "/4");
       }
     });
 
@@ -2172,14 +2175,11 @@ class scene0 extends Phaser.Scene {
 
     if (this.inFinalDoorP1) {
       this.game.socket.emit("scene0", this.game.room, {
-        //engrenagens: this.score,
+        engrenagens: this.score,
         inFinalDoorP1: this.inFinalDoorP1,
       });
 
-      this.game.socket.emit("scene2", this.game.room, {
-        engrenagens: this.score,
-        
-      });
+      
 
       if (this.inFinalDoorP2) {
         this.physics.pause();
@@ -2187,7 +2187,7 @@ class scene0 extends Phaser.Scene {
 
         this.game.socket.removeAllListeners();
         this.scene.stop("scene0");
-        this.scene.start("scene2", { role: "pilot" });
+        this.scene.start("scene2", { role: "pilot", engrenagens: this.score,});
       }
     }
 
@@ -2206,7 +2206,7 @@ class scene0 extends Phaser.Scene {
         console.error("Error updating player:", e);
       }
     }
-    if (this.fase5 === false && this.energy === false) {
+    if (this.platMoviment) {
       try {
         this.game.socket.emit("scene0", this.game.room, {
           platform12: {
@@ -2730,6 +2730,7 @@ class scene0 extends Phaser.Scene {
           this.score -= 1;
           this.engrenagem2.enableBody(true, 1059, 1652, true, true);
           this.collectEng2 = false;
+          this.scoreText.setText(this.score + "/4");
         }
       }
     });
