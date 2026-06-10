@@ -1337,6 +1337,7 @@ class scene1 extends Phaser.Scene {
 
   update(time, delta) {
     this.GameOver();
+
     this.puzzleAberto = this.verificarMinigamesAtivos();
     this.cannon.setAngle(this.angleCannon);
 

@@ -5,11 +5,11 @@ class creditos extends Phaser.Scene {
 
   create() {
 
-     this.trilhacreditos = this.sound.add("trilhacreditos", {
-       loop: true,
-       volume: 1,
-     });
-     this.trilhacreditos.play();
+    // this.trilhacreditos = this.sound.add("trilhacreditos", {
+     //  loop: true,
+    //   volume: 1,
+   //  });
+   //  this.trilhacreditos.play();
 
     const content = [
       
@@ -45,7 +45,7 @@ class creditos extends Phaser.Scene {
       "Música dos créditos:",
       "'Streetsound' por p0ss em opengameart.org",
       "Efeitos sonoros:",
-      "opengameart.org",
+      "opengameart.org e pixabay",
       "",
 
       "Programadores:",
@@ -60,6 +60,9 @@ class creditos extends Phaser.Scene {
       "Pedro",
       "Prof Boi (Ederson)",
       "Prof Clayrton",
+      "",
+
+      "Código da cena de créditos (esta mesma): Elise, do Astronautica",
       "",
 
       "OBRIGADO POR JOGAR HORIZONTE DE EVENTOS!"
@@ -77,8 +80,6 @@ class creditos extends Phaser.Scene {
       duration: 20000,
       //yoyo: true,
     });
-
-   
 
     
   }

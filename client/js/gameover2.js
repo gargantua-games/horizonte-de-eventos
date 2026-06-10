@@ -8,6 +8,22 @@ class gameover2 extends Phaser.Scene {
  // }
 
   create() {
+   if (this.trilhasonora) {
+     this.trilhasonora.pause();
+   }
+   if (this.respiracao) {
+     this.respiracao.pause();
+   }
+   if (this.batimentocardiaco) {
+     this.batimentocaridaco.pause();
+   }
+
+   this.trilhacreditos = this.sound.add("trilhacreditos", {
+     loop: true,
+     volume: 1,
+   });
+   this.trilhacreditos.play();
+
     const bg = this.add.image(0, 0, "terminal").setOrigin(0, 0).setDepth(0);
     const imageRatio = bg.width / bg.height;
     const screenRatio = this.scale.width / this.scale.height;
@@ -89,6 +105,11 @@ class gameover2 extends Phaser.Scene {
     };
 
     typeChar1();
+
+     this.time.delayedCall(8000, () => {
+       this.scene.stop("gameover2");
+       this.scene.start("creditos");
+     });
   }
 
   update() {}

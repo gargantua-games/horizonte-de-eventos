@@ -131,9 +131,11 @@ class scene0 extends Phaser.Scene {
     // ===============================================
 
     this.passos = this.sound.add("passos", { loop: true, volume: 2 });
-    this.trilhasonora = this.sound
-      .add("trilhasonora", { loop: true, volume: 0.08 })
-      .play();
+    this.trilhasonora = this.sound.add("trilhasonora", {
+      loop: true,
+      volume: 0.2,
+    });
+    this.trilhasonora.play();
 
     this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
