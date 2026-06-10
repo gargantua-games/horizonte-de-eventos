@@ -69,13 +69,13 @@ export default class termo extends Phaser.Scene {
 
     this.comojogarText = this.add
       .text(
-        600,
+        630,
         215,
         "Você deve adivinhar qual a palavra certa. Ela terá cinco (5) letras.\nA cada tentativa, o jogo revelará: letras presentes na palavra, mas em posições erradas (ficarão em amarelo);\nletras presentes e na posição certa (ficarão em verde); e letras não existentes na palavra (ficarão cinza).\nClique em (como jogar) de novo para fechar o tutorial e recomeçar o desafio.",
         {
           fill: "#00ff0d",
           fontFamily: "sarpanchregular",
-          fontSize: "30px",
+          fontSize: "27px",
         },
       )
       .setOrigin(0.5)
@@ -152,7 +152,7 @@ export default class termo extends Phaser.Scene {
     }
 
     // 2. BOTÃO DE PEDIR DICA
-    this.btnDicaBg = this.add
+   /* this.btnDicaBg = this.add
       .rectangle(400, 500, 200, 45, 0xb59f3b)
       .setInteractive();
     this.btnDicaTexto = this.add
@@ -163,7 +163,7 @@ export default class termo extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.btnDicaBg.on("pointerdown", () => this.abrirPuzzleDica());
+    this.btnDicaBg.on("pointerdown", () => this.abrirPuzzleDica());*/
 
     // Texto que exibirá a dica gerada
     this.txtMensagemDica = this.add
