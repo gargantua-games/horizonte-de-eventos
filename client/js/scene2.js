@@ -272,13 +272,11 @@ if (this.game.room) {
       let inimigo = this.enemies.getChildren().find(e => e.idUnico === data.id);
       
       if (inimigo && !inimigo.isDead) {
-        inimigo.hp = data.hp; // Sobrescreve a vida local com a do Piloto
+        inimigo.hp = data.hp; // Atualiza a vida localmente para a barra de HP
         
-        // Se a física falhou localmente para o atirador, mas o piloto confirmou a morte:
+        // Se o piloto avisou que a vida zerou, o atirador aciona a morte
         if (inimigo.hp <= 0) {
-           inimigo.isDead = true;
-           // Opcional: Você pode forçar a lógica de morte aqui ou deixar 
-           // o próprio código do Atirador limpar na próxima colisão que ele registrar.
+           this.matarInimigo(inimigo);
         }
       }
     });
@@ -1042,7 +1040,7 @@ spawnAsteroide(customY, remoteData = null) {
     }
   }
 
-  atingirInimigo(tiro, inimigo) {
+ atingirInimigo(tiro, inimigo) {
     if (!tiro.active || !inimigo.active || inimigo.isDead) return;
 
     if (inimigo.isInvulnerable) {
@@ -1050,58 +1048,23 @@ spawnAsteroide(customY, remoteData = null) {
       return;
     }
 
-    inimigo.hp -= tiro.dano;
+    // AMBOS DESTROEM O TIRO E MOSTRAM O EFEITO VISUAL
     tiro.destroy();
+    inimigo.setTint(0xff3333);
+    this.time.delayedCall(100, () => { if (inimigo && inimigo.active) inimigo.clearTint(); });
 
+    // APENAS O PILOTO CALCULA O DANO
     if (this.localRole === "pilot") {
+      inimigo.hp -= tiro.dano;
+
       this.game.socket.emit("sync-enemy-health", {
         room: this.game.room,
         id: inimigo.idUnico,
         hp: inimigo.hp
       });
-    }
 
-    inimigo.setTint(0xff3333);
-    this.time.delayedCall(100, () => { if (inimigo && inimigo.active) inimigo.clearTint(); });
-
-    if (inimigo.hp <= 0) {
-      inimigo.isDead = true;
-      this.tweens.killTweensOf(inimigo);
-      if (inimigo.shootTimer) inimigo.shootTimer.remove();
-      if (inimigo.moveTimer) inimigo.moveTimer.remove();
-
-      inimigo.setVelocity(0, 0);
-      if (inimigo.barraVida) inimigo.barraVida.destroy();
-
-      if (inimigo.isBoss) {
-        if (inimigo.escudoSprite) {
-          inimigo.escudoSprite.destroy();
-          inimigo.escudoSprite = null;
-        }
-
-        this.graphicsBarraBoss.clear();
-        if (this.bossText) this.bossText.destroy();
-        this.velocidadeFundo = 2;
-
-        if (inimigo.body) this.matter.world.remove(inimigo.body);
-        inimigo.play("boss_destruido");
-
-        this.time.delayedCall(1800, () => {
-          inimigo.destroy();
-          this.time.delayedCall(600, () => this.spawnNextEnemy());
-        });
-
-      } else {
-        if (inimigo.body) this.matter.world.remove(inimigo.body);
-
-        let keyInimigo = "naveinimiga" + (inimigo.indexInimigo + 1);
-        inimigo.play(keyInimigo + "_destruido");
-
-        inimigo.on("animationcomplete", () => {
-          inimigo.destroy();
-        });
-
-        this.time.delayedCall(600, () => this.spawnNextEnemy());
+      if (inimigo.hp <= 0) {
+        this.matarInimigo(inimigo);
       }
     }
   }
@@ -1111,6 +1074,55 @@ spawnAsteroide(customY, remoteData = null) {
     let dano = tiroInimigo.dano || 1;
     tiroInimigo.destroy();
     this.computarDanoJogador(dano);
+  }
+
+  matarInimigo(inimigo) {
+    if (inimigo.isDead) return; // Evita rodar a morte duas vezes
+    
+    inimigo.isDead = true;
+    this.tweens.killTweensOf(inimigo);
+    if (inimigo.shootTimer) inimigo.shootTimer.remove();
+    if (inimigo.moveTimer) inimigo.moveTimer.remove();
+
+    inimigo.setVelocity(0, 0);
+    if (inimigo.barraVida) inimigo.barraVida.destroy();
+
+    if (inimigo.isBoss) {
+      if (inimigo.escudoSprite) {
+        inimigo.escudoSprite.destroy();
+        inimigo.escudoSprite = null;
+      }
+
+      this.graphicsBarraBoss.clear();
+      if (this.bossText) this.bossText.destroy();
+      this.velocidadeFundo = 2;
+
+      if (inimigo.body) this.matter.world.remove(inimigo.body);
+      inimigo.play("boss_destruido");
+
+      this.time.delayedCall(1800, () => {
+        inimigo.destroy();
+        // Apenas o piloto chama o próximo spawn para evitar duplicidade de comandos no servidor
+        if (this.localRole === "pilot") {
+          this.time.delayedCall(600, () => this.spawnNextEnemy());
+        }
+      });
+
+    } else {
+      if (inimigo.body) this.matter.world.remove(inimigo.body);
+
+      let keyInimigo = "naveinimiga" + (inimigo.indexInimigo + 1);
+      inimigo.play(keyInimigo + "_destruido");
+
+      inimigo.on("animationcomplete", () => {
+        inimigo.destroy();
+      });
+
+      // Apenas o piloto chama o próximo spawn
+      if (this.localRole === "pilot") {
+        this.time.delayedCall(600, () => this.spawnNextEnemy());
+      }
+    }
   }
 
   colisaoCorpoACorpo(jogador, inimigo) {

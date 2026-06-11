@@ -18,10 +18,6 @@ class scene1 extends Phaser.Scene {
       "termo",
       "sudoku",
     ];
-   // this.portaOverlapTime = 0;
-    //this.porta2OverlapTime = 0;
-    this.portalTeleported = false;
-    this.portal2Teleported = false;
     this.bulletP1 = true;
     this.shoot = false;
     this.inimigosalienscount = 0;
@@ -492,7 +488,7 @@ class scene1 extends Phaser.Scene {
     this.createSemicircleLifeBar();
 
     this.painelfios = this.physics.add.sprite(175, 1546, "painelfios");
-    this.painelfios.setVisible(false);
+    this.painelfios.setDepth(99).setScale(5).disableBody(true, true);
 
     //adicionar porta
     this.porta = this.physics.add.sprite(1200, 640, "porta", 0);
@@ -521,44 +517,30 @@ class scene1 extends Phaser.Scene {
     //adiciona o bigboss como sprite físico para colidir com o player
     //COMPUTADOR 1, SPRITES DA DIREITA PRA ESQUERDA
     this.bigboss.create(465, 275, "bigboss"); //bigboss 1
-    /* this.bigboss.create(452, 260, "bigboss").setSize(40, 10);
-      this.bigboss.create(385, 260, "bigboss").setSize(70, 20);
-    this.bigboss.create(335, 267, "bigboss").setSize(25, 17);*/
-
+    
     //COMPUTADOR 2(ABAIXO DO 1), SPRITES DA DIREITA PRA ESQUERDA
     //-62 +160
-    this.bigboss.create(403, 435, "bigboss"); //bigboss 2
-    /*this.bigboss.create(390, 420, "bigboss").setSize(40, 10);
-    this.bigboss.create(323, 420, "bigboss").setSize(70, 20);
-    this.bigboss.create(273, 427, "bigboss").setSize(25, 17);*/
+    this.bigboss.create(403, 435, "bigboss"); 
 
     //COMPUTADOR 3(ABAIXO DO 2), SPRITES DA DIREITA PRA ESQUERDA
     //-33 -160
     this.bigboss.create(370, 595, "bigboss"); //bigboss 3
-    /*this.bigboss.create(357, 580, "bigboss").setSize(40, 10);
-    this.bigboss.create(290, 580, "bigboss").setSize(70, 20);
-    this.bigboss.create(240, 587, "bigboss").setSize(25, 17);*/
+   
 
     //COMPUTADOR 4 (DIREITA DO 3), SPRITES DA DIREITA PRA ESQUERDA
     //+690 X A PARTIR DO 3
     this.bigboss.create(1040, 598, "bigboss"); //bigboss 4, posição alterada
-    /*this.bigboss.create(1047, 580, "bigboss").setSize(40, 10);
-    this.bigboss.create(980, 580, "bigboss").setSize(70, 20);
-    this.bigboss.create(930, 587, "bigboss").setSize(25, 17);*/
+    
 
     //COMPUTADOR 5 (DIREITA DO 2), SPRITES DA DIREITA PRA ESQUERDA
     //+627 X A PARTIR DO 2
     this.bigboss.create(1008, 443, "bigboss"); //bigboss 5, posição alterada
-    /*this.bigboss.create(1017, 420, "bigboss").setSize(40, 10);
-    this.bigboss.create(950, 420, "bigboss").setSize(70, 20);
-    this.bigboss.create(900, 427, "bigboss").setSize(25, 17);*/
+    
 
     //COMPUTADOR 6 (DIREITA DO 1), SPRITES DA DIREITA PRA ESQUERDA
     //+500 X A PARTIR DO 1
     this.bigboss.create(950, 282, "bigboss"); //bigboss 6, posiçao alterada
-    /*this.bigboss.create(952, 260, "bigboss").setSize(40, 10);
-    this.bigboss.create(885, 260, "bigboss").setSize(70, 20);
-    this.bigboss.create(835, 267, "bigboss").setSize(25, 17);
+    
     
     //COMPUTADOR 7 (CENTRAL DE CIMA), SPRITES DA DIREITA PRA DIREITA
     this.bigboss.create(770, 203, "bigboss").setSize(30, 20);
@@ -575,7 +557,7 @@ class scene1 extends Phaser.Scene {
     //+352 Y ABAIXO DO 7 TBM
     this.bigboss.create(770, 555, "bigboss").setSize(30, 20);
     this.bigboss.create(650, 549, "bigboss").setSize(210, 17);
-    this.bigboss.create(530, 555, "bigboss").setSize(30, 20);*/
+    this.bigboss.create(530, 555, "bigboss").setSize(30, 20);
 
     //console do meio
     this.consolelongo = this.physics.add.sprite(645, 350, "consolelongo");
@@ -768,13 +750,12 @@ class scene1 extends Phaser.Scene {
     this.iaChip.disableBody(true, true);
 
     this.telescopio3 = this.physics.add.sprite(1107, 1490, "telescopio");
-    this.telescopio3.body.setSize(20, 20);
-    this.telescopio3.setImmovable(true);
+    this.telescopio3.body.setSize(20, 20)
+    .setImmovable(true);
 
 
 
     this.antena4 = this.physics.add.sprite(433, 1468, "NewPiskel");
-    this.antena4;
     this.antena4.body.setSize(20, 30);
     this.antena4.setOffset(10, 0);
     this.antena4.setImmovable(true);
@@ -842,7 +823,7 @@ class scene1 extends Phaser.Scene {
 
     this.cracha = this.physics.add.sprite(535, 2165, "engrenagem");
     this.cracha.anims.play("engrenagem-idleciano");
-    this.cracha.setScale(0.8);
+    this.cracha.setScale(0.8).setPipeline("Light2D");
 
     this.platform12 = this.physics.add.sprite(350, 2243, "plataform"); //primeiro interagir
     this.platform12
@@ -929,31 +910,25 @@ class scene1 extends Phaser.Scene {
     this.physics.add.collider(this.playerroxo, this.antenas);
     this.physics.add.collider(this.playerroxo, this.limiteporta);
     this.physics.add.collider(this.playerroxo, this.antena1, () => {
-      //if (!this.puzzleAberto && this.faisca1.visible) {
-      //  this.abrirMinigameAleatorio(() => {
-      //  if (this.faisca1) {
-      //   this.faisca1.setVisible(false);
-      //  }
-      // this.antenasconsertadas += 1;
-      //  this.liberarIa();
-      // });
-      // }
+      console.log("antena1");
       if (this.isConsertando) {
         return;
-      }
-
-      // Trava para impedir que o código rode nos próximos frames de colisão
+      } // Trava para impedir que o código rode nos próximos frames de colisão
       this.isConsertando = true;
-      this.painelfios.setVisible(true).setDepth(3).setScale(5);
-      this.painelfios.anims.play("fiosconsertando");
+      this.puzzleAberto = true;
+      this.painelfios.enableBody(true, 175, 1546, true, true);
+      this.painelfios.setDepth(999);
+      this.painelfios.anims
+            .play("fiosconsertando");
       this.painelfios.once("animationcomplete", (anim, frame) => {
         if (anim.key === "fiosconsertando") { 
         if (this.faisca1) {
           this.faisca1.setVisible(false);
         }
+        this.antena1.disableBody(true);
+        this.puzzleAberto = false;
         this.isConsertando = false;
-        this.painelfios.setVisible(false);
-        //this.painelfios.anims.stop();
+        this.painelfios.disableBody(true, true);
         this.antenasconsertadas += 1;
           this.liberarIa();
         
@@ -963,25 +938,31 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.telescopio3, () => {
+      if(this.antenasconsertadas === 3) {
       if (this.isConsertando) {
         return;
       }
-      this.painelfios.setPosition(1107, 1490);
+      
       // Trava para impedir que o código rode nos próximos frames de colisão
       this.isConsertando = true;
-      this.painelfios.setVisible(true).setDepth(3).setScale(5);
-      this.painelfios.anims.play("fiosconsertando");
+        this.puzzleAberto = true;
+        this.painelfios.enableBody(true,1107, 1490, true, true)
+        this.painelfios.setDepth(999)
+      this.painelfios.anims
+            .play("fiosconsertando");
       this.painelfios.once("animationcomplete", (anim, frame) => {
         if (anim.key === "fiosconsertando") {
-          if (this.faisca3) {
-            this.faisca3.setVisible(false);
-          }
-           this.isConsertando = false;
-           this.painelfios.setVisible(false);
-           this.iaChip.enableBody(true, 1107, (this.playerroxo.y + 64), true, true)
+          
+          this.faisca3.setVisible(false);
+          this.telescopio3.disableBody(true);
+          this.puzzleAberto = false;
+          this.isConsertando = false;
+          this.painelfios.disableBody(true, true);
+          this.iaChip.enableBody(true, (this.playerroxo.x + 64), this.playerroxo.y, true, true)
         }
       });
-    });
+    }
+      });
 
 
     this.physics.add.overlap(this.playerroxo, this.iaChip, () => {
@@ -989,22 +970,26 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.playerroxo, this.antena2, () => {
+      console.log("antena2");
       if (this.isConsertando) {
         return;
       }
-      this.painelfios.setPosition(820, 1420);
-      // Trava para impedir que o código rode nos próximos frames de colisão
+    
       this.isConsertando = true;
-      this.painelfios.setVisible(true).setDepth(3).setScale(5);
-      this.painelfios.anims.play("fiosconsertando");
+      this.puzzleAberto = true;
+      this.painelfios.setDepth(999)
+      .enableBody(true, 820, 1420, true, true);
+      this.painelfios.anims
+      .play("fiosconsertando");
       this.painelfios.once("animationcomplete", (anim, frame) => {
         if (anim.key === "fiosconsertando") {
           if (this.faisca2) {
             this.faisca2.setVisible(false);
           }
+          this.antena2.disableBody(true);
+          this.puzzleAberto = false;
            this.isConsertando = false;
-          this.painelfios.setVisible(false);
-          //this.painelfios.anims.stop();
+          this.painelfios.disableBody(true, true);
           this.antenasconsertadas += 1;
           this.liberarIa();
           
@@ -1015,22 +1000,26 @@ class scene1 extends Phaser.Scene {
 
 
     this.physics.add.collider(this.playerroxo, this.antena4, () => {
+      console.log("antena4");
       if (this.isConsertando) {
         return;
       }
-      this.painelfios.setPosition(433, 1468);
       // Trava para impedir que o código rode nos próximos frames de colisão
+      this.puzzleAberto = true;
       this.isConsertando = true;
-      this.painelfios.setVisible(true).setDepth(3).setScale(5);
-      this.painelfios.anims.play("fiosconsertando");
+      this.painelfios.setDepth(999)
+      this.painelfios.enableBody(true, 433, 1468, true, true)
+      this.painelfios.anims
+            .play("fiosconsertando");
       this.painelfios.once("animationcomplete", (anim, frame) => {
         if (anim.key === "fiosconsertando") {
           if (this.faisca4) {
             this.faisca4.setVisible(false);
           }
+          this.painelfios.disableBody(true, true);
+          this.antena4.disableBody(true);
+          this.puzzleAberto = false;
            this.isConsertando = false;
-          this.painelfios.setVisible(false);
-          //this.painelfios.anims.stop();
           this.antenasconsertadas += 1;
           this.liberarIa();
           
@@ -1041,23 +1030,56 @@ class scene1 extends Phaser.Scene {
 
 
     this.physics.add.collider(
-      this.limitenorte,
       this.laserP1,
-      this.destroyLaser,
-      null,
-      this,
-    );
-    
-    this.physics.add.collider(
-      this.laserP1,
-      this.limites,
-      this.destroyLaser,
-      null,
-      this,
-    );
+      this.limitenorte, () => {
+        this.laserP1.children.each((laser) => {
+          laser.destroy();
+        });
 
-    this.physics.add.overlap(this.playerroxo, this.porta, null, null, this);
-    this.physics.add.overlap(this.playerroxo, this.porta2, null, null, this);
+      });
+
+    this.physics.add.overlap(this.caixa, this.porta, () => {
+      
+      //if (this.infase === 4) {
+        this.porta.anims.play("portaabrindo", true);
+        
+        this.porta.once("animationcomplete", (anim, frame) => {
+          if (anim.key === "portaabrindo") {
+            this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
+            this.outShip = true;
+            this.positionP2 = true;
+            this.spawnAlienAleatorio();
+            this.porta.anims.play("portafechando", true);
+            this.trilhasonora.pause();
+            this.respiracao.play();
+            this.batimentocardiaco.play();
+          }
+        });
+     // }
+    });
+    
+    this.physics.add.overlap(this.playerroxo, this.porta2, () => {
+      
+      if (this.antenasconsertadas === 3) {
+        this.porta2.anims.play("portaabrindo", true);
+        
+        this.porta2.once("animationcomplete", (anim, frame) => {
+          if (anim.key === "portaabrindo") {
+            
+            this.abrirPorta(4);
+            this.playerroxo.setPosition(640, 651);
+            this.outShip = false;
+            this.positionP2 = false;
+            this.spawnAlienAleatorio();
+            this.porta.anims.play("portafechando", true);
+            this.trilhasonora.play();
+            this.respiracao.pause();
+            this.batimentocardiaco.pause();
+
+          }
+        });
+      }
+    });
 
     this.physics.add.overlap(this.playerroxo, this.portaFinal, () => {
       if (this.doorOpen >= 5 && this.inFinalDoorP1) {
@@ -1074,7 +1096,7 @@ class scene1 extends Phaser.Scene {
     });
 
   
-      this.physics.add.collider(this.playerroxo, this.limitenorte);
+  this.physics.add.collider(this.playerroxo, this.limitenorte);
 
     this.inimigosaliens = this.physics.add.group({
       immovable: false,
@@ -1089,7 +1111,7 @@ class scene1 extends Phaser.Scene {
       this.perdervida,
       null,
       this,
-    ); //this.enemyAttack, null, this);
+    ); 
 
     this.layerParede.setCollisionByProperty({ collides: true });
 
@@ -1101,14 +1123,6 @@ class scene1 extends Phaser.Scene {
       this,
     );
 
-    //camera
-
-    /*if (this.estoutrabalhando === false) {
-      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
-    } else if (this.estoutrabalhando) {
-      this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1);
-    }*/
-    // Texto de posição do playerroxo atualizado a cada segundo
     this.positionText = this.add
       .text(200, 80, "X: 0 Y: 0", {
         fontSize: "18px",
@@ -1222,6 +1236,16 @@ class scene1 extends Phaser.Scene {
     this.lifeBarBgGraphics.fillStyle(0x000000, 1);
     this.lifeBarBgGraphics.fillCircle(0, 0, 36);
 
+   this.uI = this.add.container(0, 0);
+
+    this.uI.add([
+      this.lifeBarBgGraphics,
+      this.lifeBarGraphics,
+      this.playerIcon,
+    ]);
+
+    this.uI.setScrollFactor(0, 0);
+
     this.game.socket.on("scene0", (state) => {
       this.inFinalDoorP1 = state.inFinalDoorP1;
       this.score = state.engrenagens
@@ -1284,11 +1308,10 @@ class scene1 extends Phaser.Scene {
   liberarIa() {
     if (this.antenasconsertadas === 3) {
       this.faisca3.setVisible(true);
-      this.faisca3.anims.play("faiscando");
+      //this.faisca3.anims.play("faiscando");
       console.log("ia disponivel");
       return;
     } else if (this.antenasconsertadas != 3) {
-      console.log("ia não disponivel");
       this.faisca3.setVisible(false);
     }
   }
@@ -1297,52 +1320,12 @@ class scene1 extends Phaser.Scene {
     this.iaChip.disableBody(true, true);
     this.collectIa = true;
     this.playerIcon.anims.play("playerIconVerde");
+    this.game.socket.emit("scene1", this.game.room, {
+        collectIa: this.collectIa,
+      });
+  
   }
 
-  abrirMinigameAleatorio(callbackSucesso) {
-    // 1. A SUA IDEIA: Conta quantos minigames estão abertos neste exato segundo
-    let minigamesAbertos = 0;
-    this.bancoMinigames.forEach((m) => {
-      if (this.scene.isActive(m.id)) {
-        minigamesAbertos++;
-      }
-    });
-
-    // 2. A TRAVA SUPREMA:
-    // Se tiver 1 minigame aberto OU se o jogo estiver no bloqueio temporário, CANCELA!
-    if (minigamesAbertos >= 1 || this.bloqueioColisao) {
-      return;
-    }
-
-    // 3. ATIVA O BLOQUEIO DE TEMPO IMEDIATAMENTE
-    this.bloqueioColisao = true;
-
-    // Desativa o bloqueio após 1 segundo (tempo mais que suficiente pro Phaser processar a abertura)
-    this.time.delayedCall(1000, () => {
-      this.bloqueioColisao = false;
-    });
-
-    // Mantém a sua variável que trava o player
-    this.puzzleAberto = true;
-
-    // --- RESTO DO CÓDIGO DO SORTEIO NORMAL ---
-    let minigamesDisponiveis = this.bancoMinigames.filter(
-      (m) => m.aparicoes < 2,
-    );
-
-    if (minigamesDisponiveis.length === 0) {
-      this.bancoMinigames.forEach((m) => (m.aparicoes = 0));
-      minigamesDisponiveis = this.bancoMinigames;
-    }
-
-    let minigameEscolhido = Phaser.Utils.Array.GetRandom(minigamesDisponiveis);
-    minigameEscolhido.aparicoes++;
-
-    this.scene.launch(minigameEscolhido.id, {
-      cenaOrigem: this.scene.key,
-      onComplete: callbackSucesso,
-    });
-  }
 
   createSemicircleLifeBar() {
     // Posição da barra de vida segmentada
@@ -1399,8 +1382,6 @@ class scene1 extends Phaser.Scene {
   update(time, delta) {
     this.GameOver();
 
-    this.puzzleAberto = this.verificarMinigamesAtivos();
-
     this.liberarIa();
 
    // console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
@@ -1442,20 +1423,21 @@ class scene1 extends Phaser.Scene {
       }
     }
 
-    if (this.doorOpen === 0) {
+    if (this.infase === 1) {
       this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(913, 388);
-    } else if (this.doorOpen === 1) {
+      this.avisoconsole.setPosition(this.consoles5.x, this.consoles5.y);
+    } else if (this.infase === 2) {
       this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(843, 222);
-    } else if (this.doorOpen === 2) {
+      this.avisoconsole.setPosition(this.consoles4.x, this.consoles4.y);
+    } else if (this.infase === 3) {
       this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(933, 550);
-    } else if (this.doorOpen === 3) {
-      this.avisoconsole.setVisible(false);
-    } else if (this.doorOpen === 5) {
+      this.avisoconsole.setPosition(this.consoles6.x, this.consoles6.y);
+    } else if (this.infase === 4) {
       this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(640, 505);
+      this.avisoconsole.setPosition(this.porta.x, this.porta.y);
+    } else if (this.infase === 5) {
+      this.avisoconsole.setVisible(true);
+      this.avisoconsole.setPosition(this.consolemedio.x, this.consolemedio.y);
     } else {
       this.avisoconsole.setVisible(false);
     }
@@ -1494,6 +1476,7 @@ class scene1 extends Phaser.Scene {
 
     if (this.game.audio && this.comunication) {
       this.game.audio.volume = this.comunication.isDown ? 1 : 0;
+      console.log("p2:falando")
     }
 
     if (this.shoot && this.bulletP1) {
@@ -1515,7 +1498,8 @@ class scene1 extends Phaser.Scene {
 
       if (this.fase5) {
         if(!this.puzzleAberto){
-        if (qe.E.isDown && !this.camP1) {
+          if (qe.E.isDown && !this.camP1) {
+          this.uI.setVisible(false);
           this.cameras.main.setBounds(10, 0, this.tilemap.widthInPixels);
           this.cameras.main.startFollow(this.player2, false, 1, 0).zoom = 1.2;
           this.lights.setAmbientColor(0x303030);
@@ -1523,6 +1507,7 @@ class scene1 extends Phaser.Scene {
 
           this.cameras.main.scrollY = 2348 - this.cameras.main.height / 2 - 120;
         } else if (qe.Q.isDown && this.camP1) {
+          this.uI.setVisible(true);
           this.cameras.main.startFollow(this.playerroxo, true, 0.1, 0.1).zoom = 1.5;
           this.cameras.main.setBounds(
             24,
@@ -1553,26 +1538,8 @@ class scene1 extends Phaser.Scene {
       //.startFollow(this.playerroxo, true, .1, .1);
     }
 
-    const portaOverlap = this.physics.overlap(this.caixa, this.porta);
-    const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
 
-    if (portaOverlap && !this.portalTeleported) {
-   
-        this.portalTeleported = true;
-       
-        this.teletransporte();
-     
-    }
-
-    if (porta2Overlap && !this.portal2Teleported) {
-     // this.porta2OverlapTime += delta;
-    //  if (this.porta2OverlapTime >= 2000) {
-        this.portal2Teleported = true;
-       // this.porta2OverlapTime = 0;
-        this.teletransporte2();
-     // }
-    } 
-
+  
     if (this.puzzleAberto) {
       if (this.playerroxo) {
         this.playerroxo.setVelocity(0, 0);
@@ -1791,9 +1758,13 @@ class scene1 extends Phaser.Scene {
           } else if (dy < 0) {
             enemy.anims.play("enemyWalkCima", true);
             enemy.setFlipX(false);
+            enemy.body
+                  .setOffset(33, 17);
           } else {
             enemy.anims.play("enemyWalkBaixo", true);
             enemy.setFlipX(false);
+            enemy.body
+                  .setOffset(33, 17);
           }
         } else {
           enemy.anims.stop();
@@ -1870,6 +1841,10 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
+    if (this.puzzleAberto) {
+      this.puzzleAberto = false;
+    }
+
     // Ativa invencibilidade e desativa colisão por 1 segundo
     this.invulnerable = true;
     this.colliderAliensBox.active = false;
@@ -1877,7 +1852,13 @@ class scene1 extends Phaser.Scene {
     this.updateSemicircleLifeBar();
 
     // Teletransporta playerroxo, destrói inimigos e bloqueia spawn por 1 segundo
-    this.playerroxo.setPosition(111, 1573).anims.play("idlefrente", true);
+    this.playerroxo.setPosition(111, 1573).setVelocity(0, 0);
+    if (!this.collectIa) {
+      this.playerroxo.anims.play("idlefrente", true);
+    } else if (this.collectIa) {
+
+      this.playerroxo.anims.play("idlefrenteverde", true);
+    };
 
     if (this.puzzleAberto) {
       console.log("O Alien pegou o player! Fechando o puzzle ativo...");
@@ -1929,21 +1910,7 @@ class scene1 extends Phaser.Scene {
     });
   }
 
-  teletransporte() {
-    if (this.infase === 4) {
-      this.porta.anims.play("portaabrindo", true);
-      
-        this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
-        this.outShip = true;
-      this.positionP2 = true;
-      this.spawnAlienAleatorio()
-        this.porta.anims.play("portafechando", true);
-        this.trilhasonora.pause();
-        this.respiracao.play();
-        this.batimentocardiaco.play();
-    }
-  }
-
+  
   teletransporte2() {
     if (this.antenasconsertadas === 3) { 
     
@@ -2052,7 +2019,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 0;
+      //this.game.audio.volume = 0;
     };
 
     if (this.game.media) {

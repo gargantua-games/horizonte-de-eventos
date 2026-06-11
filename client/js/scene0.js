@@ -1167,7 +1167,7 @@ class scene0 extends Phaser.Scene {
     this.iaBox
       .setOrigin(0, 0)
       .setScrollFactor(0)
-      .setPipeline("Light2D").anims.play("iaSpeak", true).body.allowGravity = false;
+      .anims.play("iaSpeak", true).body.allowGravity = false;
 
     const texto = " ";
     const texto1 =
@@ -1179,9 +1179,11 @@ class scene0 extends Phaser.Scene {
       "Porém mesmo que você não consiga\ncoletar os crachás vocês conseguem\nfugir daqui.";
     const texto5 = "Fuja deste alien até que o Roxo\nelimine ele.";
     const texto6 =
-      "Assim você pode pegar o jetpack\ndele e para passar pela próxima\nsala.";
-    const texto7 = "Esta sala esta com\numa anomalia gravitacional, é\nbom você usar o jetpack";
-    const texto8 = "Tome cuidado com os\nRTG's nesta sala eles estão\npifando";
+      "Assim você pode pegar o jetpack\ndele e para passar pela próximaifando\nsala.";
+    const texto7 = "Esta sala esta com uma anomalia\ngravitacional, é bom você usar o jetpack";
+    const texto8 = "Tome cuidado com os RTG's nesta\nsala eles estão sobreaquecidos";
+    const texto9 = "Os aliens cortaram as comunicações. Rápido! Use a torreta através destes computadores para ajudar o Roxo enquanto ele restabelece a comunicação."
+    const texto10 = "Cuidado! Os aliens desligaram\nas luzes e o seu oxigênio."
     this.iaText = this.add
       .text(735, 38, texto, { font: "13px", fill: "#fffc51" })
       .setScrollFactor(0)
@@ -1239,7 +1241,7 @@ class scene0 extends Phaser.Scene {
     
     this.cannon.setCollideWorldBounds(true);
 
-    this.limitenorte = this.physics.add.sprite(670, (1317 + 2624), "bigboss"); //662, 1347 667 1460
+    this.limitenorte = this.physics.add.sprite(670, (1324 + 2624), "bigboss"); //662, 1347 667 1460
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
 
@@ -1315,6 +1317,15 @@ class scene0 extends Phaser.Scene {
     this.physics.add.collider(this.laser, this.layerPiso, this.laserFloor, null, this);
     this.physics.add.collider(this.laserP1, this.layerPiso, this.laserFloor, null, this);
     this.physics.add.collider(this.laserP1, this.limitenorte, this.laserFloor, null, this);
+
+   /* this.physics.add.collider(
+      this.laserP1,
+      this.limitenorte, () => {
+        this.laserP1.children.each((laser) => {
+          laser.destroy();
+        });
+
+      });*/
 
     this.physics.add.collider(this.laser, this.inimigo, () => {
       this.inimigo.disableBody(true, true);
@@ -1472,7 +1483,7 @@ class scene0 extends Phaser.Scene {
 
         this.door21.once("animationcomplete", (anim, frame) => {
           if (anim.key === "open-door") {
-            this.iaBox.setVelocityX(0).setPosition(1009, 33);
+            this.iaBox.setPosition(1009, 33).setVelocityX(0);
             this.player
               .setPosition(108, 1835)
               .setVelocity(0, 0)
@@ -1490,11 +1501,11 @@ class scene0 extends Phaser.Scene {
             this.cameras.main.scrollY =
               this.player.y - this.cameras.main.height / 2 - 120;
             this.door12.anims.play("close-door", true);
-
-            this.iaBox.setVelocityX(-100);
+            
+            this.iaBox.setPosition(1009, 33)
+              .setVelocityX(-100);
             setTimeout(() => {
               this.iaBox.setVelocityX(0);
-              //this.iaBox.anims.play("iaSpeak", true);
 
               this.typeIaText(texto5, 50, () => {
                 this.time.delayedCall(800, () => {
@@ -1551,6 +1562,24 @@ class scene0 extends Phaser.Scene {
               this.player.y - this.cameras.main.height / 3.8 - 120;
             this.fase3 = true;
             this.door13.anims.play("close-door", true);
+
+            this.iaBox.setPosition(1009, 33)
+              .setVelocityX(-100);
+            setTimeout(() => {
+              this.iaBox.setVelocityX(0);
+
+              this.typeIaText(texto7, 50, () => {
+                this.time.delayedCall(800, () => {
+                  this.typeIaText(texto8, 50, () => {
+                    this.time.delayedCall(800, () => {
+                      this.typeIaText(texto, 50);
+                      this.iaBox.setVelocityX(100);
+                    });
+                  });
+                });
+              });
+            }, 3237);
+            
             this.door13.once("animationcomplete", (anim, frame) => {
               if (anim.key === "close-door") {
                 this.light13.setColor(0xff0000);
@@ -1599,6 +1628,26 @@ class scene0 extends Phaser.Scene {
             this.cargaJp = 0;
             this.updateCargaBar();
             this.door14.anims.play("close-door", true);
+
+            //BIG IA
+
+           /* this.iaBox.setPosition(1009, 33)
+              .setVelocityX(-100);
+            setTimeout(() => {
+              this.iaBox.setVelocityX(0);
+
+              this.typeIaText(texto5, 50, () => {
+                this.time.delayedCall(800, () => {
+                  this.typeIaText(texto6, 50, () => {
+                    this.time.delayedCall(800, () => {
+                      this.typeIaText(texto, 50);
+                      this.iaBox.setVelocityX(100);
+                    });
+                  });
+                });
+              });
+            }, 3237);*/
+            
             this.door14.once("animationcomplete", (anim, frame) => {
               if (anim.key === "close-door") {
                 this.light14.setColor(0xff0000);
@@ -1656,6 +1705,21 @@ class scene0 extends Phaser.Scene {
             this.lamp.setIntensity(0.95);
 
             this.door15.anims.play("close-door", true);
+            if(this.collectIa){
+
+            this.iaBox.setPosition(1009, 33)
+              .setVelocityX(-100);
+            setTimeout(() => {
+              this.iaBox.setVelocityX(0);
+
+              this.typeIaText(texto10, 50, () => {
+                this.time.delayedCall(800, () => {
+                  this.iaBox.setVelocityX(100);
+                });
+              });
+            }, 3237);
+          }
+            
             this.door15.once("animationcomplete", (anim, frame) => {
               if (anim.key === "close-door") {
                 this.light15.setColor(0xff0000);
@@ -1964,6 +2028,10 @@ class scene0 extends Phaser.Scene {
 
       if (state.faisca4) {
         this.faisca4.setVisible(state.faisca4.visible);
+      }
+
+      if (state.collectIa) {
+        this.collectIa = state.collectIa;
       }
 
     });
@@ -2413,6 +2481,7 @@ class scene0 extends Phaser.Scene {
     if (this.game.audio) {
       if (this.comunication)
         this.game.audio.volume = comunicationPressed ? 1 : 0;
+      console.log("P1:falando")
     }
 
     if (this.esperandoInteracao === 1 && interectPressed) {
@@ -2789,7 +2858,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 0;
+      //this.game.audio.volume = 0;
     };
 
     if (this.game.media) {
