@@ -67,6 +67,18 @@ class scene2 extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, 2000, 800);
 
     this.space = this.add.tileSprite(0, 0, 2000, 800, "space1").setOrigin(0, 0).setDisplaySize(2000, 800).setScrollFactor(0);
+    
+    // trilha sonora e efeitos sonoros
+    this.trilhasonora = this.sound.add("trilhascene2", {
+      loop: true,
+      volume: 0.2,
+    });
+    this.disparo = this.sound.add("disparo")
+    this.disparo = this.sound.add("navesendodestruida")
+    this.disparo = this.sound.add("explosionmeteoro")
+
+    this.trilhasonora.play();
+
 
     if (!this.anims.exists('boss_preparando')) {
       this.anims.create({ key: 'boss_preparando', frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 21 }), frameRate: 15, repeat: 0 });
