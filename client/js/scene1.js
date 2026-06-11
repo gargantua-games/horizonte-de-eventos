@@ -1554,7 +1554,7 @@ class scene1 extends Phaser.Scene {
     }
 
     const portaOverlap = this.physics.overlap(this.caixa, this.porta);
-    const porta2Overlap = this.physics.overlap(this.caixa, this.porta2);
+    const porta2Overlap = this.physics.overlap(this.player, this.porta2);
 
     if (portaOverlap && !this.portalTeleported) {
    
