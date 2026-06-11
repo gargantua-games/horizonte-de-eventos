@@ -1188,7 +1188,7 @@ class scene0 extends Phaser.Scene {
     this.iaTypingEvent = null;
 
     this.bigIaText = this.add
-      .text(345, 100, texto9, { font: "19px", fill: "#fffc51" })
+      .text(257, 65, texto9, { font: "19px", fill: "#fffc51" })
       .setPipeline("Light2D")
       .setOrigin(0, 0)
       .setScrollFactor(0.9, 1);
