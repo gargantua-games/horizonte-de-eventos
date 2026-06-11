@@ -1567,15 +1567,14 @@ class scene1 extends Phaser.Scene {
     }
 
     const portaOverlap = this.physics.overlap(this.caixa, this.porta);
-    const porta2Overlap = this.physics.overlap(this.playerroxo, this.porta2);
+    const porta2Overlap = this.physics.overlap(this.caixa, this.porta2);
 
     if (portaOverlap && !this.portalTeleported) {
-    //  this.portaOverlapTime += delta;
-      //if (this.portaOverlapTime >= 2000) {
+   
         this.portalTeleported = true;
-        //this.portaOverlapTime = 0;
+       
         this.teletransporte();
-     // }
+     
     }
 
     if (porta2Overlap && !this.portal2Teleported) {
@@ -1944,7 +1943,7 @@ class scene1 extends Phaser.Scene {
   }
 
   teletransporte() {
-    if (this.fase4) {
+   // if (this.fase4) {
       this.porta.anims.play("portaabrindo", true);
       
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
@@ -1955,7 +1954,7 @@ class scene1 extends Phaser.Scene {
         this.trilhasonora.pause();
         this.respiracao.play();
         this.batimentocardiaco.play();
-    }
+   // }
   }
 
   teletransporte2() {
