@@ -718,7 +718,7 @@ class scene1 extends Phaser.Scene {
     this.limiteporta.setSize(128, 32);
     this.limiteporta.setImmovable(true);
 
-    this.limitenorte = this.physics.add.sprite(670, 1317, "bigboss"); //662, 1347 667 1460
+    this.limitenorte = this.physics.add.sprite(638, 1330, "bigboss"); //662, 1347 667 1460
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
 
@@ -1073,12 +1073,8 @@ class scene1 extends Phaser.Scene {
       }
     });
 
-    if (this.estoutrabalhando === false) {
+  
       this.physics.add.collider(this.playerroxo, this.limitenorte);
-      this.physics.add.collider(this.playerroxo, this.limitesul);
-      this.physics.add.collider(this.playerroxo, this.limiteoeste);
-      this.physics.add.collider(this.playerroxo, this.limiteleste);
-    }
 
     this.inimigosaliens = this.physics.add.group({
       immovable: false,
@@ -1086,9 +1082,6 @@ class scene1 extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.inimigosaliens, this.limitenorte);
-    this.physics.add.collider(this.inimigosaliens, this.limitesul);
-    this.physics.add.collider(this.inimigosaliens, this.limiteoeste);
-    this.physics.add.collider(this.inimigosaliens, this.limiteleste);
     this.physics.add.collider(this.inimigosaliens, this.inimigosaliens);
     this.colliderAliensBox = this.physics.add.collider(
       this.caixa,
