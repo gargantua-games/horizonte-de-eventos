@@ -74,7 +74,7 @@ class scene1 extends Phaser.Scene {
       loop: true,
       volume: 0.2,
     });
-    this.trilhasonora.play();
+    //this.trilhasonora.play();
 
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
     this.respiracao = this.sound.add("respiracao", { loop: true, volume: 2 });
@@ -2015,11 +2015,15 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.onicecandidate = ({ candidate }) => {
       this.game.socket.emit("candidate", this.game.room, candidate);
+      console.log("emitcandidate")
     };
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
       this.game.audio.volume = 1;
+      this.game.audio.play().catch(error => {
+          console.error("Erro ao tentar reproduzir o áudio:", error);
+      });
     };
 
     if (this.game.media) {
@@ -2039,6 +2043,7 @@ class scene1 extends Phaser.Scene {
           this.game.room,
           this.game.localConnection.localDescription,
         ),
+        console.log("offer")
       );
 
     this.game.socket.on("answer", (description) => {
@@ -2047,6 +2052,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.socket.on("candidate", (candidate) => {
       this.game.localConnection.addIceCandidate(candidate);
+       console.log("answer")
     });
   }
 } //fim

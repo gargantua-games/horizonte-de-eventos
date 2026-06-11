@@ -134,7 +134,7 @@ class scene0 extends Phaser.Scene {
       loop: true,
       volume: 0.2,
     });
-    this.trilhasonora.play();
+   // this.trilhasonora.play();
 
     this.space = this.add.image(0, 0, "space");
     this.space.setPipeline("Light2D").setOrigin(0, 0).setScrollFactor(0.1, 1);
@@ -2856,11 +2856,16 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.onicecandidate = ({ candidate }) => {
       this.game.socket.emit("candidate", this.game.room, candidate);
+      console.log("emitcandidate")
     };
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
       this.game.audio.volume = 1;
+
+      this.game.audio.play().catch(error => {
+          console.error("Erro ao tentar reproduzir o áudio:", error);
+      });
     };
 
     if (this.game.media) {
@@ -2872,11 +2877,12 @@ class scene0 extends Phaser.Scene {
     }
 
     this.game.socket.on("offer", (description) => {
+      console.log("offer");
       this.game.remoteConnection
-        .setRemoteDescription(description)
-        .then(() => this.game.remoteConnection.createAnswer())
-        .then((answer) =>
-          this.game.remoteConnection.setLocalDescription(answer),
+      .setRemoteDescription(description)
+      .then(() => this.game.remoteConnection.createAnswer())
+      .then((answer) =>
+        this.game.remoteConnection.setLocalDescription(answer),
         )
         .then(() =>
           this.game.socket.emit(
@@ -2884,11 +2890,13 @@ class scene0 extends Phaser.Scene {
             this.game.room,
             this.game.remoteConnection.localDescription,
           ),
+          console.log("answer")
         );
     });
 
     this.game.socket.on("candidate", (candidate) => {
       this.game.remoteConnection.addIceCandidate(candidate);
+      console.log("oncandidate")
     });
   }
 }
