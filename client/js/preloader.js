@@ -87,6 +87,13 @@ class preloader extends Phaser.Scene {
     this.load.audio("respiracao", "respiracao.mp3");
     this.load.audio("batimentocardiaco", "batimentocardiaco.mp3");
     this.load.audio("trilhacreditos", "trilhacreditos.mp3")
+    this.load.audio("trilhascene2", "trilhascene2.mp3");
+    this.load.audio("disparo", "disparo.mp3");
+    this.load.audio("navesendodestruida", "navesendodestruida.mp3");
+    this.load.audio("explosionmeteoro", "explosionmeteoro.mp3")
+
+
+
 
     // Mapas e Elementos de Cenário
     this.load.tilemapTiledJSON("todasfases", "mapasv4/todasfases.json");
