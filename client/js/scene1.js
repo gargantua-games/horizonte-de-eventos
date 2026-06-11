@@ -1382,10 +1382,7 @@ class scene1 extends Phaser.Scene {
   update(time, delta) {
     this.GameOver();
 
-      if (this.game.audio && this.comunication) {
-      this.game.audio.volume = this.comunication.isDown ? 1 : 0;
-      console.log("p2:falando")
-    }
+      
 
     this.liberarIa();
 
@@ -1588,6 +1585,11 @@ class scene1 extends Phaser.Scene {
     this.comunication = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.SHIFT,
     );
+
+    if (this.game.audio && this.comunication) {
+      this.game.audio.volume = this.comunication.isDown ? 1 : 0;
+      console.log("p2:falando")
+    }
 
     const jkl = this.input.keyboard.addKeys("J,K,L");
 

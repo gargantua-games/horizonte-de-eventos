@@ -2279,11 +2279,7 @@ class scene0 extends Phaser.Scene {
    
     this.GameOver();
 
-    if (this.game.audio) {
-      if (this.comunication)
-        this.game.audio.volume = comunicationPressed ? 1 : 0;
-      console.log("P1:falando")
-    }
+  
 
     console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
 
@@ -2427,6 +2423,12 @@ class scene0 extends Phaser.Scene {
       interectPressed = !!pad.buttons[9].pressed;
       comunicationPressed = !!pad.L1;
       reloadPressed = !!pad.R1;
+    }
+
+      if (this.game.audio) {
+      if (this.comunication)
+        this.game.audio.volume = comunicationPressed ? 1 : 0;
+      console.log("P1:falando")
     }
 
     if (reloadPressed) {
