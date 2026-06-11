@@ -1170,20 +1170,16 @@ class scene0 extends Phaser.Scene {
       .anims.play("iaSpeak", true).body.allowGravity = false;
 
     const texto = " ";
-    const texto1 =
-      "Olá, eu sou ... e estou aqui para\najudar vocês a sairem daqui.";
+    const texto1 = "Olá, eu sou ... e estou aqui para\najudar vocês a sairem daqui.";
     const texto2 = "Você pode saltar nas paredes para\nir mais alto.";
-    const texto3 =
-      "Você pode coletar os crachás para\nconseguir uma fuga melhor.";
-    const texto4 =
-      "Porém mesmo que você não consiga\ncoletar os crachás vocês conseguem\nfugir daqui.";
+    const texto3 = "Você pode coletar os crachás para\nconseguir uma fuga melhor.";
+    const texto4 = "Porém mesmo que você não consiga\ncoletar os crachás vocês conseguem\nfugir daqui.";
     const texto5 = "Fuja deste alien até que o Roxo\nelimine ele.";
-    const texto6 =
-      "Assim você pode pegar o jetpack\ndele e para passar pela próximaifando\nsala.";
-    const texto7 = "Esta sala esta com uma anomalia\ngravitacional, é bom você usar o jetpack";
+    const texto6 = "Assim você pode pegar o jetpack\ndele e para passar pela próxima\nsala.";
+    const texto7 = "Esta sala esta com uma anomalia\ngravitacional, é bom você usar\no jetpack";
     const texto8 = "Tome cuidado com os RTG's nesta\nsala eles estão sobreaquecidos";
     const texto9 = "Os aliens cortaram as comunicações. Rápido! Use a torreta através destes computadores para ajudar o Roxo enquanto ele restabelece a comunicação."
-    const texto10 = "Cuidado! Os aliens desligaram\nas luzes e o seu oxigênio."
+   const texto10 = "Cuidado! Os aliens desligaram\nas luzes e o seu oxigênio."
     this.iaText = this.add
       .text(735, 38, texto, { font: "13px", fill: "#fffc51" })
       .setScrollFactor(0)
@@ -1760,7 +1756,7 @@ class scene0 extends Phaser.Scene {
 
     // Texto de posição do player atualizado a cada segundo
     this.positionText = this.add
-      .text(100, 50, "X: 0 Y: 0", {
+      .text(350, 50, "X: 0 Y: 0", {
         fontSize: "18px",
         fill: "#ffffff",
         backgroundColor: "rgba(0,0,0,0.5)",
@@ -1773,8 +1769,7 @@ class scene0 extends Phaser.Scene {
       loop: true,
       callback: () => {
         this.positionText.setText(
-          this.movingP1,
-          /*`X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`*/
+          `X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`
         );
       },
     });
