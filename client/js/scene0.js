@@ -1583,9 +1583,12 @@ class scene0 extends Phaser.Scene {
               this.player.y - this.cameras.main.height / 2 - 120;
             this.fase3 = false;
             this.infase = 4;
+             this.fase4 = true;
+                
             try {
               this.game.socket.emit("scene0", this.game.room, {
                 infase: this.infase,
+                fase4: this.fase4,
               });
             } catch (e) {
               console.error("Error updating player:", e);
@@ -1596,16 +1599,7 @@ class scene0 extends Phaser.Scene {
             this.door14.once("animationcomplete", (anim, frame) => {
               if (anim.key === "close-door") {
                 this.light14.setColor(0xff0000);
-                this.fase4 = true;
-                try {
-                  this.game.socket.emit("scene0", this.game.room, {
-                    fase4: {
-                      key: this.fase4,
-                    },
-                  });
-                } catch (e) {
-                  console.error("Error updating player:", e);
-                }
+               
               }
             });
           }

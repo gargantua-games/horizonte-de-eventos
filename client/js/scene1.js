@@ -1241,6 +1241,7 @@ class scene1 extends Phaser.Scene {
     this.game.socket.on("scene0", (state) => {
       if (state.fase4) {
         this.fase4 = state.fase4.key;
+        console.log("fase4:" + this.fase4)
       }
       if (state.fase5) {
         this.fase5 = state.fase5.key;
