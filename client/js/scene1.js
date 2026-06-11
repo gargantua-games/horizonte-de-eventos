@@ -1226,8 +1226,8 @@ class scene1 extends Phaser.Scene {
       this.inFinalDoorP1 = state.inFinalDoorP1;
       this.score = state.engrenagens
       
-      if (state && state.infase !== undefined) {
-        this.infase = Number(state.infase);
+      if (state.infase) {
+        this.infase = (state.infase);
         console.log("Scene 1 capturou a fase da Scene 0: ", this.infase);
       }
     });
@@ -1240,7 +1240,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.socket.on("scene0", (state) => {
       if (state.fase4) {
-        this.fase4 = state.fase4.key;
+        this.fase4 = state.fase4;
         console.log("fase4:" + this.fase4)
       }
       if (state.fase5) {

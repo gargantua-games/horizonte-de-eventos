@@ -1583,7 +1583,7 @@ class scene0 extends Phaser.Scene {
               this.player.y - this.cameras.main.height / 2 - 120;
             this.fase3 = false;
             this.infase = 4;
-             this.fase4 = true;
+            this.fase4 = true;
                 
             try {
               this.game.socket.emit("scene0", this.game.room, {
