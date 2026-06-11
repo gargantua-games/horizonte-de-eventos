@@ -1041,8 +1041,8 @@ class scene1 extends Phaser.Scene {
 
 
     this.physics.add.collider(
-      this.laserP1,
       this.limitenorte,
+      this.laserP1,
       this.destroyLaser,
       null,
       this,
