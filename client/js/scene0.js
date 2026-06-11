@@ -2425,11 +2425,19 @@ class scene0 extends Phaser.Scene {
       reloadPressed = !!pad.R1;
     }
 
-      if (this.game.audio) {
-      if (this.comunication)
-        this.game.audio.volume = comunicationPressed ? 1 : 0;
-      console.log("P1:falando")
-    }
+  if (this.game.media && this.comunication) {
+  
+  // Pega a trilha do seu microfone e liga/desliga baseado no botão
+  const myAudioTrack = this.game.media.getAudioTracks()[0];
+  
+  if (myAudioTrack) {
+    myAudioTrack.enabled = comunicationPressed; // true para transmitir, false para mutar
+  }
+
+  if (comunicationPressed) {
+    console.log("P1: falando e transmitindo áudio!");
+  }
+}
 
     if (reloadPressed) {
       window.location.reload();
@@ -2865,6 +2873,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
+      this.game.audio.volume = 1;
       
 
       this.game.audio.play().catch(error => {
