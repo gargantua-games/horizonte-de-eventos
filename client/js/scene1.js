@@ -1805,7 +1805,7 @@ class scene1 extends Phaser.Scene {
                   .setOffset(55, 17);
             } else if (enemy.flipX) {
               enemy.body.setSize(30, 37)
-                  .setOffset(23, 17);
+                  .setOffset(27, 17);
             }
 
           } else if (dy < 0) {
