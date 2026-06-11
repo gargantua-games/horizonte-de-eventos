@@ -1301,6 +1301,27 @@ class scene1 extends Phaser.Scene {
         this.shoot = state.cannon.shooting;
       }
     });
+
+    this.teclaFalar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+
+  // Quando APERTAR a tecla (Desmuta o microfone)
+  this.teclaFalar.on('down', () => {
+    if (this.game.media && this.comunication) {
+      const myAudioTrack = this.game.media.getAudioTracks()[0];
+      if (myAudioTrack) myAudioTrack.enabled = true;
+      console.log("P2: microfone ABERTO");
+    }
+  });
+
+  // Quando SOLTAR a tecla (Muta o microfone)
+  this.teclaFalar.on('up', () => {
+    if (this.game.media && this.comunication) {
+      const myAudioTrack = this.game.media.getAudioTracks()[0];
+      if (myAudioTrack) myAudioTrack.enabled = false;
+      console.log("P2: microfone FECHADO");
+    }
+  });
+    
   }
 
 
@@ -1580,25 +1601,7 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
-this.teclaFalar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
-  // Quando APERTAR a tecla (Desmuta o microfone)
-  this.teclaFalar.on('down', () => {
-    if (this.game.media && this.comunication) {
-      const myAudioTrack = this.game.media.getAudioTracks()[0];
-      if (myAudioTrack) myAudioTrack.enabled = true;
-      console.log("P2: microfone ABERTO");
-    }
-  });
-
-  // Quando SOLTAR a tecla (Muta o microfone)
-  this.teclaFalar.on('up', () => {
-    if (this.game.media && this.comunication) {
-      const myAudioTrack = this.game.media.getAudioTracks()[0];
-      if (myAudioTrack) myAudioTrack.enabled = false;
-      console.log("P2: microfone FECHADO");
-    }
-  });
 
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
