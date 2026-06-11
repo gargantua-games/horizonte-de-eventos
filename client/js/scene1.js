@@ -1805,7 +1805,7 @@ class scene1 extends Phaser.Scene {
                   .setOffset(55, 17);
             } else if (enemy.flipX) {
               enemy.body.setSize(30, 37)
-                  .setOffset(33, 17);
+                  .setOffset(23, 17);
             }
 
           } else if (dy < 0) {
@@ -1955,7 +1955,8 @@ class scene1 extends Phaser.Scene {
       
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
         this.outShip = true;
-        this.positionP2 = true;
+      this.positionP2 = true;
+      this.spawnAlienAleatorio()
         this.porta.anims.play("portafechando", true);
         this.trilhasonora.pause();
         this.respiracao.play();
@@ -1975,6 +1976,7 @@ class scene1 extends Phaser.Scene {
         
       this.playerroxo.setPosition(640, 651); // teletransporte para o interior da nave
       this.positionP2 = false;
+      this.spawnAlienAleatorio();
       this.outShip = false;
         this.porta2.anims.play("portafechando", true);
         this.trilhasonora.play();
