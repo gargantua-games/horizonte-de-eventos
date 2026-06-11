@@ -1101,14 +1101,16 @@ spawnAsteroide(customY, remoteData = null) {
   }
 
   computarDanoJogador(quantidadeDano) {
-    this.vidaAtual -= quantidadeDano;
-    this.vidaAtual = Phaser.Math.Clamp(this.vidaAtual, 0, this.statusNave.vidaMax);
-    this.desenharBarraVida();
+    
 
     this.nave.setTint(0xff3333);
     this.time.delayedCall(150, () => { if (!this.playerIsDead && this.nave.active) this.nave.clearTint(); });
 
     if (this.localRole === "pilot") {
+    this.vidaAtual -= quantidadeDano;
+    this.vidaAtual = Phaser.Math.Clamp(this.vidaAtual, 0, this.statusNave.vidaMax);
+    this.desenharBarraVida();
+
       this.game.socket.emit("sync-player-health", {
         room: this.game.room,
         hp: this.vidaAtual
