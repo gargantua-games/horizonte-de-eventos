@@ -1800,6 +1800,14 @@ class scene1 extends Phaser.Scene {
           if (Math.abs(dx) > Math.abs(dy)) {
             enemy.anims.play("enemyWalk", true);
             enemy.setFlipX(dx > 0);
+            if (!enemy.flipX) {
+              enemy.body.setSize(30, 37)
+                  .setOffset(55, 17);
+            } else if (enemy.flipX) {
+              enemy.body.setSize(30, 37)
+                  .setOffset(33, 17);
+            }
+
           } else if (dy < 0) {
             enemy.anims.play("enemyWalkCima", true);
             enemy.setFlipX(false);
