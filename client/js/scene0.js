@@ -2279,6 +2279,12 @@ class scene0 extends Phaser.Scene {
    
     this.GameOver();
 
+    if (this.game.audio) {
+      if (this.comunication)
+        this.game.audio.volume = comunicationPressed ? 1 : 0;
+      console.log("P1:falando")
+    }
+
     console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
 
     if (this.inFinalDoorP1) {
@@ -2857,11 +2863,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      if (this.game.audio) {
-      if (this.comunication)
-        this.game.audio.volume = comunicationPressed ? 1 : 0;
-      console.log("P1:falando")
-    }
+      
 
       this.game.audio.play().catch(error => {
           console.error("Erro ao tentar reproduzir o áudio:", error);
