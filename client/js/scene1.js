@@ -2033,7 +2033,7 @@ this.teclaFalar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIF
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-    
+      this.game.audio.volume = 1;
       this.game.audio.play().catch(error => {
           console.error("Erro ao tentar reproduzir o áudio:", error);
       });
