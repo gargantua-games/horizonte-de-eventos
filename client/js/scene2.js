@@ -242,9 +242,9 @@ if (this.game.room) {
       if (boss) this.atirarInimigo(boss, data.ataque); // Força o ataque que o piloto sorteou
     });
 
-    this.game.socket.on("ship-shot", () => {
+    /*this.game.socket.on("ship-shot", () => {
       this.dispararTiro(); 
-    });
+    });*/
    
     // === NOVO: RECEBER VIDA DO JOGADOR ===
     this.game.socket.on("sync-player-health", (data) => {
@@ -278,6 +278,10 @@ if (this.game.room) {
     });
     
   }
+
+    this.game.socket.on("ship-shot", () => {
+      this.dispararTiro(); 
+    });
   
   }
 
