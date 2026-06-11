@@ -1167,7 +1167,7 @@ class scene0 extends Phaser.Scene {
     this.iaBox
       .setOrigin(0, 0)
       .setScrollFactor(0)
-      .setPipeline("Light2D").body.allowGravity = false;
+      .setPipeline("Light2D").anims.play("iaSpeak", true).body.allowGravity = false;
 
     const texto = " ";
     const texto1 =
@@ -1357,14 +1357,13 @@ class scene0 extends Phaser.Scene {
 
       setTimeout(() => {
         this.iaBox.setVelocityX(0);
-        this.iaBox.anims.play("iaSpeak", true);
 
         this.typeIaText(texto1, 50, () => {
-          this.time.delayedCall(500, () => {
+          this.time.delayedCall(1000, () => {
             this.typeIaText(texto2, 50, () => {
-              this.time.delayedCall(500, () => {
+              this.time.delayedCall(1000, () => {
                 this.typeIaText(texto3, 50, () => {
-                  this.time.delayedCall(500, () => {
+                  this.time.delayedCall(1000, () => {
                     this.typeIaText(texto4, 50);
                   });
                 });
@@ -1377,15 +1376,12 @@ class scene0 extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.invisibleH2, () => {
       this.invisibleH2.disableBody(true, true);
-      this.iaBox.anims.stop();
+      //this.iaBox.anims.stop();
 
       this.typeIaText(texto, 50);
-      /*//if (this.doorOpen != 1) {
-       */ this.iaBox.setVelocityX(100);
-      /*setTimeout(() => {
-          this.iaBox.setVelocityX(0);
-        }, 3237);
-      }*/
+     
+        this.iaBox.setVelocityX(100);
+      
     });
 
     this.physics.add.overlap(
@@ -1426,7 +1422,7 @@ class scene0 extends Phaser.Scene {
 
       this.life -= 1;
       this.updateSemicircleLifeBar();
-      this.iaBox.setPosition(1009, 33).setVelocityX(0).anims.stop();
+      this.iaBox.setPosition(1009, 33).setVelocityX(0);
       this.typeIaText(texto, 50);
 
       this.invisibleH.enableBody(true, 942, 1020, true, true);
@@ -1477,7 +1473,7 @@ class scene0 extends Phaser.Scene {
             this.iaBox.setVelocityX(0).setPosition(1009, 33);
             this.player
               .setPosition(108, 1835)
-              //.setVelocity(0, 0)
+              .setVelocity(0, 0)
               .anims.play("idleRight");
             this.infase = 2;
             try {
@@ -1496,22 +1492,27 @@ class scene0 extends Phaser.Scene {
             this.iaBox.setVelocityX(-100);
             setTimeout(() => {
               this.iaBox.setVelocityX(0);
-              this.iaBox.anims.play("iaSpeak", true);
+              //this.iaBox.anims.play("iaSpeak", true);
 
               this.typeIaText(texto5, 50, () => {
-                this.time.delayedCall(500, () => {
-                  this.typeIaText(texto6, 50);
+                this.time.delayedCall(800, () => {
+                  this.typeIaText(texto6, 50, () => {
+                    this.time.delayedCall(800, () => {
+                      this.typeIaText(texto, 50);
+                      this.iaBox.setVelocityX(100);
+                    });
+                  });
                 });
               });
-            }, 3237);
+              }, 3237);
 
-            this.door12.once("animationcomplete", (anim, frame) => {
-              if (anim.key === "close-door") {
-                this.light12.setColor(0xff0000);
-              }
-            });
-          }
-        });
+              this.door12.once("animationcomplete", (anim, frame) => {
+                if (anim.key === "close-door") {
+                  this.light12.setColor(0xff0000);
+                }
+              });
+            }
+          });
       }
     });
 
