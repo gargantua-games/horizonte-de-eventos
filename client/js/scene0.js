@@ -1178,7 +1178,7 @@ class scene0 extends Phaser.Scene {
     const texto6 = "Assim você pode pegar o jetpack\ndele e para passar pela próxima\nsala.";
     const texto7 = "Esta sala esta com uma anomalia\ngravitacional, é bom você usar\no jetpack";
     const texto8 = "Tome cuidado com os RTG's nesta\nsala eles estão sobreaquecidos";
-    const texto9 = "Os aliens cortaram as comunicações. Rápido! Use a torreta através destes computadores para ajudar o Roxo enquanto ele restabelece a comunicação."
+    const texto9 = "Os aliens cortaram as comunicações. Rápido! Use\na torreta através destes computadores para ajudar\no Roxo enquanto ele restabelece a comunicação."
    const texto10 = "Cuidado! Os aliens desligaram\nas luzes e o seu oxigênio."
     this.iaText = this.add
       .text(735, 38, texto, { font: "13px", fill: "#fffc51" })
@@ -1187,7 +1187,14 @@ class scene0 extends Phaser.Scene {
       .setOrigin(0, 0);
     this.iaTypingEvent = null;
 
-    this.player = this.physics.add.sprite(92, 1066, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
+    this.bigIaText = this.add
+      .text(345, 100, texto9, { font: "19px", fill: "#fffc51" })
+      .setPipeline("Light2D")
+      .setOrigin(0, 0)
+      .setScrollFactor(0.9, 1);
+    this.iaTypingEvent = null;
+
+    this.player = this.physics.add.sprite(92, 300, "player", 3); //fase1:92, 1066/445, 911//fase2:108, 1836/1138, 1836//fase3: 69, 2496/1256,2356//fase4: 92,300//fase5:92, 3532//
     this.player.body.setSize(20, 40);
     this.cameras.main.startFollow(this.player, false, 1, 0).zoom = 1.2;
     this.cameras.main.scrollY =
