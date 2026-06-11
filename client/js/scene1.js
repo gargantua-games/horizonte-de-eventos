@@ -718,7 +718,7 @@ class scene1 extends Phaser.Scene {
     this.limiteporta.setSize(128, 32);
     this.limiteporta.setImmovable(true);
 
-    this.limitenorte = this.physics.add.sprite(638, 1330, "bigboss"); //662, 1347 667 1460
+    this.limitenorte = this.physics.add.sprite(638, 1324, "bigboss"); //662, 1347 667 1460
     this.limitenorte.setImmovable(true);
     this.limitenorte.setSize(1280, 17);
 
@@ -1460,8 +1460,6 @@ class scene1 extends Phaser.Scene {
       this.avisoconsole.setVisible(false);
     }
 
-    if (this.fase4) {
-
     if (this.positionP2 && this.fase4) {
       try {
         this.game.socket.emit("scene1", this.game.room, {
@@ -1492,7 +1490,7 @@ class scene1 extends Phaser.Scene {
         console.error("Error updating player:", e);
       }
     }
-    }
+    
 
     if (this.game.audio && this.comunication) {
       this.game.audio.volume = this.comunication.isDown ? 1 : 0;
@@ -1510,18 +1508,7 @@ class scene1 extends Phaser.Scene {
       
     }
 
-    /*if (this.puzzleAberto) {
-      if (this.playerroxo) {
-        this.playerroxo.setVelocity(0, 0);
-        this.playerroxo.anims.play("idlecostas", true);
-        this.caixa.setPosition(this.faisca1, this.playerroxo.y)
-      }
-      if (this.passos && this.passos.isPlaying) {
-        this.passos.stop();
-      }
-      return;
-    }*/
-     const cursores = this.input.keyboard.createCursorKeys();
+    const cursores = this.input.keyboard.createCursorKeys();
     const qe = this.input.keyboard.addKeys("E, Q");
 
     if (!this.outShip) {
@@ -1943,7 +1930,7 @@ class scene1 extends Phaser.Scene {
   }
 
   teletransporte() {
-   // if (this.fase4) {
+    if (this.infase === 4) {
       this.porta.anims.play("portaabrindo", true);
       
         this.playerroxo.setPosition(111, 1573); //teletransporte para o exterior da nave
@@ -1954,7 +1941,7 @@ class scene1 extends Phaser.Scene {
         this.trilhasonora.pause();
         this.respiracao.play();
         this.batimentocardiaco.play();
-   // }
+    }
   }
 
   teletransporte2() {
