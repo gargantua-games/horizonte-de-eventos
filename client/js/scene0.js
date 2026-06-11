@@ -1180,6 +1180,8 @@ class scene0 extends Phaser.Scene {
     const texto5 = "Fuja deste alien até que o Roxo\nelimine ele.";
     const texto6 =
       "Assim você pode pegar o jetpack\ndele e para passar pela próxima\nsala.";
+    const texto7 = "Esta sala esta com\numa anomalia gravitacional, é\nbom você usar o jetpack";
+    const texto8 = "Tome cuidado com os\nRTG's nesta sala eles estão\npifando";
     this.iaText = this.add
       .text(735, 38, texto, { font: "13px", fill: "#fffc51" })
       .setScrollFactor(0)
