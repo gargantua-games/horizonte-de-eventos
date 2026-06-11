@@ -1113,7 +1113,7 @@ spawnAsteroide(customY, remoteData = null) {
         room: this.game.room,
         hp: this.vidaAtual
       });
-    }
+    
 
     if (this.vidaAtual <= 0 && !this.playerIsDead) {
       this.playerIsDead = true;
@@ -1121,6 +1121,7 @@ spawnAsteroide(customY, remoteData = null) {
       this.nave.setTint(0xff0000);
       this.time.delayedCall(1500, () => this.scene.start("gameover1"));
     }
+  }
   }
 
   desenharBarraVida() {
