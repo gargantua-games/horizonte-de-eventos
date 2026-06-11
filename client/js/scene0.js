@@ -2480,11 +2480,11 @@ class scene0 extends Phaser.Scene {
     }
 
     // Controla volume de áudio baseado em comunicationPressed
-    if (this.game.audio) {
+    /*if (this.game.audio) {
       if (this.comunication)
         this.game.audio.volume = comunicationPressed ? 1 : 0;
       console.log("P1:falando")
-    }
+    }*/
 
     if (this.esperandoInteracao === 1 && interectPressed) {
       this.esperandoInteracao = 0;
@@ -2860,7 +2860,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      //this.game.audio.volume = 0;
+      this.game.audio.volume = 1;
     };
 
     if (this.game.media) {
