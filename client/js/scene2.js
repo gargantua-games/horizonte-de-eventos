@@ -1103,6 +1103,8 @@ spawnAsteroide(customY, remoteData = null) {
 
       this.time.delayedCall(1800, () => {
         inimigo.destroy();
+        this.scene.stop("scene2");
+        this.scene.start("gameover2");
         // Apenas o piloto chama o próximo spawn para evitar duplicidade de comandos no servidor
         if (this.localRole === "pilot") {
           this.time.delayedCall(600, () => this.spawnNextEnemy());
