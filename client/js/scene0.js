@@ -2432,7 +2432,7 @@ class scene0 extends Phaser.Scene {
         if (!button) return;
         const pressed =
           !!button.pressed || (button.value && button.value > 0.1);
-        /*if (pressed) {
+        if (pressed) {
           // tenta identificar por nome comum, senão mostra índice e valor
           const nameMap = {
             0: "A / Botão 0",
@@ -2457,7 +2457,7 @@ class scene0 extends Phaser.Scene {
           console.log(
             `Gamepad: ${name} (índice ${idx}) pressionado, value=${button.value}`,
           );
-        }*/
+        }
       });
     }
 
