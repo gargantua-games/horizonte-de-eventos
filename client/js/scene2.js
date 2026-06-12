@@ -69,7 +69,7 @@ class scene2 extends Phaser.Scene {
     this.space = this.add.tileSprite(0, 0, 2000, 800, "space1").setOrigin(0, 0).setDisplaySize(2000, 800).setScrollFactor(0);
     
     // trilha sonora e efeitos sonoros
-    this.trilhaFundo = this.sound.add("trilhascene2", { volume: 0.3, loop: true });
+    this.trilhaFundo = this.sound.add("trilhascene2", { volume: 0.1, loop: true });
     this.trilhaFundo.play();
 
 
@@ -239,7 +239,7 @@ if (this.game.room) {
 
     this.game.socket.on("enemy-shoot", (idUnico) => {
       let inimigo = this.enemies.getChildren().find(e => e.idUnico === idUnico);
-      this.sound.play("disparo", { volume: 0.12 });
+      this.sound.play("disparo", { volume: 0.08 });
       if (inimigo) this.atirarInimigo(inimigo, true);
     });
 
@@ -402,7 +402,7 @@ if (this.game.room) {
   if (!this.nave || !this.nave.active) return;
 
   let tiro = this.matter.add.sprite(this.nave.x + 70, this.nave.y, this.spriteTiroJogador);
-  this.sound.play("disparo", { volume: 0.4 });
+  this.sound.play("disparo", { volume: 0.08});
   tiro.setRectangle(35, 10);
   tiro.setSensor(true);
   tiro.setIgnoreGravity(true);
@@ -541,7 +541,7 @@ spawnAsteroide(customY, remoteData = null) {
       if (asteroide.body) this.matter.world.remove(asteroide.body);
       asteroide.setVelocity(0, 0);
       asteroide.setAngularVelocity(0);
-      this.sound.play("explosionmeteoro", { volume: 0.6 });
+      this.sound.play("explosionmeteoro", { volume: 0.4 });
 
     asteroide.play("meteoro_destruido");
     asteroide.on("animationcomplete", () => { asteroide.destroy(); });
@@ -862,7 +862,7 @@ spawnAsteroide(customY, remoteData = null) {
 
               // === ADICIONADO: Som da rajada de disparos do Boss ===
               // Colocado aqui para tocar uma vez por rajada (volume equilibrado em 0.15)
-              this.sound.play("disparo", { volume: 0.15 });
+              this.sound.play("disparo", { volume: 0.08});
 
               let angulos = [165, 180, 195];
               angulos.forEach(ang => {
@@ -929,7 +929,7 @@ spawnAsteroide(customY, remoteData = null) {
                 if (!inimigo.active || inimigo.isDead) return;
 
                 // === ADICIONADO: Som a cada tiro da rajada sequencial ===
-                this.sound.play("disparo", { volume: 0.12 });
+                this.sound.play("disparo", { volume: 0.08});
 
                 let bala = this.matter.add.sprite(inimigo.x - 50, inimigo.y, "tiroinimigo");
                 bala.setRectangle(35, 10);

@@ -122,11 +122,11 @@ class scene0 extends Phaser.Scene {
       right: Phaser.Input.Keyboard.KeyCodes.D,
     });
     // ===============================================
-    this.disparo = this.sound.add("disparo", { volume: 0.7 });
-    this.passos = this.sound.add("passos", { loop: true, volume: .9 });
+    this.disparo = this.sound.add("disparo", { volume: 0.2 });
+    this.passos = this.sound.add("passos", { loop: true, volume: .8 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.3,
+      volume: 0.03,
     });
     this.trilhasonora.play();
 
