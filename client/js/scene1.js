@@ -80,9 +80,9 @@ class scene1 extends Phaser.Scene {
     this.respiracao = this.sound.add("respiracao", { loop: true, volume: .9 });
     this.batimentocardiaco = this.sound.add("batimentocardiaco", {
       loop: true,
-      volume: .8,
+      volume: .3,
     });
-    this.disparo = this.sound.add("disparo",{ volume: 0.7 });
+    this.disparo = this.sound.add("disparo",{ volume: 0.2 });
 
     //adiciona o espaço ao fundo
     this.space = this.add.image("space1");
@@ -1254,6 +1254,10 @@ class scene1 extends Phaser.Scene {
         this.infase = (state.infase);
         console.log("Scene 1 capturou a fase da Scene 0: ", this.infase);
       }
+
+      if (state.comunication) {
+        this.comunicationP2 = state.comunication;
+      }
     });
 
     
@@ -1308,7 +1312,14 @@ class scene1 extends Phaser.Scene {
   liberarIa() {
     if (this.antenasconsertadas === 3) {
       this.faisca3.setVisible(true);
-      //this.faisca3.anims.play("faiscando");
+      this.comunicationP2 = true;
+      try {
+              this.game.socket.emit("scene1", this.game.room, {
+                comunication: this.comunicationP2,
+              });
+            } catch (e) {
+              console.error("Error updating player:", e);
+            }
       console.log("ia disponivel");
       return;
     } else if (this.antenasconsertadas != 3) {
@@ -1380,11 +1391,16 @@ class scene1 extends Phaser.Scene {
   }
 
   update(time, delta) {
+    
     this.GameOver();
 
     this.liberarIa();
 
-   // console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
+   if (this.comunicationP2) {
+      this.game.audio.volume = 1;
+    } else if (!this.comunicationP2) {
+      this.game.audio.volume = 0;
+    }
 
     if (this.inFinalDoorP2) {
       this.game.socket.emit("scene1", this.game.room, {
@@ -1674,7 +1690,6 @@ class scene1 extends Phaser.Scene {
       }
     }*/
 
-    if (jkl.K.isDown) { this.disparo.play(); } 
     // Animações e som baseado no movimento
     const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
 
@@ -2035,7 +2050,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 2;
+      this.game.audio.volume = 1;
     };
 
     if (this.game.media) {
