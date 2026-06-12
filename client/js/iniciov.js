@@ -57,7 +57,7 @@ class iniciov extends Phaser.Scene {
       delay: 200,
     });
 
-      this.delayedCall = this.time.delayedCall(12000, () => { //12000
+      this.delayedCall = this.time.delayedCall(17000, () => { //12000
         this.tweens.add({
           targets: [bg, this.text1],
           alpha: 0,
@@ -67,7 +67,7 @@ class iniciov extends Phaser.Scene {
         });
       });
 
-      this.delayedCall = this.time.delayedCall(14000, () => { //14000
+      this.delayedCall = this.time.delayedCall(19000, () => { //14000
         this.scene.stop("iniciov");
         this.scene.start("scene0");
       });
