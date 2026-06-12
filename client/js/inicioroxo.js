@@ -31,6 +31,11 @@ class inicioroxo extends Phaser.Scene {
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
     bg.setAlpha(0);
 
+    this.manche = this.add.image(150, 0, "funcaomanche").setOrigin(0, 0).setDepth(999);
+    setTimeout(() => {
+      this.manche.setVisible(false);
+    }, 8000);
+
 
     this.text1 = this.add.text(
       322,
