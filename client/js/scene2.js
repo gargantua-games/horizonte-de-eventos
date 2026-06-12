@@ -6,7 +6,7 @@ class scene2 extends Phaser.Scene {
         default: "matter",
         matter: {
           gravity: { x: 0, y: 0 },
-          debug: true
+          debug: false
         }
       }
     });
