@@ -72,12 +72,12 @@ class scene1 extends Phaser.Scene {
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.1,
+      volume: 0.09,
     });
     this.trilhasonora.play();
 
-    this.passos = this.sound.add("passos", { loop: true, volume: 1 });
-    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 1 });
+    this.passos = this.sound.add("passos", { loop: true, volume: .8 });
+    this.respiracao = this.sound.add("respiracao", { loop: true, volume: .9 });
     this.batimentocardiaco = this.sound.add("batimentocardiaco", {
       loop: true,
       volume: .8,
@@ -1424,23 +1424,44 @@ class scene1 extends Phaser.Scene {
     }
 
     if (this.infase === 1) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consoles5.x, this.consoles5.y);
+      if (this.doorOpen === 0) {
+        this.avisoconsole.setVisible(true);
+        this.avisoconsole.setPosition(this.consoles5.x, this.consoles5.y);
+      }else{
+        this.avisoconsole.setVisible(false);
+      }
     } else if (this.infase === 2) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consoles4.x, this.consoles4.y);
-    } else if (this.infase === 3) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consoles6.x, this.consoles6.y);
-    } else if (this.infase === 4) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.porta.x, this.porta.y);
-    } else if (this.infase === 5) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consolemedio.x, this.consolemedio.y);
-    } else {
+      if (this.doorOpen === 1) {
+        this.avisoconsole.setVisible(true);
+        this.avisoconsole.setPosition(this.consoles4.x, this.consoles4.y);
+      } else {
+        this.avisoconsole.setVisible(false);
+      }
+      } else if (this.infase === 3) {
+        if (this.doorOpen === 2) {
+          this.avisoconsole.setVisible(true);
+          this.avisoconsole.setPosition(this.consoles6.x, this.consoles6.y);
+        } else {
+          this.avisoconsole.setVisible(false);
+        }
+      } else if (this.infase === 4) {
+        if (this.doorOpen === 3) {
+          this.avisoconsole.setVisible(true);
+          this.avisoconsole.setPosition(this.porta.x, this.porta.y);
+        } else {
+          this.avisoconsole.setVisible(false);
+        }
+        } else if (this.infase === 5) {
+          if (this.doorOpen === 4) {
+            this.avisoconsole.setVisible(true);
+            this.avisoconsole.setPosition(this.consolemedio.x, this.consolemedio.y);
+          } else {
+            this.avisoconsole.setVisible(false);
+          }
+          } else {
       this.avisoconsole.setVisible(false);
     }
+
 
     if (this.positionP2 && this.fase4) {
       try {

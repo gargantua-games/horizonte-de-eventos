@@ -129,10 +129,10 @@ class scene0 extends Phaser.Scene {
     });
     // ===============================================
     this.disparo = this.sound.add("disparo", { volume: 0.7 });
-    this.passos = this.sound.add("passos", { loop: true, volume: 1 });
+    this.passos = this.sound.add("passos", { loop: true, volume: .9 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.1,
+      volume: 0.09,
     });
     this.trilhasonora.play();
 
