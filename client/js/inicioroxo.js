@@ -31,7 +31,7 @@ class inicioroxo extends Phaser.Scene {
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
     bg.setAlpha(0);
 
-    this.teclado = this.add.image(150, 0, "funcaoteclado").setOrigin(0, 0).setDepth(999);
+    this.teclado = this.add.image(150, 0, "funcaoteclado").setOrigin(0, 0).setDepth(999).setScale(0.5);
     setTimeout(() => {
       this.teclado.setVisible(false);
     }, 10000);
