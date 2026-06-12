@@ -1302,25 +1302,30 @@ class scene1 extends Phaser.Scene {
       }
     });
 
-    this.teclaFalar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+  this.teclaFalar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
 
-  // Quando APERTAR a tecla (Desmuta o microfone)
-  this.teclaFalar.on('down', () => {
-    if (this.game.media && this.comunication) {
-      const myAudioTrack = this.game.media.getAudioTracks()[0];
-      if (myAudioTrack) myAudioTrack.enabled = true;
-      console.log("P2: microfone ABERTO");
-    }
-  });
+    // Quando APERTAR o SHIFT (Abre o microfone)
+    this.teclaFalar.on('down', () => {
+      // Checa se o microfone existe e se a comunicação está liberada
+      if (this.game.media && this.comunication) {
+        const myAudioTrack = this.game.media.getAudioTracks()[0];
+        if (myAudioTrack) {
+          myAudioTrack.enabled = true;
+          console.log("P2: Falando (SHIFT pressionado)");
+        }
+      }
+    });
 
-  // Quando SOLTAR a tecla (Muta o microfone)
-  this.teclaFalar.on('up', () => {
-    if (this.game.media && this.comunication) {
-      const myAudioTrack = this.game.media.getAudioTracks()[0];
-      if (myAudioTrack) myAudioTrack.enabled = false;
-      console.log("P2: microfone FECHADO");
-    }
-  });
+    // Quando SOLTAR o SHIFT (Fecha o microfone)
+    this.teclaFalar.on('up', () => {
+      if (this.game.media) {
+        const myAudioTrack = this.game.media.getAudioTracks()[0];
+        if (myAudioTrack) {
+          myAudioTrack.enabled = false;
+          console.log("P2: Mutado (SHIFT solto)");
+        }
+      }
+    });
     
   }
 
@@ -2045,9 +2050,16 @@ class scene1 extends Phaser.Scene {
     if (this.game.media) {
       this.game.media
         .getTracks()
-        .forEach((track) =>
-          this.game.localConnection.addTrack(track, this.game.media),
-        );
+        .forEach((track) => {
+          // 1. Adiciona a trilha na conexão
+          this.game.localConnection.addTrack(track, this.game.media);
+          
+          // 2. Força o mudo inicial se for a trilha de áudio
+          if (track.kind === 'audio') {
+            track.enabled = false; 
+            console.log("P2: Microfone iniciado no mudo.");
+          }
+        });
     }
 
     this.game.localConnection
