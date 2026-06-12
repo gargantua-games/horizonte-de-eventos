@@ -283,9 +283,36 @@ class preloader extends Phaser.Scene {
   }
 
   create() {
+    const funcaoManche = this.add.image(
+      this.scale.width / 2,
+      this.scale.height / 2,
+      "funcaomanche",
+    );
+    funcaoManche.setOrigin(0.5, 0.5);
 
-    this.scene.stop("preloader");
-    this.scene.start(this.nextScene);
+    const maxWidth = this.scale.width * 0.6;
+    const maxHeight = this.scale.height * 0.6;
+    const ratio = Math.min(
+      maxWidth / funcaoManche.width,
+      maxHeight / funcaoManche.height,
+      1,
+    );
+    funcaoManche.setDisplaySize(
+      funcaoManche.width * ratio,
+      funcaoManche.height * ratio,
+    );
+
+    funcaoManche.setAlpha(0);
+    this.tweens.add({
+      targets: funcaoManche,
+      alpha: 1,
+      duration: 600,
+      ease: "Linear",
+    });
+
+    this.time.delayedCall(5000, () => {
+      this.scene.start(this.nextScene);
+    });
   }
 }
 
