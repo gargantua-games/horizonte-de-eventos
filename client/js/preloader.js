@@ -95,6 +95,7 @@ class preloader extends Phaser.Scene {
     //imagem dos botões
 
     this.load.image("funcaomanche", "funcaomanche.png")
+    this.load.image("funcaoteclado", "funcaoteclado.png")
 
 
     // Mapas e Elementos de Cenário
@@ -111,7 +112,7 @@ class preloader extends Phaser.Scene {
       "remasterizedEnfeites",
       "assets-usados/remasterizedEnfeites.png",
     );
-    this.load.image("NewPiskel", "assets-usados/NewPiskel.png");
+    this.load.image("NewPiskel", "assets-usados/NewPiskel.png");''
     this.load.image("consoles", "assets-usados/console_s.png");
     this.load.image("consolew", "assets-usados/console_w.png");
     this.load.image("tilesetx1", "assets-usados/tilesetx1.png");
