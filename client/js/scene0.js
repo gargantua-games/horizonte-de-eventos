@@ -129,10 +129,10 @@ class scene0 extends Phaser.Scene {
     });
     // ===============================================
     this.disparo = this.sound.add("disparo", { volume: 0.7 });
-    this.passos = this.sound.add("passos", { loop: true, volume: 2 });
+    this.passos = this.sound.add("passos", { loop: true, volume: 1 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.2,
+      volume: 0.1,
     });
     this.trilhasonora.play();
 
@@ -2478,7 +2478,7 @@ class scene0 extends Phaser.Scene {
       jumpPressed = true; // Se o seu jogo usa 'jumpPressed' para pular
       vertical = -1; // Se o seu jogo usa 'vertical' negativo para subir/voar
     }
-    
+
 
     if (this.esperandoInteracao === 1 && interectPressed) {
       this.esperandoInteracao = 0;

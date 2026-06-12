@@ -72,15 +72,15 @@ class scene1 extends Phaser.Scene {
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.2,
+      volume: 0.1,
     });
     this.trilhasonora.play();
 
     this.passos = this.sound.add("passos", { loop: true, volume: 1 });
-    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 2 });
+    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 1 });
     this.batimentocardiaco = this.sound.add("batimentocardiaco", {
       loop: true,
-      volume: 1,
+      volume: .8,
     });
     this.disparo = this.sound.add("disparo",{ volume: 0.7 });
 
