@@ -1371,12 +1371,6 @@ class scene1 extends Phaser.Scene {
 
     this.liberarIa();
 
-   if (this.comunicationP2) {
-      this.game.audio.volume = 1;
-    } else if (!this.comunicationP2) {
-      this.game.audio.volume = 0;
-    }
-
     if (this.inFinalDoorP2) {
       this.game.socket.emit("scene1", this.game.room, {
         inFinalDoorP2: this.inFinalDoorP2,
@@ -2025,7 +2019,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 1;
+      this.game.audio.volume = 0;
     };
 
     if (this.game.media) {

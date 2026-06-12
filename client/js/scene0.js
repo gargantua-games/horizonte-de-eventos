@@ -2256,12 +2256,7 @@ class scene0 extends Phaser.Scene {
       }
     }
 
-    if (this.comunication) {
-      this.game.audio.volume = 1;
-    } else if (!this.comunication) {
-      this.game.audio.volume = 0;
-    }
-
+  
     if (this.fase5) {
       try {
         this.game.socket.emit("scene0", this.game.room, {
@@ -2817,7 +2812,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 1;
+      this.game.audio.volume = 0;
     };
 
     if (this.game.media) {

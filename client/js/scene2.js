@@ -370,6 +370,7 @@ if (this.game.room) {
           }
         }
       
+      
         e.barraVida.clear();
 
         if (e.isBoss) {
@@ -545,7 +546,7 @@ spawnAsteroide(customY, remoteData = null) {
     asteroide.play("meteoro_destruido");
     asteroide.on("animationcomplete", () => { asteroide.destroy(); });
 
-    this.computarDanoJogador(2);
+    //this.computarDanoJogador(2);
     }
   }
 
