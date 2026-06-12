@@ -31,10 +31,10 @@ class inicioroxo extends Phaser.Scene {
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
     bg.setAlpha(0);
 
-    this.manche = this.add.image(150, 0, "funcaomanche").setOrigin(0, 0).setDepth(999);
+    this.teclado = this.add.image(150, 0, "funcaoteclado").setOrigin(0, 0).setDepth(999);
     setTimeout(() => {
-      this.manche.setVisible(false);
-    }, 8000);
+      this.teclado.setVisible(false);
+    }, 10000);
 
 
     this.text1 = this.add.text(
@@ -57,7 +57,7 @@ class inicioroxo extends Phaser.Scene {
       delay: 200,
     });
 
-    this.delayedCall = this.time.delayedCall(100, () => { //13000
+    this.delayedCall = this.time.delayedCall(23000, () => { //13000
       this.tweens.add({
         targets: [bg, this.text1],
         alpha: 0,
@@ -67,7 +67,7 @@ class inicioroxo extends Phaser.Scene {
       });
     });
      
-    this.delayedCall = this.time.delayedCall(100, () => { //15000
+    this.delayedCall = this.time.delayedCall(25000, () => { //15000
       this.scene.stop("inicioroxo");
       this.scene.start("scene1");
     });
