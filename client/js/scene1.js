@@ -46,23 +46,16 @@ class scene1 extends Phaser.Scene {
   }
 
   GameOver() {
-    if (this.gameOver) {
-      return;
-    }
-
-    console.log("antenas" + this.antenasconsertadas);
-
-    if (this.vida > 0) {
-      return;
-    }
-
-    this.gameOver = true;
+    if (this.gameOver === true || this.vida <= 0) {
+      this.gameOver = true;
     this.game.socket.emit("GameOver", this.game.room, {
       gameOver: this.gameOver,
     });
-
-    this.scene.stop("scene1");
+      
+      this.scene.stop("scene1");
     this.scene.start("gameover1");
+    }
+    
   }
 
   create() {

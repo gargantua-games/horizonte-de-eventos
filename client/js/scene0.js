@@ -47,23 +47,17 @@ class scene0 extends Phaser.Scene {
     this.webrtcAnswerCall();
   }
 
-  GameOver() {
-    if (this.gameOver) {
-      return;
-    }
-
-    if (this.life > 0) {
-      return;
-    }
-
+    GameOver() {
+    if (this.gameOver === true || this.life <= 0) {
     this.gameOver = true;
     this.game.socket.emit("GameOver", this.game.room, {
       gameOver: this.gameOver,
     });
-
-    this.scene.stop("scene0");
+      
+      this.scene.stop("scene0");
     this.scene.start("gameover1");
-
+    }
+    
   }
 
  startPlatformMovement() {
