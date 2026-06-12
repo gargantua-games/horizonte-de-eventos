@@ -12,7 +12,7 @@ class iniciov extends Phaser.Scene {
     const imageRatio = bg.width / bg.height;
     const screenRatio = this.scale.width / this.scale.height;
 
-    let displayWidth = this.scale.width;
+    let displayWidth = this.scale.width; 
     let displayHeight = this.scale.height;
 
     if (screenRatio > imageRatio) {
