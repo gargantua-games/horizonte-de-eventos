@@ -2279,8 +2279,6 @@ class scene0 extends Phaser.Scene {
    
     this.GameOver();
 
-  
-
     console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
 
     if (this.inFinalDoorP1) {
@@ -2421,35 +2419,8 @@ class scene0 extends Phaser.Scene {
       vertical = pad.axes[1].getValue();
       jumpPressed = !!pad.X;
       interectPressed = !!pad.buttons[9].pressed;
-      comunicationPressed = !!pad.A;
+      comunicationPressed = !!pad.L1;
       reloadPressed = !!pad.R1;
-    }
-
-    if (comunicationPressed) {
-       console.log("Botão apertado! Mas o resto está OK?", {
-          temMicrofone: !!this.game.media,
-          comunicationAtivo: this.comunication
-       });
-    }
-
-  if (this.game.media && this.comunication) {
-      
-      // Verifica se a função getAudioTracks realmente existe antes de tentar rodar
-      if (typeof this.game.media.getAudioTracks === 'function') {
-        const myAudioTrack = this.game.media.getAudioTracks()[0];
-        
-        if (myAudioTrack) {
-          myAudioTrack.enabled = comunicationPressed;
-        }
-
-        if (comunicationPressed) {
-          console.log("P1: falando e transmitindo áudio COM SUCESSO!");
-        }
-      } else {
-        // Se cair aqui, achamos o culpado!
-        console.error("ERRO: this.game.media não é um MediaStream válido!", this.game.media);
-      }
-      
     }
 
     if (reloadPressed) {
@@ -2461,7 +2432,7 @@ class scene0 extends Phaser.Scene {
         if (!button) return;
         const pressed =
           !!button.pressed || (button.value && button.value > 0.1);
-        if (pressed) {
+        /*if (pressed) {
           // tenta identificar por nome comum, senão mostra índice e valor
           const nameMap = {
             0: "A / Botão 0",
@@ -2486,7 +2457,7 @@ class scene0 extends Phaser.Scene {
           console.log(
             `Gamepad: ${name} (índice ${idx}) pressionado, value=${button.value}`,
           );
-        }
+        }*/
       });
     }
 
@@ -2509,7 +2480,11 @@ class scene0 extends Phaser.Scene {
     }
 
     // Controla volume de áudio baseado em comunicationPressed
-    
+    /*if (this.game.audio) {
+      if (this.comunication)
+        this.game.audio.volume = comunicationPressed ? 1 : 0;
+      console.log("P1:falando")
+    }*/
 
     if (this.esperandoInteracao === 1 && interectPressed) {
       this.esperandoInteracao = 0;
@@ -2887,7 +2862,6 @@ class scene0 extends Phaser.Scene {
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
       this.game.audio.volume = 1;
-      
 
       this.game.audio.play().catch(error => {
           console.error("Erro ao tentar reproduzir o áudio:", error);

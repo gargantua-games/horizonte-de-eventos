@@ -1301,32 +1301,6 @@ class scene1 extends Phaser.Scene {
         this.shoot = state.cannon.shooting;
       }
     });
-
-  this.teclaFalar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
-
-    // Quando APERTAR o SHIFT (Abre o microfone)
-    this.teclaFalar.on('down', () => {
-      // Checa se o microfone existe e se a comunicação está liberada
-      if (this.game.media && this.comunication) {
-        const myAudioTrack = this.game.media.getAudioTracks()[0];
-        if (myAudioTrack) {
-          myAudioTrack.enabled = true;
-          console.log("P2: Falando (SHIFT pressionado)");
-        }
-      }
-    });
-
-    // Quando SOLTAR o SHIFT (Fecha o microfone)
-    this.teclaFalar.on('up', () => {
-      if (this.game.media) {
-        const myAudioTrack = this.game.media.getAudioTracks()[0];
-        if (myAudioTrack) {
-          myAudioTrack.enabled = false;
-          console.log("P2: Mutado (SHIFT solto)");
-        }
-      }
-    });
-    
   }
 
 
@@ -1407,8 +1381,6 @@ class scene1 extends Phaser.Scene {
 
   update(time, delta) {
     this.GameOver();
-
-      
 
     this.liberarIa();
 
@@ -1502,7 +1474,10 @@ class scene1 extends Phaser.Scene {
     }
     
 
-   /* */
+   /* if (this.game.audio && this.comunication) {
+      this.game.audio.volume = this.comunication.isDown ? 1 : 0;
+      console.log("p2:falando")
+    }*/
 
     if (this.shoot && this.bulletP1) {
       this.bulletP1 = false;
@@ -1606,7 +1581,11 @@ class scene1 extends Phaser.Scene {
       return;
     }
 
+   
 
+    this.comunication = this.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SHIFT,
+    );
 
     const jkl = this.input.keyboard.addKeys("J,K,L");
 
@@ -2050,16 +2029,9 @@ class scene1 extends Phaser.Scene {
     if (this.game.media) {
       this.game.media
         .getTracks()
-        .forEach((track) => {
-          // 1. Adiciona a trilha na conexão
-          this.game.localConnection.addTrack(track, this.game.media);
-          
-          // 2. Força o mudo inicial se for a trilha de áudio
-          if (track.kind === 'audio') {
-            track.enabled = false; 
-            console.log("P2: Microfone iniciado no mudo.");
-          }
-        });
+        .forEach((track) =>
+          this.game.localConnection.addTrack(track, this.game.media),
+        );
     }
 
     this.game.localConnection
