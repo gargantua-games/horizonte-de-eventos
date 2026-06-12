@@ -2019,7 +2019,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 0;
+      this.game.audio.volume = 1;
     };
 
     if (this.game.media) {

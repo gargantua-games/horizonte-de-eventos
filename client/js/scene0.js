@@ -2812,7 +2812,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 0;
+      this.game.audio.volume = 1;
     };
 
     if (this.game.media) {
