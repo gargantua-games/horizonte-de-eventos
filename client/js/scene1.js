@@ -7,7 +7,7 @@ class scene1 extends Phaser.Scene {
     this.doorOpen = 0;
     this.fase4 = false;
     this.fase5 = false;
-    this.vida = 4;
+    this.vida = 5;
     this.invulnerable = false;
     this.positionP2 = false;
     this.puzzleAberto = false;
@@ -500,7 +500,7 @@ class scene1 extends Phaser.Scene {
 
     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
-    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
+    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole").setDepth(99);
     this.avisoconsole.anims.play("avisopiscando");
     
 
@@ -1040,7 +1040,7 @@ class scene1 extends Phaser.Scene {
 
     this.physics.add.overlap(this.caixa, this.porta, () => {
       
-      //if (this.infase === 4) {
+      if (this.infase === 4) {
         this.porta.anims.play("portaabrindo", true);
         
         this.porta.once("animationcomplete", (anim, frame) => {
@@ -1055,7 +1055,7 @@ class scene1 extends Phaser.Scene {
             this.batimentocardiaco.play();
           }
         });
-     // }
+      }
     });
     
     this.physics.add.overlap(this.playerroxo, this.porta2, () => {
@@ -1354,7 +1354,7 @@ class scene1 extends Phaser.Scene {
 
     const maxLife = 4;
     const radius = this.lifeRadius;
-    const segmentCount = 4;
+    const segmentCount = 5;
     const gapDegrees = 5;
     const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
@@ -1473,11 +1473,6 @@ class scene1 extends Phaser.Scene {
       }
     }
     
-
-   /* if (this.game.audio && this.comunication) {
-      this.game.audio.volume = this.comunication.isDown ? 1 : 0;
-      console.log("p2:falando")
-    }*/
 
     if (this.shoot && this.bulletP1) {
       this.bulletP1 = false;

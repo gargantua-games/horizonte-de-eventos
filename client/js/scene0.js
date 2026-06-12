@@ -2478,13 +2478,7 @@ class scene0 extends Phaser.Scene {
       jumpPressed = true; // Se o seu jogo usa 'jumpPressed' para pular
       vertical = -1; // Se o seu jogo usa 'vertical' negativo para subir/voar
     }
-
-    // Controla volume de áudio baseado em comunicationPressed
-    /*if (this.game.audio) {
-      if (this.comunication)
-        this.game.audio.volume = comunicationPressed ? 1 : 0;
-      console.log("P1:falando")
-    }*/
+    
 
     if (this.esperandoInteracao === 1 && interectPressed) {
       this.esperandoInteracao = 0;
