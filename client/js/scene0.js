@@ -2425,7 +2425,7 @@ class scene0 extends Phaser.Scene {
       reloadPressed = !!pad.R1;
     }
 
-    if (jumpPressed) {
+    if (comunicationPressed) {
        console.log("Botão apertado! Mas o resto está OK?", {
           temMicrofone: !!this.game.media,
           comunicationAtivo: this.comunication
