@@ -92,7 +92,9 @@ class preloader extends Phaser.Scene {
     this.load.audio("navesendodestruida", "navesendodestruida.mp3");
     this.load.audio("explosionmeteoro", "explosionmeteoro.mp3")
 
+    //imagem dos botões
 
+    this.load.image("funcaomanche", "funcaomanche.png")
 
 
     // Mapas e Elementos de Cenário
