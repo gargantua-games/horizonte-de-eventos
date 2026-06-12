@@ -15,7 +15,7 @@ class scene0 extends Phaser.Scene {
     this.cargaJp = 1000;
     this.cargaJPpercentage = this.cargaJp / 10;
     this.o2 = 100;
-    this.o2Ship = true;
+    this.o2Ship = true; 
     this.collectEng1 = false;
     this.collectEng2 = false;
     this.collectEng3 = false;
@@ -1739,26 +1739,7 @@ class scene0 extends Phaser.Scene {
 
     this.layerPiso.setCollisionByProperty({ collides: true });
 
-    // Texto de posição do player atualizado a cada segundo
-    this.positionText = this.add
-      .text(350, 50, "X: 0 Y: 0", {
-        fontSize: "18px",
-        fill: "#ffffff",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        padding: { x: 6, y: 4 },
-      })
-      .setScrollFactor(0);
-
-    this.time.addEvent({
-      delay: 10,
-      loop: true,
-      callback: () => {
-        this.positionText.setText(
-          `X: ${Math.round(this.player.x)} Y: ${Math.round(this.player.y)}`
-        );
-      },
-    });
-
+    // Texto de posição do player atualizado a cada segund
     const hudBarX = 170;
     const hudBarY = 43;
     const hudBarWidth = 12;

@@ -1123,24 +1123,6 @@ class scene1 extends Phaser.Scene {
       this,
     );
 
-    this.positionText = this.add
-      .text(200, 80, "X: 0 Y: 0", {
-        fontSize: "18px",
-        fill: "#ffffff",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        padding: { x: 6, y: 4 },
-      })
-      .setScrollFactor(0);
-
-    this.time.addEvent({
-      delay: 1000,
-      loop: true,
-      callback: () => {
-        this.positionText.setText(
-          `X: ${Math.round(this.playerroxo.x)} Y: ${Math.round(this.playerroxo.y)}`,
-        );
-      },
-    });
 
     this.iaBox = this.physics.add.sprite(400, 80, "iaBox");
     this.iaBox
