@@ -132,7 +132,7 @@ class scene0 extends Phaser.Scene {
     this.passos = this.sound.add("passos", { loop: true, volume: .9 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.09,
+      volume: 0.07,
     });
     this.trilhasonora.play();
 
@@ -2854,7 +2854,7 @@ class scene0 extends Phaser.Scene {
 
     this.game.remoteConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 1;
+      this.game.audio.volume = 2;
     };
 
     if (this.game.media) {

@@ -72,7 +72,7 @@ class scene1 extends Phaser.Scene {
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.09,
+      volume: 0.07,
     });
     this.trilhasonora.play();
 
@@ -2035,7 +2035,7 @@ class scene1 extends Phaser.Scene {
 
     this.game.localConnection.ontrack = ({ streams: [stream] }) => {
       this.game.audio.srcObject = stream;
-      this.game.audio.volume = 1;
+      this.game.audio.volume = 2;
     };
 
     if (this.game.media) {
