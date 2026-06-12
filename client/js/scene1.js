@@ -51,16 +51,9 @@ class scene1 extends Phaser.Scene {
     this.game.socket.emit("GameOver", this.game.room, {
       gameOver: this.gameOver,
     });
-      let minigamesRodando = [];
       
-      this.listaMinigames.forEach((m) => {
-        if (this.scene.isActive(m.id)) {
-          minigamesRodando.push(m.id);
-        }
-      });
-      this.scene.stop(minigamesRodando[i]);
       this.scene.stop("scene1");
-      this.scene.start("gameover1");
+    this.scene.start("gameover1");
     }
     
   }
@@ -1400,7 +1393,7 @@ class scene1 extends Phaser.Scene {
       let minigamesRodando = [];
 
       // 1. Checa quais minigames estão abertos AGORA e anota o nome deles
-      this.listaMinigames.forEach((m) => {
+      this.bancoMinigames.forEach((m) => {
         if (this.scene.isActive(m.id)) {
           minigamesRodando.push(m.id);
         }
