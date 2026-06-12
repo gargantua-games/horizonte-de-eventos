@@ -2433,18 +2433,24 @@ class scene0 extends Phaser.Scene {
     }
 
   if (this.game.media && this.comunication) {
-  
-  // Pega a trilha do seu microfone e liga/desliga baseado no botão
-  const myAudioTrack = this.game.media.getAudioTracks()[0];
-  
-  if (myAudioTrack) {
-    myAudioTrack.enabled = comunicationPressed; // true para transmitir, false para mutar
-  }
+      
+      // Verifica se a função getAudioTracks realmente existe antes de tentar rodar
+      if (typeof this.game.media.getAudioTracks === 'function') {
+        const myAudioTrack = this.game.media.getAudioTracks()[0];
+        
+        if (myAudioTrack) {
+          myAudioTrack.enabled = comunicationPressed;
+        }
 
-  if (comunicationPressed) {
-    console.log("P1: falando e transmitindo áudio!");
-  }
-}
+        if (comunicationPressed) {
+          console.log("P1: falando e transmitindo áudio COM SUCESSO!");
+        }
+      } else {
+        // Se cair aqui, achamos o culpado!
+        console.error("ERRO: this.game.media não é um MediaStream válido!", this.game.media);
+      }
+      
+    }
 
     if (reloadPressed) {
       window.location.reload();
