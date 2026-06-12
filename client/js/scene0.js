@@ -129,10 +129,10 @@ class scene0 extends Phaser.Scene {
     });
     // ===============================================
     this.disparo = this.sound.add("disparo", { volume: 0.7 });
-    this.passos = this.sound.add("passos", { loop: true, volume: 2 });
+    this.passos = this.sound.add("passos", { loop: true, volume: .9 });
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.2,
+      volume: 0.3,
     });
     this.trilhasonora.play();
 
@@ -1060,6 +1060,8 @@ class scene0 extends Phaser.Scene {
     this.torreta.setPipeline("Light2D").setImmovable(true).setScale(1.5);
     this.torreta.body.allowGravity = false;
 
+
+
     setInterval(() => {
       if (this.o2 < 100 && this.o2Ship === true) {
         this.o2 += 1;
@@ -1314,21 +1316,14 @@ class scene0 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platform12);
     this.physics.add.collider(this.player, this.platform15);
 
+    this.physics.add.collider(this.torreta, this.layerPiso);
+
     //inimigo
     this.physics.add.collider(this.inimigo, this.layerPiso);
 
     this.physics.add.collider(this.laser, this.layerPiso, this.laserFloor, null, this);
     this.physics.add.collider(this.laserP1, this.layerPiso, this.laserFloor, null, this);
     this.physics.add.collider(this.laserP1, this.limitenorte, this.laserFloor, null, this);
-
-   /* this.physics.add.collider(
-      this.laserP1,
-      this.limitenorte, () => {
-        this.laserP1.children.each((laser) => {
-          laser.destroy();
-        });
-
-      });*/
 
     this.physics.add.collider(this.laser, this.inimigo, () => {
       this.inimigo.disableBody(true, true);
@@ -1619,11 +1614,13 @@ class scene0 extends Phaser.Scene {
             this.fase3 = false;
             this.infase = 4;
             this.fase4 = true;
+            this.comunication = false;
                 
             try {
               this.game.socket.emit("scene0", this.game.room, {
                 infase: this.infase,
                 fase4: this.fase4,
+                comunication: this.comunication,
               });
             } catch (e) {
               console.error("Error updating player:", e);
@@ -1631,25 +1628,6 @@ class scene0 extends Phaser.Scene {
             this.cargaJp = 0;
             this.updateCargaBar();
             this.door14.anims.play("close-door", true);
-
-            //BIG IA
-
-           /* this.iaBox.setPosition(1009, 33)
-              .setVelocityX(-100);
-            setTimeout(() => {
-              this.iaBox.setVelocityX(0);
-
-              this.typeIaText(texto5, 50, () => {
-                this.time.delayedCall(800, () => {
-                  this.typeIaText(texto6, 50, () => {
-                    this.time.delayedCall(800, () => {
-                      this.typeIaText(texto, 50);
-                      this.iaBox.setVelocityX(100);
-                    });
-                  });
-                });
-              });
-            }, 3237);*/
             
             this.door14.once("animationcomplete", (anim, frame) => {
               if (anim.key === "close-door") {
@@ -2036,6 +2014,10 @@ class scene0 extends Phaser.Scene {
         this.collectIa = state.collectIa;
       }
 
+      if (state.comunication) {
+        this.comunication = state.comunication;
+      }
+
     });
 
     this.game.socket.on("criar-alien-scene0", (dadosAlien) => {
@@ -2299,6 +2281,12 @@ class scene0 extends Phaser.Scene {
       }
     }
 
+    if (this.comunication) {
+      this.game.audio.volume = 1;
+    } else if (!this.comunication) {
+      this.game.audio.volume = 0;
+    }
+
     if (this.fase5) {
       try {
         this.game.socket.emit("scene0", this.game.room, {
@@ -2432,7 +2420,7 @@ class scene0 extends Phaser.Scene {
         if (!button) return;
         const pressed =
           !!button.pressed || (button.value && button.value > 0.1);
-        /*if (pressed) {
+        if (pressed) {
           // tenta identificar por nome comum, senão mostra índice e valor
           const nameMap = {
             0: "A / Botão 0",
@@ -2457,7 +2445,7 @@ class scene0 extends Phaser.Scene {
           console.log(
             `Gamepad: ${name} (índice ${idx}) pressionado, value=${button.value}`,
           );
-        }*/
+        }
       });
     }
 
@@ -2479,12 +2467,6 @@ class scene0 extends Phaser.Scene {
       vertical = -1; // Se o seu jogo usa 'vertical' negativo para subir/voar
     }
 
-    // Controla volume de áudio baseado em comunicationPressed
-    /*if (this.game.audio) {
-      if (this.comunication)
-        this.game.audio.volume = comunicationPressed ? 1 : 0;
-      console.log("P1:falando")
-    }*/
 
     if (this.esperandoInteracao === 1 && interectPressed) {
       this.esperandoInteracao = 0;

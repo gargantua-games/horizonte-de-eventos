@@ -7,7 +7,7 @@ class scene1 extends Phaser.Scene {
     this.doorOpen = 0;
     this.fase4 = false;
     this.fase5 = false;
-    this.vida = 4;
+    this.vida = 5;
     this.invulnerable = false;
     this.positionP2 = false;
     this.puzzleAberto = false;
@@ -72,17 +72,17 @@ class scene1 extends Phaser.Scene {
     //adiciona trilha sonora e efeitos sonoros
     this.trilhasonora = this.sound.add("trilhasonora", {
       loop: true,
-      volume: 0.2,
+      volume: 0.07,
     });
     this.trilhasonora.play();
 
-    this.passos = this.sound.add("passos", { loop: true, volume: 1 });
-    this.respiracao = this.sound.add("respiracao", { loop: true, volume: 2 });
+    this.passos = this.sound.add("passos", { loop: true, volume: .8 });
+    this.respiracao = this.sound.add("respiracao", { loop: true, volume: .9 });
     this.batimentocardiaco = this.sound.add("batimentocardiaco", {
       loop: true,
-      volume: 1,
+      volume: .3,
     });
-    this.disparo = this.sound.add("disparo",{ volume: 0.7 });
+    this.disparo = this.sound.add("disparo",{ volume: 0.2 });
 
     //adiciona o espaço ao fundo
     this.space = this.add.image("space1");
@@ -500,7 +500,7 @@ class scene1 extends Phaser.Scene {
 
     this.portaFinal = this.physics.add.sprite(641, 719, "porta", 0);
 
-    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole");
+    this.avisoconsole = this.physics.add.sprite(913, 388, "avisoconsole").setDepth(99);
     this.avisoconsole.anims.play("avisopiscando");
     
 
@@ -1040,7 +1040,7 @@ class scene1 extends Phaser.Scene {
 
     this.physics.add.overlap(this.caixa, this.porta, () => {
       
-      //if (this.infase === 4) {
+      if (this.infase === 4) {
         this.porta.anims.play("portaabrindo", true);
         
         this.porta.once("animationcomplete", (anim, frame) => {
@@ -1055,7 +1055,7 @@ class scene1 extends Phaser.Scene {
             this.batimentocardiaco.play();
           }
         });
-     // }
+      }
     });
     
     this.physics.add.overlap(this.playerroxo, this.porta2, () => {
@@ -1254,6 +1254,10 @@ class scene1 extends Phaser.Scene {
         this.infase = (state.infase);
         console.log("Scene 1 capturou a fase da Scene 0: ", this.infase);
       }
+
+      if (state.comunication) {
+        this.comunicationP2 = state.comunication;
+      }
     });
 
     
@@ -1308,7 +1312,14 @@ class scene1 extends Phaser.Scene {
   liberarIa() {
     if (this.antenasconsertadas === 3) {
       this.faisca3.setVisible(true);
-      //this.faisca3.anims.play("faiscando");
+      this.comunicationP2 = true;
+      try {
+              this.game.socket.emit("scene1", this.game.room, {
+                comunication: this.comunicationP2,
+              });
+            } catch (e) {
+              console.error("Error updating player:", e);
+            }
       console.log("ia disponivel");
       return;
     } else if (this.antenasconsertadas != 3) {
@@ -1354,7 +1365,7 @@ class scene1 extends Phaser.Scene {
 
     const maxLife = 4;
     const radius = this.lifeRadius;
-    const segmentCount = 4;
+    const segmentCount = 5;
     const gapDegrees = 5;
     const segmentDegrees = (360 - segmentCount * gapDegrees) / segmentCount;
 
@@ -1380,11 +1391,16 @@ class scene1 extends Phaser.Scene {
   }
 
   update(time, delta) {
+    
     this.GameOver();
 
     this.liberarIa();
 
-   // console.log("P1:" + this.inFinalDoorP1 + "P2:" + this.inFinalDoorP2);
+   if (this.comunicationP2) {
+      this.game.audio.volume = 1;
+    } else if (!this.comunicationP2) {
+      this.game.audio.volume = 0;
+    }
 
     if (this.inFinalDoorP2) {
       this.game.socket.emit("scene1", this.game.room, {
@@ -1424,23 +1440,44 @@ class scene1 extends Phaser.Scene {
     }
 
     if (this.infase === 1) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consoles5.x, this.consoles5.y);
+      if (this.doorOpen === 0) {
+        this.avisoconsole.setVisible(true);
+        this.avisoconsole.setPosition(this.consoles5.x, this.consoles5.y);
+      }else{
+        this.avisoconsole.setVisible(false);
+      }
     } else if (this.infase === 2) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consoles4.x, this.consoles4.y);
-    } else if (this.infase === 3) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consoles6.x, this.consoles6.y);
-    } else if (this.infase === 4) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.porta.x, this.porta.y);
-    } else if (this.infase === 5) {
-      this.avisoconsole.setVisible(true);
-      this.avisoconsole.setPosition(this.consolemedio.x, this.consolemedio.y);
-    } else {
+      if (this.doorOpen === 1) {
+        this.avisoconsole.setVisible(true);
+        this.avisoconsole.setPosition(this.consoles4.x, this.consoles4.y);
+      } else {
+        this.avisoconsole.setVisible(false);
+      }
+      } else if (this.infase === 3) {
+        if (this.doorOpen === 2) {
+          this.avisoconsole.setVisible(true);
+          this.avisoconsole.setPosition(this.consoles6.x, this.consoles6.y);
+        } else {
+          this.avisoconsole.setVisible(false);
+        }
+      } else if (this.infase === 4) {
+        if (this.doorOpen === 3) {
+          this.avisoconsole.setVisible(true);
+          this.avisoconsole.setPosition(this.porta.x, this.porta.y);
+        } else {
+          this.avisoconsole.setVisible(false);
+        }
+        } else if (this.infase === 5) {
+          if (this.doorOpen === 4) {
+            this.avisoconsole.setVisible(true);
+            this.avisoconsole.setPosition(this.consolemedio.x, this.consolemedio.y);
+          } else {
+            this.avisoconsole.setVisible(false);
+          }
+          } else {
       this.avisoconsole.setVisible(false);
     }
+
 
     if (this.positionP2 && this.fase4) {
       try {
@@ -1473,11 +1510,6 @@ class scene1 extends Phaser.Scene {
       }
     }
     
-
-   /* if (this.game.audio && this.comunication) {
-      this.game.audio.volume = this.comunication.isDown ? 1 : 0;
-      console.log("p2:falando")
-    }*/
 
     if (this.shoot && this.bulletP1) {
       this.bulletP1 = false;
@@ -1658,7 +1690,6 @@ class scene1 extends Phaser.Scene {
       }
     }*/
 
-    if (jkl.K.isDown) { this.disparo.play(); } 
     // Animações e som baseado no movimento
     const moving = Math.abs(horizontal) > 0.1 || Math.abs(vertical) > 0.1;
 
