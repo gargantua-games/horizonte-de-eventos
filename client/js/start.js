@@ -86,14 +86,14 @@ class start extends Phaser.Scene {
     this.playerRoxo.on("pointerdown", () => {
       this.webrtcGetMic();
       this.scene.stop("start");
-      this.scene.start("preloader", { startScene: "scene1" });
+      this.scene.start("preloader", { startScene: "inicioroxo" });
     });
 
     // Click no player vermelho abre scene0
     this.playerVermelho.on("pointerdown", () => {
       this.webrtcGetMic();
       this.scene.stop("start");
-      this.scene.start("preloader", { startScene: "scene1" });
+      this.scene.start("preloader", { startScene: "iniciov" });
     });
 
     this.textoInstrucao = this.add.text(
@@ -158,7 +158,7 @@ class start extends Phaser.Scene {
 
     if (reloadPressed) {
       window.location.reload();
-    } else if (!reloadPressed && (qer.E.isDown || (padPressed))) {
+    } else if (!reloadPressed && padPressed) {
       //this.scene.start("scene0");
       this.webrtcGetMic();
       this.scene.stop("start");

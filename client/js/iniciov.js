@@ -29,7 +29,9 @@ class iniciov extends Phaser.Scene {
       (this.scale.height - displayHeight) / 2,
     );
     //this.terminal = this.add.image(200, 0, "terminal").setOrigin(0, 0);
-     bg.setAlpha(0);
+    bg.setAlpha(0);
+    
+    this.manche = this.add.image(0, 0, "funcaomanche").setOrigin(0, 0).setDepth(999);
 
 
     this.text1 = this.add.text(
@@ -52,7 +54,7 @@ class iniciov extends Phaser.Scene {
       delay: 200,
     });
 
-      this.delayedCall = this.time.delayedCall(100, () => { //12000
+      this.delayedCall = this.time.delayedCall(12000, () => { //12000
         this.tweens.add({
           targets: [bg, this.text1],
           alpha: 0,
@@ -62,7 +64,7 @@ class iniciov extends Phaser.Scene {
         });
       });
 
-      this.delayedCall = this.time.delayedCall(100, () => { //14000
+      this.delayedCall = this.time.delayedCall(14000, () => { //14000
         this.scene.stop("iniciov");
         this.scene.start("scene0");
       });
