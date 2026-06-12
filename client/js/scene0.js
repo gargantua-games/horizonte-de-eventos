@@ -2421,7 +2421,7 @@ class scene0 extends Phaser.Scene {
       vertical = pad.axes[1].getValue();
       jumpPressed = !!pad.X;
       interectPressed = !!pad.buttons[9].pressed;
-      comunicationPressed = !!pad.L1;
+      comunicationPressed = !!pad.A;
       reloadPressed = !!pad.R1;
     }
 
