@@ -2425,6 +2425,13 @@ class scene0 extends Phaser.Scene {
       reloadPressed = !!pad.R1;
     }
 
+    if (comunicationPressed) {
+       console.log("Botão apertado! Mas o resto está OK?", {
+          temMicrofone: !!this.game.media,
+          comunicationAtivo: this.comunication
+       });
+    }
+
   if (this.game.media && this.comunication) {
   
   // Pega a trilha do seu microfone e liga/desliga baseado no botão
